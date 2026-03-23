@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameTimer : MonoBehaviour
 {
-    public Text timerText;
+    public TextMeshProUGUI timerText;
 
     private float duration = 900f;
 

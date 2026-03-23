@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerHealthSystem : MonoBehaviour
 {
     public int lives = 3;
-    public Text livesText;
+    public TextMeshProUGUI livesText;
 
     private void OnEnable()
     {
