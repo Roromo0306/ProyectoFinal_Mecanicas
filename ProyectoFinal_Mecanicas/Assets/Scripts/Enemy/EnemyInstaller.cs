@@ -9,16 +9,37 @@ public class EnemyInstaller : MonoBehaviour
         controller = new EnemyController(transform);
     }
 
+    private void OnEnable()
+    {
+        EventBus.Subscribe<PlayerHitEvent>(OnPlayerHit);
+    }
+
+    private void OnDisable()
+    {
+        EventBus.Unsubscribe<PlayerHitEvent>(OnPlayerHit);
+    }
+
     private void Update()
     {
         controller.Tick();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
             controller.OnPlayerCollision(collision.transform);
         }
+    }
+
+    private void OnPlayerHit(object evt)
+    {
+        PlayerHitEvent hit = (PlayerHitEvent)evt;
+
+        controller.ApplyRadialKnockback(
+            hit.hitPosition,
+            3f,
+            20f
+        );
     }
 }
