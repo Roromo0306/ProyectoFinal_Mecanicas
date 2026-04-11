@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SelectionService : MonoBehaviour
 {
@@ -17,6 +18,6 @@ public class SelectionService : MonoBehaviour
 
         Time.timeScale = 1f;
 
-        UIManager.Instance.OpenDeploymentScreen(data);
+        SceneManager.LoadScene("DeploymentScene");
     }
 }
