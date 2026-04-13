@@ -21,6 +21,6 @@ public class PowerUpCardUI : MonoBehaviour
 
     public void OnClick()
     {
-        SelectionService.Instance.Select(data);
+        SelectionService.Instance.selected = data;
     }
 }

@@ -10,13 +10,13 @@ public class DeckCardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void OnPointerEnter(PointerEventData eventData)
     {
         tooltip.SetActive(true);
-        TooltipUI.Instance.Show(data.description);
+       
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         tooltip.SetActive(false);
-        TooltipUI.Instance.Hide();
+        
     }
 
     public void OnClick()

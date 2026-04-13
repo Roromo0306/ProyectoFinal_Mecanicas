@@ -9,11 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1043ab6f7458c6a47bbf2799c4c47ff9, type: 3}
-  m_Name: DamageCard
+  m_Script: {fileID: 11500000, guid: 1c362220a96e36943ad5094e5004f90f, type: 3}
+  m_Name: MagnetEffect
   m_EditorClassIdentifier: 
-  title: "DA\xF1o"
-  description: duele
-  icon: {fileID: 0}
-  effects:
-  - {fileID: 11400000, guid: ca98f70ba60570b4591465b75b8610ba, type: 2}
+  amount: 2

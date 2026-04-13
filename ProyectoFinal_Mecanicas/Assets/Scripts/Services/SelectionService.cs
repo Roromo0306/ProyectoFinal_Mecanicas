@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class SelectionService : MonoBehaviour
 {
@@ -9,15 +8,13 @@ public class SelectionService : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
-    }
-
-    public void Select(PowerUpData data)
-    {
-        selected = data;
-
-        Time.timeScale = 1f;
-
-        SceneManager.LoadScene("DeploymentScene");
+        DontDestroyOnLoad(gameObject);
     }
 }

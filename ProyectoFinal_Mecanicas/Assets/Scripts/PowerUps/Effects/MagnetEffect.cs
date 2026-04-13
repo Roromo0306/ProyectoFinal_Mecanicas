@@ -3,10 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "PowerUps/Effects/Magnet")]
 public class MagnetEffect : PowerUpEffect
 {
-    public float increase = 2f;
+    public float amount = 2f;
 
-    public override void Apply(PlayerContext context)
+    public override void Apply(PlayerStats stats)
     {
-        context.pickups.magnetRadius += increase;
+        stats.magnetRadius += amount;
     }
 }

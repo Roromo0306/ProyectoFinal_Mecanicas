@@ -2,5 +2,5 @@ using UnityEngine;
 
 public abstract class PowerUpEffect : ScriptableObject
 {
-    public abstract void Apply(PlayerContext context);
+    public abstract void Apply(PlayerStats stats);
 }

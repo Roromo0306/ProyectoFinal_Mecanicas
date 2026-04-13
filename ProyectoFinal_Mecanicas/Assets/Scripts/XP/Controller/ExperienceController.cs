@@ -30,6 +30,7 @@ public class ExperienceController
 
         model.xpToNextLevel = Mathf.RoundToInt(model.xpToNextLevel * 1.5f);
 
+        Debug.Log("LEVEL UP LANZADO");
         EventBus.Publish(new LevelUpEvent(model.currentLevel));
     }
 }
