@@ -10,37 +10,32 @@ public class ActivationService : MonoBehaviour
     {
         Instance = this;
         playerStats = FindObjectOfType<PlayerStats>();
-
-        if (playerStats == null)
-            Debug.LogError("ActivationService -> No se encontró PlayerStats en la escena");
     }
 
     public void Activate(PowerUpData data)
     {
         if (data == null)
         {
-            Debug.LogError("ActivationService.Activate -> data es null");
+            Debug.LogError("ActivationService -> data es null");
             return;
         }
 
         if (playerStats == null)
+            playerStats = FindObjectOfType<PlayerStats>();
+
+        if (playerStats == null)
         {
-            Debug.LogError("ActivationService.Activate -> playerStats es null");
+            Debug.LogError("ActivationService -> playerStats es null");
             return;
         }
 
-        if (data.effects == null || data.effects.Count == 0)
-        {
-            Debug.LogWarning("La carta " + data.title + " no tiene efectos");
+        if (data.effects == null)
             return;
-        }
 
         foreach (var effect in data.effects)
         {
             if (effect != null)
                 effect.Apply(playerStats);
         }
-
-        Debug.Log("PowerUp activado: " + data.title);
     }
 }

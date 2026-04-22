@@ -17,6 +17,12 @@ public class PlayerHealthSystem : MonoBehaviour
     private bool isInvulnerable;
     private Coroutine invRoutine;
     private float lastHitTime;
+    private PlayerStats playerStats;
+
+    private void Awake()
+    {
+        playerStats = GetComponent<PlayerStats>();
+    }
 
     private void OnEnable()
     {
@@ -30,6 +36,9 @@ public class PlayerHealthSystem : MonoBehaviour
 
     private void Start()
     {
+        if (playerStats != null)
+            lives = playerStats.maxLives;
+
         UpdateLivesUI();
     }
 
