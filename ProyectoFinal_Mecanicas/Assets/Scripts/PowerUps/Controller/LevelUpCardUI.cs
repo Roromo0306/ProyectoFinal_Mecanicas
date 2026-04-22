@@ -33,12 +33,10 @@ public class LevelUpCardUI : MonoBehaviour
             return;
         }
 
-        Debug.Log("Seleccionada: " + data.title);
-
         SelectionService.Instance.selected = data;
         SelectionService.Instance.AddToDeck(data);
 
-        Debug.Log("Cartas en deck tras añadir: " + SelectionService.Instance.deckCards.Count);
+        Debug.Log("Seleccionada -> " + data.title);
 
         UIFlowController.Instance.OpenDeployment();
     }

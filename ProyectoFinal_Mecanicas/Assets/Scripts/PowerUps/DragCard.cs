@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine;
+
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -42,10 +42,11 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (canvasGroup != null)
             canvasGroup.blocksRaycasts = false;
 
-        
-
         if (currentSlot != null)
         {
+            if (SelectionService.Instance != null)
+                SelectionService.Instance.RemoveFromSlot(currentSlot.slotIndex);
+
             currentSlot.ClearSlot();
             currentSlot = null;
         }

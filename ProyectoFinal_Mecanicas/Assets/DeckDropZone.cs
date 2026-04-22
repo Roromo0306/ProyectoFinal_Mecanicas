@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class DeckDropZone : MonoBehaviour, IDropHandler
 {
@@ -13,6 +12,11 @@ public class DeckDropZone : MonoBehaviour, IDropHandler
 
         DragCard dragCard = draggedObject.GetComponent<DragCard>();
         if (dragCard == null) return;
+
+        if (dragCard.currentSlot != null && SelectionService.Instance != null)
+        {
+            SelectionService.Instance.RemoveFromSlot(dragCard.currentSlot.slotIndex);
+        }
 
         dragCard.droppedSuccessfully = true;
         dragCard.ReturnToDeck();

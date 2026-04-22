@@ -7,6 +7,7 @@ public class SelectionService : MonoBehaviour
 
     public PowerUpData selected;
     public List<PowerUpData> deckCards = new List<PowerUpData>();
+    public PowerUpData[] equippedSlots = new PowerUpData[4];
 
     private void Awake()
     {
@@ -22,14 +23,25 @@ public class SelectionService : MonoBehaviour
 
     public void AddToDeck(PowerUpData card)
     {
-        if (card == null)
-        {
-            Debug.LogError("AddToDeck -> card es null");
-            return;
-        }
+        if (card == null) return;
 
         deckCards.Add(card);
-        Debug.Log("Carta añadida al deck: " + card.title + " | Total: " + deckCards.Count);
+        Debug.Log("AddToDeck -> " + card.title + " | Total: " + deckCards.Count);
+    }
+
+    public void EquipToSlot(PowerUpData card, int slotIndex)
+    {
+        if (card == null) return;
+        if (slotIndex < 0 || slotIndex >= equippedSlots.Length) return;
+
+        equippedSlots[slotIndex] = card;
+    }
+
+    public void RemoveFromSlot(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= equippedSlots.Length) return;
+
+        equippedSlots[slotIndex] = null;
     }
 
     public void ClearSelection()

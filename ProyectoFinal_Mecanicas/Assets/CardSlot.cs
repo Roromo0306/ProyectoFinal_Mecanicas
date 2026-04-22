@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class CardSlot : MonoBehaviour, IDropHandler
 {
+    public int slotIndex;
     public bool occupied = false;
     public DragCard currentCard;
 
@@ -40,11 +41,26 @@ public class CardSlot : MonoBehaviour, IDropHandler
         occupied = true;
         currentCard = dragCard;
         dragCard.currentSlot = this;
+
+        if (SelectionService.Instance != null)
+            SelectionService.Instance.EquipToSlot(dragCard.data, slotIndex);
+
+        if (ActivationService.Instance != null)
+            ActivationService.Instance.Activate(dragCard.data);
     }
 
     public void ClearSlot()
     {
         occupied = false;
         currentCard = null;
+    }
+
+    public void ClearVisualOnly()
+    {
+        occupied = false;
+        currentCard = null;
+
+        foreach (Transform child in transform)
+            Destroy(child.gameObject);
     }
 }
