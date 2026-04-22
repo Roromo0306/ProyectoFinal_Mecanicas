@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6772014719577163035}
   - component: {fileID: 5543664409260509665}
   - component: {fileID: 2945422432910242198}
+  - component: {fileID: 7239332879015739471}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -181,6 +182,33 @@ MonoBehaviour:
   droppedSuccessfully: 0
   currentSlot: {fileID: 0}
   deckParent: {fileID: 0}
+--- !u!114 &7239332879015739471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4995290879565325688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b50bfc03f2938f14dbda322b91f83153, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualRoot: {fileID: 1690176825387678833}
+  dragCard: {fileID: 2945422432910242198}
+  enableFloat: 1
+  floatAmplitude: 6
+  floatSpeed: 2.2
+  floatPhaseOffset: 0.35
+  enableTilt: 1
+  maxTiltX: 10
+  maxTiltY: 10
+  tiltSmooth: 12
+  hoverScale: 1.06
+  scaleSmooth: 10
+  hoverLift: 12
+  idleRockAmount: 3
+  idleRockSpeed: 1.6
 --- !u!1 &5006147905281967656
 GameObject:
   m_ObjectHideFlags: 0

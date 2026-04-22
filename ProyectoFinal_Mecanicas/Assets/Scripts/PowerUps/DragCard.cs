@@ -14,18 +14,35 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     [HideInInspector] public CardSlot currentSlot = null;
     [HideInInspector] public Transform deckParent = null;
 
+    private Vector2 originalSizeDelta;
+    private bool originalSizeSaved = false;
+
+    private bool isDragging;
+
+
+    public bool IsDragging()
+    {
+        return isDragging;
+    }
+
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-    }
 
+        originalSizeDelta = rectTransform.sizeDelta;
+        originalSizeSaved = true;
+    }
     public void OnBeginDrag(PointerEventData eventData)
     {
         droppedSuccessfully = false;
+        isDragging = true;
 
         if (canvasGroup != null)
             canvasGroup.blocksRaycasts = false;
+
+        
 
         if (currentSlot != null)
         {
@@ -41,6 +58,8 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        isDragging = false;
+
         if (canvasGroup != null)
             canvasGroup.blocksRaycasts = true;
 
@@ -52,17 +71,29 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void ReturnToDeck()
     {
+
         if (deckParent == null)
         {
             Debug.LogError("DragCard -> deckParent es null");
             return;
         }
-
-        transform.SetParent(deckParent, false);
-
         LayoutElement le = GetComponent<LayoutElement>();
         if (le != null)
+        {
             le.ignoreLayout = false;
+            le.preferredWidth = 180;
+            le.preferredHeight = 240;
+        }
+        transform.SetParent(deckParent, false);
+
+        CardBalatroVisual visual = GetComponent<CardBalatroVisual>();
+        if (visual != null)
+            visual.ResetVisual();
+
+        if (le != null)
+            le.ignoreLayout = false;
+
+       
 
         rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
@@ -70,6 +101,9 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         rectTransform.anchoredPosition = Vector2.zero;
         rectTransform.localRotation = Quaternion.identity;
         rectTransform.localScale = Vector3.one;
+
+        if (originalSizeSaved)
+            rectTransform.sizeDelta = originalSizeDelta;
 
         currentSlot = null;
     }
