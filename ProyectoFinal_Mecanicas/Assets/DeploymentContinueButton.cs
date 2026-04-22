@@ -6,6 +6,12 @@ public class DeploymentContinueButton : MonoBehaviour
 
     public void Continue()
     {
+        if (flow == null)
+        {
+            Debug.LogError("DeploymentContinueButton -> flow es null");
+            return;
+        }
+
         flow.CloseDeployment();
     }
 }

@@ -39,10 +39,10 @@ RectTransform:
   - {fileID: 3665689686176784627}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 39, y: -46}
-  m_SizeDelta: {x: -1696.4569, y: -663.6506}
+  m_SizeDelta: {x: 200, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8602429558742205738
 CanvasRenderer:
@@ -178,6 +178,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 0}
+  droppedSuccessfully: 0
+  currentSlot: {fileID: 0}
+  deckParent: {fileID: 0}
 --- !u!1 &5006147905281967656
 GameObject:
   m_ObjectHideFlags: 0

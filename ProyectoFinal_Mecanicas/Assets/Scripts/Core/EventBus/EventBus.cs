@@ -18,7 +18,9 @@ public static class EventBus
     {
         var type = typeof(T);
         if (events.ContainsKey(type))
+        {
             events[type] -= listener;
+        }
     }
 
     public static void Publish<T>(T evt)

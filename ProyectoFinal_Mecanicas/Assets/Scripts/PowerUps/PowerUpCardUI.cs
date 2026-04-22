@@ -14,13 +14,13 @@ public class PowerUpCardUI : MonoBehaviour
     {
         this.data = data;
 
-        icon.sprite = data.icon;
-        title.text = data.title;
-        description.text = data.description;
+        if (icon != null) icon.sprite = data.icon;
+        if (title != null) title.text = data.title;
+        if (description != null) description.text = data.description;
     }
 
-    public void OnClick()
+    public PowerUpData GetData()
     {
-        SelectionService.Instance.selected = data;
+        return data;
     }
 }

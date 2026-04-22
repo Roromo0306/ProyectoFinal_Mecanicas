@@ -7,25 +7,52 @@ public class DeploymentLoader : MonoBehaviour
 
     public void Init()
     {
-        LoadCard();
+        LoadDeck();
     }
 
-    void LoadCard()
+    void LoadDeck()
     {
-        Debug.Log("Instance: " + SelectionService.Instance);
-        Debug.Log("Selected: " + SelectionService.Instance?.selected);
-        Debug.Log("Prefab: " + cardPrefab);
-        Debug.Log("Parent: " + deckParent);
+        if (SelectionService.Instance == null)
+        {
+            Debug.LogError("SelectionService.Instance es null");
+            return;
+        }
 
-        var data = SelectionService.Instance.selected;
+        foreach (Transform child in deckParent)
+            Destroy(child.gameObject);
 
-        var card = Instantiate(cardPrefab, deckParent);
-        Debug.Log("SELECTED: " + SelectionService.Instance.selected);
-        card.GetComponent<DragCard>().data = data;
+        var deckCards = SelectionService.Instance.deckCards;
 
-        Debug.Log("DEPLOYMENT LOAD");
-        Debug.Log("Selected: " + SelectionService.Instance.selected);
-        Debug.Log("Prefab: " + cardPrefab);
-        Debug.Log("Parent: " + deckParent);
+        if (deckCards == null || deckCards.Count == 0)
+        {
+            Debug.LogWarning("No hay cartas en el deck");
+            return;
+        }
+
+        foreach (var data in deckCards)
+        {
+            var card = Instantiate(cardPrefab, deckParent);
+
+            var drag = card.GetComponent<DragCard>();
+            if (drag != null)
+            {
+                drag.data = data;
+                drag.deckParent = deckParent;
+            }
+
+            var levelUpUI = card.GetComponent<LevelUpCardUI>();
+            if (levelUpUI != null)
+                levelUpUI.Setup(data);
+
+            var deckUI = card.GetComponent<DeckCardUI>();
+            if (deckUI != null)
+                deckUI.Setup(data);
+
+            var powerUpUI = card.GetComponent<PowerUpCardUI>();
+            if (powerUpUI != null)
+                powerUpUI.Setup(data);
+        }
+
+        Debug.Log("Deck cargado con " + deckCards.Count + " cartas");
     }
 }

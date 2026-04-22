@@ -9,41 +9,36 @@ public class UIFlowController : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
+
+        Instance = this;
     }
 
     public void OpenLevelUp()
     {
-        levelUpPanel.SetActive(true);
-        deploymentPanel.SetActive(false);
+        if (levelUpPanel != null) levelUpPanel.SetActive(true);
+        if (deploymentPanel != null) deploymentPanel.SetActive(false);
     }
 
     public void OpenDeployment()
     {
-        var dp = deploymentPanel;
-        var lp = levelUpPanel;
-
-        if (!dp || !lp)
+        if (deploymentPanel == null || levelUpPanel == null)
         {
             Debug.LogError("REFERENCIAS ROTAS EN RUNTIME");
             return;
         }
 
-        lp.SetActive(false);
-        dp.SetActive(true);
+        levelUpPanel.SetActive(false);
+        deploymentPanel.SetActive(true);
 
-        var loader = dp.GetComponent<DeploymentLoader>();
-        if (!loader)
+        var loader = deploymentPanel.GetComponent<DeploymentLoader>();
+        if (loader == null)
         {
-            Debug.LogError("DeploymentLoader NO está en el panel activo");
+            Debug.LogError("DeploymentLoader no está en deploymentPanel");
             return;
         }
 
@@ -52,8 +47,11 @@ public class UIFlowController : MonoBehaviour
 
     public void CloseDeployment()
     {
-        deploymentPanel.SetActive(false);
-        levelUpPanel.SetActive(false);
+        if (deploymentPanel != null) deploymentPanel.SetActive(false);
+        if (levelUpPanel != null) levelUpPanel.SetActive(false);
+
+        if (SelectionService.Instance != null)
+            SelectionService.Instance.ClearSelection();
 
         Time.timeScale = 1f;
     }

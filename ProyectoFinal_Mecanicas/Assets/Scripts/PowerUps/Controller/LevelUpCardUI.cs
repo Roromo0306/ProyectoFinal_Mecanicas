@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class LevelUpCardUI : MonoBehaviour
 {
@@ -14,17 +13,33 @@ public class LevelUpCardUI : MonoBehaviour
     public void Setup(PowerUpData d)
     {
         data = d;
-        icon.sprite = d.icon;
-        title.text = d.title;
-        desc.text = d.description;
+
+        if (icon != null) icon.sprite = d.icon;
+        if (title != null) title.text = d.title;
+        if (desc != null) desc.text = d.description;
     }
 
     public void Select()
     {
-        Debug.Log("INSTANCE: " + SelectionService.Instance);
-        Debug.Log("DATA: " + data);
+        if (data == null)
+        {
+            Debug.LogError("LevelUpCardUI.Select -> data es null");
+            return;
+        }
+
+        if (SelectionService.Instance == null)
+        {
+            Debug.LogError("SelectionService.Instance es null");
+            return;
+        }
+
+        Debug.Log("Seleccionada: " + data.title);
+
         SelectionService.Instance.selected = data;
-        Debug.Log(UIFlowController.Instance);
+        SelectionService.Instance.AddToDeck(data);
+
+        Debug.Log("Cartas en deck tras añadir: " + SelectionService.Instance.deckCards.Count);
+
         UIFlowController.Instance.OpenDeployment();
     }
 }

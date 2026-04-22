@@ -7,7 +7,6 @@ public class LevelUpUI : MonoBehaviour
     public GameObject panel;
     public Transform cardContainer;
     public GameObject cardPrefab;
-
     public List<PowerUpData> allPowerUps;
 
     private void OnEnable()
@@ -31,22 +30,38 @@ public class LevelUpUI : MonoBehaviour
         panel.SetActive(true);
         Time.timeScale = 0;
 
+        ClearCards();
+
+        RectTransform rt = panel.GetComponent<RectTransform>();
+        rt.anchoredPosition = new Vector2(0, 800);
+
         yield return MovePanel();
 
+        List<PowerUpData> pool = new List<PowerUpData>(allPowerUps);
         List<PowerUpData> selection = new();
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 3 && pool.Count > 0; i++)
         {
-            var random = allPowerUps[Random.Range(0, allPowerUps.Count)];
-            selection.Add(random);
+            int index = Random.Range(0, pool.Count);
+            selection.Add(pool[index]);
+            pool.RemoveAt(index);
         }
 
         foreach (var data in selection)
         {
             var card = Instantiate(cardPrefab, cardContainer);
-            card.GetComponent<LevelUpCardUI>().Setup(data);
+            var ui = card.GetComponent<LevelUpCardUI>();
+            if (ui != null)
+                ui.Setup(data);
+
             yield return new WaitForSecondsRealtime(0.2f);
         }
+    }
+
+    void ClearCards()
+    {
+        foreach (Transform child in cardContainer)
+            Destroy(child.gameObject);
     }
 
     IEnumerator MovePanel()

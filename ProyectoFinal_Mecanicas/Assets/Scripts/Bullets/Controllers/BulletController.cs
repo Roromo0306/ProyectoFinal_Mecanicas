@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour
@@ -6,10 +7,17 @@ public class BulletController : MonoBehaviour
     public float lifetime = 3f;
 
     private Vector3 direction;
+    private float damage;
+    private int remainingHits;
 
-    public void Init(Vector3 dir)
+    private HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
+
+    public void Init(Vector3 dir, float bulletDamage, int pierceCount)
     {
-        direction = dir;
+        direction = dir.normalized;
+        damage = bulletDamage;
+        remainingHits = pierceCount;
+
         Destroy(gameObject, lifetime);
     }
 
@@ -20,7 +28,26 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        EventBus.Publish(new EnemyHitEvent(collision.gameObject));
-        Destroy(gameObject);
+        if (collision == null) return;
+
+        GameObject target = collision.gameObject;
+
+        if (hitEnemies.Contains(target))
+            return;
+
+        EnemyHealthSystem enemy = target.GetComponent<EnemyHealthSystem>();
+        if (enemy == null)
+            return;
+
+        hitEnemies.Add(target);
+
+        EventBus.Publish(new EnemyHitEvent(target, damage));
+
+        remainingHits--;
+
+        if (remainingHits <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }

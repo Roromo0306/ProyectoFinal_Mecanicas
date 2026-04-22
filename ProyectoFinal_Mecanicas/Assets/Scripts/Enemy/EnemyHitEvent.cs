@@ -3,9 +3,11 @@ using UnityEngine;
 public struct EnemyHitEvent
 {
     public GameObject enemy;
+    public float damage;
 
-    public EnemyHitEvent(GameObject e)
+    public EnemyHitEvent(GameObject enemy, float damage)
     {
-        enemy = e;
+        this.enemy = enemy;
+        this.damage = damage;
     }
 }

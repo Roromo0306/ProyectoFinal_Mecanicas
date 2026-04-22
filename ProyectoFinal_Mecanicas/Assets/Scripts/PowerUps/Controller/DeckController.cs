@@ -15,8 +15,20 @@ public class DeckController : MonoBehaviour
         {
             GameObject card = Instantiate(cardPrefab, container);
 
-            var ui = card.GetComponent<DragCard>();
-            ui.data = data;
+            var drag = card.GetComponent<DragCard>();
+            if (drag != null)
+            {
+                drag.data = data;
+                drag.deckParent = container;
+            }
+
+            var powerUpUI = card.GetComponent<PowerUpCardUI>();
+            if (powerUpUI != null)
+                powerUpUI.Setup(data);
+
+            var deckUI = card.GetComponent<DeckCardUI>();
+            if (deckUI != null)
+                deckUI.Setup(data);
         }
     }
 }

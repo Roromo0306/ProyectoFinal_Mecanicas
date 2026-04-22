@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3972945690307517229}
   - component: {fileID: 2242711617160906065}
   - component: {fileID: -759748569323462703}
+  - component: {fileID: 3149428824222267399}
   m_Layer: 0
   m_Name: XPPrefab
   m_TagString: Untagged
@@ -147,3 +148,16 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &3149428824222267399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460968092890710249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9651c62115b67146aededad8d4f1151, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 7

@@ -4,6 +4,16 @@ public class BulletSpawner : MonoBehaviour
 {
     public GameObject bulletPrefab;
 
+    private PlayerStats playerStats;
+
+    private void Awake()
+    {
+        playerStats = FindObjectOfType<PlayerStats>();
+
+        if (playerStats == null)
+            Debug.LogError("BulletSpawner -> No se encontró PlayerStats");
+    }
+
     private void OnEnable()
     {
         EventBus.Subscribe<ShootEvent>(OnShoot);
@@ -18,7 +28,27 @@ public class BulletSpawner : MonoBehaviour
     {
         var e = (ShootEvent)evt;
 
-        var bullet = Instantiate(bulletPrefab, e.position, Quaternion.identity);
-        bullet.GetComponent<BulletController>().Init(e.direction);
+        if (bulletPrefab == null)
+        {
+            Debug.LogError("BulletSpawner -> bulletPrefab es null");
+            return;
+        }
+
+        if (playerStats == null)
+        {
+            Debug.LogError("BulletSpawner -> playerStats es null");
+            return;
+        }
+
+        var bulletObj = Instantiate(bulletPrefab, e.position, Quaternion.identity);
+
+        BulletController bullet = bulletObj.GetComponent<BulletController>();
+        if (bullet == null)
+        {
+            Debug.LogError("La bala no tiene BulletController");
+            return;
+        }
+
+        bullet.Init(e.direction, playerStats.damage, playerStats.pierceCount);
     }
 }
