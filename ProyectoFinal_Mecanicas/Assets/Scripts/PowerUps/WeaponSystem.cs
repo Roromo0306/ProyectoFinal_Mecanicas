@@ -61,7 +61,14 @@ public class WeaponSystem : MonoBehaviour
      playerStats.bounceSearchRadius,
      playerStats.hasExplodingBullets,
      playerStats.explosionRadius,
-     playerStats.explosionDamageMultiplier
+     playerStats.explosionDamageMultiplier,
+    playerStats.hasFreezeBullets,
+    playerStats.freezeDuration,
+    playerStats.freezeSlowMultiplier,
+    playerStats.hasBurnBullets,
+    playerStats.burnDuration,
+    playerStats.burnTickDamage,
+    playerStats.burnTickInterval
  );
     }
 

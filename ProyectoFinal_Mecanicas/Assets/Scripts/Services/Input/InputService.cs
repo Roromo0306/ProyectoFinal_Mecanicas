@@ -22,4 +22,9 @@ public class InputService : IInputService
     {
         return Input.GetMouseButton(0);
     }
+    public bool GetDash()
+    {
+        return Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
+    }
+
 }

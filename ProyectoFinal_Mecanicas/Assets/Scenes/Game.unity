@@ -521,7 +521,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8.79228
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -865,7 +865,7 @@ MonoBehaviour:
   rampDuration: 60
   peakDuration: 180
   cooldownDuration: 60
-  spawnDistance: 11
+  spawnDistance: 20
 --- !u!4 &315368618
 Transform:
   m_ObjectHideFlags: 0
@@ -6631,7 +6631,7 @@ MonoBehaviour:
   rampDuration: 60
   peakDuration: 180
   cooldownDuration: 60
-  spawnDistance: 11
+  spawnDistance: 20
 --- !u!4 &686504495
 Transform:
   m_ObjectHideFlags: 0
@@ -6814,6 +6814,8 @@ GameObject:
   - component: {fileID: 963126773}
   - component: {fileID: 963126774}
   - component: {fileID: 963126775}
+  - component: {fileID: 963126776}
+  - component: {fileID: 963126777}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -6914,11 +6916,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lives: 3
-  invulnerabilityTime: 0.5
   hitCooldown: 0.2
   livesText: {fileID: 1227978235}
-  hitParticles: {fileID: 469160666}
-  spriteRenderer: {fileID: 18641331}
 --- !u!114 &963126771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6945,6 +6944,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 963126768}
   firePoint: {fileID: 368049260}
+  spriteRenderer: {fileID: 18641331}
+  dashTrail: {fileID: 0}
 --- !u!114 &963126773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6971,20 +6972,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   pierceCount: 1
-  fireCooldown: 0.3
+  fireCooldown: 0.6
   hasSpreadShot: 0
   spreadAngle: 20
-  moveSpeed: 5
-  dashCooldown: 1.5
-  dashDuration: 0.2
-  dashSpeedMultiplier: 2.5
-  maxLives: 3
-  magnetRadius: 2
   bounceCount: 0
   bounceSearchRadius: 6
   hasExplodingBullets: 0
   explosionRadius: 2.5
   explosionDamageMultiplier: 1
+  hasFreezeBullets: 0
+  freezeDuration: 2
+  freezeSlowMultiplier: 0.4
+  hasBurnBullets: 0
+  burnDuration: 3
+  burnTickDamage: 0.2
+  burnTickInterval: 0.4
+  moveSpeed: 5
+  maxLives: 3
+  magnetRadius: 2
+  hasDash: 0
+  dashSpeed: 18
+  dashDuration: 0.2
+  dashCooldown: 1.5
+  hasRadialWeapon: 0
+  radialOrbitRadius: 2.5
+  radialOrbitSpeed: 250
+  radialDamageMultiplier: 2
+  hasAttackPet: 0
+  hasSupportPet: 0
+  petOrbitRadius: 2.2
+  petOrbitSpeed: 160
 --- !u!114 &963126775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6997,6 +7014,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e30354154e8803e44914ecfa5e55ec84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &963126776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963126766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682880612cba84c49b293eb283a16a92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radialWeaponPrefab: {fileID: 5730420686704500869, guid: 19a252d7328522a468c7f266eac46f28, type: 3}
+--- !u!114 &963126777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963126766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ed3b65311825634c99c983a3f9c054a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackPetPrefab: {fileID: 2972187758541132346, guid: eeb809e887f78e84ea2faa42bde65751, type: 3}
+  supportPetPrefab: {fileID: 3125143055084087038, guid: 3072a740ccc8bec41a2e8a30a6248ede, type: 3}
 --- !u!1 &990782318
 GameObject:
   m_ObjectHideFlags: 0
@@ -7430,7 +7474,7 @@ MonoBehaviour:
   rampDuration: 60
   peakDuration: 180
   cooldownDuration: 60
-  spawnDistance: 11
+  spawnDistance: 20
 --- !u!4 &1290505631
 Transform:
   m_ObjectHideFlags: 0
@@ -7914,6 +7958,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3d99b3b5d506cf84e939af7fc2bae898, type: 2}
   - {fileID: 11400000, guid: 4e41479bf2d2d03429420574d54c3555, type: 2}
   - {fileID: 11400000, guid: 44b3829fe19f4ce4b99232624d26f7f3, type: 2}
+  - {fileID: 11400000, guid: 784a3ec83f407fc4b9a4eb7251e79a59, type: 2}
+  - {fileID: 11400000, guid: 2df8c3b1229fdc84ea09d32914a3f531, type: 2}
+  - {fileID: 11400000, guid: 68b1b8329dd3b454aa3d4cb5f4079ab8, type: 2}
+  - {fileID: 11400000, guid: 45f476a237f5c45429897766f434992b, type: 2}
+  - {fileID: 11400000, guid: 1cdf5d76448b6e34dbd009f83b8a4634, type: 2}
+  - {fileID: 11400000, guid: e5d1d9113132b2647bd0302b2facb506, type: 2}
+  - {fileID: 11400000, guid: fa57204d1d43b034b9a68b5075c07024, type: 2}
+  - {fileID: 11400000, guid: 83452dcab3945b9448960c25be50999f, type: 2}
+  - {fileID: 11400000, guid: 2d240854ddaeea249ae82d01343063f0, type: 2}
 --- !u!1 &1619590192
 GameObject:
   m_ObjectHideFlags: 0

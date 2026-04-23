@@ -18,6 +18,15 @@ public class BulletController : MonoBehaviour
     private float explosionRadius;
     private float explosionDamageMultiplier;
 
+    private bool hasFreeze;
+    private float freezeDuration;
+    private float freezeSlowMultiplier;
+
+    private bool hasBurn;
+    private float burnDuration;
+    private float burnTickDamage;
+    private float burnTickInterval;
+
     private HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
 
     public void Init(
@@ -28,7 +37,14 @@ public class BulletController : MonoBehaviour
         float searchRadius,
         bool exploding,
         float explosionRadiusValue,
-        float explosionDamageMultiplierValue
+        float explosionDamageMultiplierValue,
+        bool freezing,
+        float freezeDurationValue,
+        float freezeSlowMultiplierValue,
+        bool burning,
+        float burnDurationValue,
+        float burnTickDamageValue,
+        float burnTickIntervalValue
     )
     {
         direction = dir.normalized;
@@ -41,6 +57,15 @@ public class BulletController : MonoBehaviour
         hasExplosion = exploding;
         explosionRadius = explosionRadiusValue;
         explosionDamageMultiplier = explosionDamageMultiplierValue;
+
+        hasFreeze = freezing;
+        freezeDuration = freezeDurationValue;
+        freezeSlowMultiplier = freezeSlowMultiplierValue;
+
+        hasBurn = burning;
+        burnDuration = burnDurationValue;
+        burnTickDamage = burnTickDamageValue;
+        burnTickInterval = burnTickIntervalValue;
 
         Destroy(gameObject, lifetime);
     }
@@ -65,18 +90,19 @@ public class BulletController : MonoBehaviour
 
         hitEnemies.Add(target);
 
-        // daño al objetivo directo
         EventBus.Publish(new EnemyHitEvent(target, damage));
 
-        // explosión
+        if (hasFreeze)
+            ApplyFreeze(target);
+
+        if (hasBurn)
+            ApplyBurn(target);
+
         if (hasExplosion)
-        {
             Explode(target);
-        }
 
         remainingHits--;
 
-        // intentar rebote
         if (remainingBounces > 0)
         {
             GameObject nextTarget = FindNextEnemy(target);
@@ -87,14 +113,30 @@ public class BulletController : MonoBehaviour
 
                 Vector3 newDir = (nextTarget.transform.position - transform.position).normalized;
                 direction = newDir;
-
-                Debug.Log("Bounce hacia -> " + nextTarget.name + " | Bounces restantes: " + remainingBounces);
             }
         }
 
         if (remainingHits <= 0)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void ApplyFreeze(GameObject target)
+    {
+        EnemyInstaller enemyInstaller = target.GetComponent<EnemyInstaller>();
+        if (enemyInstaller != null)
+        {
+            enemyInstaller.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
+        }
+    }
+
+    private void ApplyBurn(GameObject target)
+    {
+        EnemyInstaller enemyInstaller = target.GetComponent<EnemyInstaller>();
+        if (enemyInstaller != null)
+        {
+            enemyInstaller.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
         }
     }
 
@@ -108,10 +150,10 @@ public class BulletController : MonoBehaviour
                 Quaternion.identity
             );
 
-            // opcional: escalar según radio
-            float scale = explosionRadius;
+            float scale = explosionRadius * 0.6f;
             fx.transform.localScale = Vector3.one * scale;
         }
+
         Collider2D[] hits = Physics2D.OverlapCircleAll(mainTarget.transform.position, explosionRadius);
 
         float explosionDamage = damage * explosionDamageMultiplier;
@@ -128,9 +170,13 @@ public class BulletController : MonoBehaviour
             if (enemy == null) continue;
 
             EventBus.Publish(new EnemyHitEvent(candidate, explosionDamage));
-        }
 
-        Debug.Log("Explosión en " + mainTarget.name + " | Radio: " + explosionRadius);
+            if (hasFreeze)
+                ApplyFreeze(candidate);
+
+            if (hasBurn)
+                ApplyBurn(candidate);
+        }
     }
 
     private GameObject FindNextEnemy(GameObject currentTarget)
@@ -162,14 +208,5 @@ public class BulletController : MonoBehaviour
         }
 
         return closestEnemy;
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, bounceSearchRadius);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }

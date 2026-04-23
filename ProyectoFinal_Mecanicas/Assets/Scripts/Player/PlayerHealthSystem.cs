@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 
@@ -15,6 +14,7 @@ public class PlayerHealthSystem : MonoBehaviour
     public SpriteRenderer spriteRenderer;
 
     private bool isInvulnerable;
+    private bool externalInvulnerable;
     private Coroutine invRoutine;
     private float lastHitTime;
     private PlayerStats playerStats;
@@ -44,7 +44,7 @@ public class PlayerHealthSystem : MonoBehaviour
 
     private void OnHit(object evt)
     {
-        if (isInvulnerable)
+        if (isInvulnerable || externalInvulnerable)
             return;
 
         if (Time.time - lastHitTime < hitCooldown)
@@ -87,18 +87,40 @@ public class PlayerHealthSystem : MonoBehaviour
 
         while (elapsed < invulnerabilityTime)
         {
-            spriteRenderer.color = Color.red;
+            if (spriteRenderer != null)
+                spriteRenderer.color = Color.red;
+
             yield return new WaitForSeconds(0.1f);
 
-            spriteRenderer.color = Color.white;
+            if (spriteRenderer != null)
+                spriteRenderer.color = Color.white;
+
             yield return new WaitForSeconds(0.1f);
 
             elapsed += 0.2f;
         }
 
-        spriteRenderer.color = Color.white;
+        if (spriteRenderer != null)
+            spriteRenderer.color = Color.white;
+
         isInvulnerable = false;
         invRoutine = null;
+    }
+
+    public void AddLives(int amount)
+    {
+        lives += amount;
+
+        if (playerStats != null)
+            lives = Mathf.Min(lives, playerStats.maxLives);
+
+        UpdateLivesUI();
+        Debug.Log("Vidas actuales: " + lives + " / " + (playerStats != null ? playerStats.maxLives : lives));
+    }
+
+    public void SetExternalInvulnerable(bool value)
+    {
+        externalInvulnerable = value;
     }
 
     private void UpdateLivesUI()

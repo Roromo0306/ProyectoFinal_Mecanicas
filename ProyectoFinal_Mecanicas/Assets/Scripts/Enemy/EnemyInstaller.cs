@@ -42,4 +42,14 @@ public class EnemyInstaller : MonoBehaviour
             20f
         );
     }
+
+    public void ApplyFreeze(float duration, float slowMultiplier)
+    {
+        controller.ApplyFreeze(duration, slowMultiplier);
+    }
+
+    public void ApplyBurn(float duration, float tickDamage, float tickInterval)
+    {
+        controller.ApplyBurn(duration, tickDamage, tickInterval);
+    }
 }
