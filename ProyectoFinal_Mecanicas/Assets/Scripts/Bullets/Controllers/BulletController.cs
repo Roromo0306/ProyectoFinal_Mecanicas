@@ -5,7 +5,6 @@ public class BulletController : MonoBehaviour
 {
     public float speed = 10f;
     public float lifetime = 3f;
-
     public GameObject explosionParticlePrefab;
 
     private Vector3 direction;
@@ -27,7 +26,7 @@ public class BulletController : MonoBehaviour
     private float burnTickDamage;
     private float burnTickInterval;
 
-    private HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
+    private HashSet<GameObject> hitRoots = new HashSet<GameObject>();
 
     public void Init(
         Vector3 dir,
@@ -77,66 +76,105 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision == null) return;
+        HandleHit(collision.gameObject);
+    }
 
-        GameObject target = collision.gameObject;
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        HandleHit(collision.gameObject);
+    }
 
-        if (hitEnemies.Contains(target))
+    private void HandleHit(GameObject hitObject)
+    {
+        if (hitObject == null) return;
+
+        GameObject enemyRoot = GetEnemyRoot(hitObject);
+        if (enemyRoot == null) return;
+
+        if (hitRoots.Contains(enemyRoot))
             return;
 
-        EnemyHealthSystem enemy = target.GetComponent<EnemyHealthSystem>();
-        if (enemy == null)
-            return;
+        hitRoots.Add(enemyRoot);
 
-        hitEnemies.Add(target);
-
-        EventBus.Publish(new EnemyHitEvent(target, damage));
-
-        if (hasFreeze)
-            ApplyFreeze(target);
-
-        if (hasBurn)
-            ApplyBurn(target);
+        DamageEnemy(enemyRoot, damage);
+        ApplyStatuses(enemyRoot);
 
         if (hasExplosion)
-            Explode(target);
+            Explode(enemyRoot);
 
         remainingHits--;
 
         if (remainingBounces > 0)
         {
-            GameObject nextTarget = FindNextEnemy(target);
+            GameObject nextTarget = FindNextEnemy(enemyRoot);
 
             if (nextTarget != null)
             {
                 remainingBounces--;
-
-                Vector3 newDir = (nextTarget.transform.position - transform.position).normalized;
-                direction = newDir;
+                direction = (nextTarget.transform.position - transform.position).normalized;
             }
         }
 
         if (remainingHits <= 0)
-        {
             Destroy(gameObject);
+    }
+
+    private GameObject GetEnemyRoot(GameObject obj)
+    {
+        if (obj == null) return null;
+
+        EnemyHealthSystem normal = obj.GetComponentInParent<EnemyHealthSystem>();
+        if (normal != null)
+            return normal.gameObject;
+
+        EliteEnemyHealth elite = obj.GetComponentInParent<EliteEnemyHealth>();
+        if (elite != null)
+            return elite.gameObject;
+
+        return null;
+    }
+
+    private void DamageEnemy(GameObject enemyRoot, float amount)
+    {
+        if (enemyRoot == null) return;
+
+        EnemyHealthSystem normal = enemyRoot.GetComponentInParent<EnemyHealthSystem>();
+        if (normal != null)
+        {
+            normal.TakeDamage(amount);
+            return;
+        }
+
+        EliteEnemyHealth elite = enemyRoot.GetComponentInParent<EliteEnemyHealth>();
+        if (elite != null)
+        {
+            elite.TakeDamage(amount);
+            return;
         }
     }
 
-    private void ApplyFreeze(GameObject target)
+    private void ApplyStatuses(GameObject enemyRoot)
     {
-        EnemyInstaller enemyInstaller = target.GetComponent<EnemyInstaller>();
-        if (enemyInstaller != null)
+        if (hasFreeze)
         {
-            enemyInstaller.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
-        }
-    }
+            EnemyInstaller normalInstaller = enemyRoot.GetComponent<EnemyInstaller>();
+            if (normalInstaller != null)
+                normalInstaller.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
 
-    private void ApplyBurn(GameObject target)
-    {
-        EnemyInstaller enemyInstaller = target.GetComponent<EnemyInstaller>();
-        if (enemyInstaller != null)
+            EliteEnemyController eliteController = enemyRoot.GetComponent<EliteEnemyController>();
+            if (eliteController != null)
+                eliteController.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
+        }
+
+        if (hasBurn)
         {
-            enemyInstaller.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
+            EnemyInstaller normalInstaller = enemyRoot.GetComponent<EnemyInstaller>();
+            if (normalInstaller != null)
+                normalInstaller.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
+
+            EliteEnemyController eliteController = enemyRoot.GetComponent<EliteEnemyController>();
+            if (eliteController != null)
+                eliteController.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
         }
     }
 
@@ -144,38 +182,23 @@ public class BulletController : MonoBehaviour
     {
         if (explosionParticlePrefab != null)
         {
-            GameObject fx = Instantiate(
-                explosionParticlePrefab,
-                mainTarget.transform.position,
-                Quaternion.identity
-            );
-
-            float scale = explosionRadius * 0.6f;
-            fx.transform.localScale = Vector3.one * scale;
+            GameObject fx = Instantiate(explosionParticlePrefab, mainTarget.transform.position, Quaternion.identity);
+            fx.transform.localScale = Vector3.one * explosionRadius * 0.6f;
         }
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(mainTarget.transform.position, explosionRadius);
-
         float explosionDamage = damage * explosionDamageMultiplier;
 
         foreach (Collider2D hit in hits)
         {
             if (hit == null) continue;
 
-            GameObject candidate = hit.gameObject;
+            GameObject enemyRoot = GetEnemyRoot(hit.gameObject);
+            if (enemyRoot == null) continue;
+            if (enemyRoot == mainTarget) continue;
 
-            if (candidate == mainTarget) continue;
-
-            EnemyHealthSystem enemy = candidate.GetComponent<EnemyHealthSystem>();
-            if (enemy == null) continue;
-
-            EventBus.Publish(new EnemyHitEvent(candidate, explosionDamage));
-
-            if (hasFreeze)
-                ApplyFreeze(candidate);
-
-            if (hasBurn)
-                ApplyBurn(candidate);
+            DamageEnemy(enemyRoot, explosionDamage);
+            ApplyStatuses(enemyRoot);
         }
     }
 
@@ -190,20 +213,17 @@ public class BulletController : MonoBehaviour
         {
             if (hit == null) continue;
 
-            GameObject candidate = hit.gameObject;
+            GameObject enemyRoot = GetEnemyRoot(hit.gameObject);
+            if (enemyRoot == null) continue;
+            if (enemyRoot == currentTarget) continue;
+            if (hitRoots.Contains(enemyRoot)) continue;
 
-            if (candidate == currentTarget) continue;
-            if (hitEnemies.Contains(candidate)) continue;
-
-            EnemyHealthSystem enemy = candidate.GetComponent<EnemyHealthSystem>();
-            if (enemy == null) continue;
-
-            float distance = Vector2.Distance(transform.position, candidate.transform.position);
+            float distance = Vector2.Distance(transform.position, enemyRoot.transform.position);
 
             if (distance < closestDistance)
             {
                 closestDistance = distance;
-                closestEnemy = candidate;
+                closestEnemy = enemyRoot;
             }
         }
 

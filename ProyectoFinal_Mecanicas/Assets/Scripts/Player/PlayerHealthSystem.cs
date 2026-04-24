@@ -128,4 +128,26 @@ public class PlayerHealthSystem : MonoBehaviour
         if (livesText != null)
             livesText.text = lives.ToString();
     }
+
+    public void ForceDamage()
+    {
+        if (isInvulnerable || externalInvulnerable)
+            return;
+
+        if (Time.time - lastHitTime < hitCooldown)
+            return;
+
+        lastHitTime = Time.time;
+
+        lives--;
+        UpdateLivesUI();
+
+        if (lives <= 0)
+        {
+            Debug.Log("Game Over");
+            return;
+        }
+
+        StartInvulnerability();
+    }
 }
