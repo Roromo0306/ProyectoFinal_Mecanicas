@@ -7,6 +7,7 @@ public class GameTimer : MonoBehaviour
 
     [SerializeField] private float duration = 900f;
     private float startDuration;
+    private bool victoryTriggered = false;
 
     public float RemainingTime => duration;
     public float ElapsedTime => startDuration - duration;
@@ -18,6 +19,8 @@ public class GameTimer : MonoBehaviour
 
     private void Update()
     {
+        if (victoryTriggered) return;
+
         duration -= Time.deltaTime;
         duration = Mathf.Max(duration, 0f);
 
@@ -26,5 +29,13 @@ public class GameTimer : MonoBehaviour
 
         if (timerText != null)
             timerText.text = $"{minutes:00}:{seconds:00}";
+
+        if (duration <= 0f)
+        {
+            victoryTriggered = true;
+
+            if (EndGameUI.Instance != null)
+                EndGameUI.Instance.ShowWin();
+        }
     }
 }

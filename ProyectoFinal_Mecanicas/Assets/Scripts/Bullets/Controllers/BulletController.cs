@@ -131,6 +131,10 @@ public class BulletController : MonoBehaviour
         if (elite != null)
             return elite.gameObject;
 
+        FinalBossHealth boss = obj.GetComponentInParent<FinalBossHealth>();
+        if (boss != null)
+            return boss.gameObject;
+
         return null;
     }
 
@@ -149,6 +153,13 @@ public class BulletController : MonoBehaviour
         if (elite != null)
         {
             elite.TakeDamage(amount);
+            return;
+        }
+
+        FinalBossHealth boss = enemyRoot.GetComponent<FinalBossHealth>();
+        if (boss != null)
+        {
+            boss.TakeDamage(amount);
             return;
         }
     }

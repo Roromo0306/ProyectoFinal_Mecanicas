@@ -4,8 +4,9 @@ public class EnemyXPDropper : MonoBehaviour
 {
     public GameObject xpPrefab;
 
-    private void OnDestroy()
+    public void DropXP()
     {
+        if (xpPrefab == null) return;
         Instantiate(xpPrefab, transform.position, Quaternion.identity);
     }
 }

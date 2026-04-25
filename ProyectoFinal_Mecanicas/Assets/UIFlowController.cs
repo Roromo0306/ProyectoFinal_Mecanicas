@@ -2,56 +2,44 @@ using UnityEngine;
 
 public class UIFlowController : MonoBehaviour
 {
+    public static UIFlowController Instance;
+
     public GameObject levelUpPanel;
     public GameObject deploymentPanel;
 
-    public static UIFlowController Instance;
-
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         Instance = this;
     }
 
     public void OpenLevelUp()
     {
-        if (levelUpPanel != null) levelUpPanel.SetActive(true);
-        if (deploymentPanel != null) deploymentPanel.SetActive(false);
+        levelUpPanel.SetActive(true);
+        deploymentPanel.SetActive(false);
     }
 
     public void OpenDeployment()
     {
-        if (deploymentPanel == null || levelUpPanel == null)
-        {
-            Debug.LogError("REFERENCIAS ROTAS EN RUNTIME");
-            return;
-        }
+        if (levelUpPanel != null)
+            levelUpPanel.SetActive(false);
 
-        levelUpPanel.SetActive(false);
-        deploymentPanel.SetActive(true);
+        if (deploymentPanel != null)
+            deploymentPanel.SetActive(true);
 
-        var loader = deploymentPanel.GetComponent<DeploymentLoader>();
-        if (loader == null)
-        {
-            Debug.LogError("DeploymentLoader no está en deploymentPanel");
-            return;
-        }
+        DeploymentLoader loader = deploymentPanel.GetComponent<DeploymentLoader>();
+        if (loader != null)
+            loader.Init();
 
-        loader.Init();
+        Time.timeScale = 0f;
     }
 
     public void CloseDeployment()
     {
-        if (deploymentPanel != null) deploymentPanel.SetActive(false);
-        if (levelUpPanel != null) levelUpPanel.SetActive(false);
+        if (deploymentPanel != null)
+            deploymentPanel.SetActive(false);
 
-        if (SelectionService.Instance != null)
-            SelectionService.Instance.ClearSelection();
+        if (levelUpPanel != null)
+            levelUpPanel.SetActive(false);
 
         Time.timeScale = 1f;
     }

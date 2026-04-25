@@ -11,17 +11,24 @@ public class PlayerHealthSystem : MonoBehaviour
 
     public TextMeshProUGUI livesText;
     public ParticleSystem hitParticles;
-    public SpriteRenderer spriteRenderer;
+    private SpriteRenderer spriteRenderer;
 
     private bool isInvulnerable;
     private bool externalInvulnerable;
+    private bool isDead;
+
     private Coroutine invRoutine;
-    private float lastHitTime;
+    private Coroutine flashRoutine;
+
+    private float lastHitTime = -999f;
     private PlayerStats playerStats;
 
     private void Awake()
     {
         playerStats = GetComponent<PlayerStats>();
+
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void OnEnable()
@@ -44,6 +51,19 @@ public class PlayerHealthSystem : MonoBehaviour
 
     private void OnHit(object evt)
     {
+        TakeDamage();
+    }
+
+    public void ForceDamage()
+    {
+        TakeDamage();
+    }
+
+    private void TakeDamage()
+    {
+        if (isDead)
+            return;
+
         if (isInvulnerable || externalInvulnerable)
             return;
 
@@ -53,22 +73,70 @@ public class PlayerHealthSystem : MonoBehaviour
         lastHitTime = Time.time;
 
         lives--;
-        EventBus.Publish(new PlayerHitEvent(transform.position));
         UpdateLivesUI();
 
-        if (hitParticles != null)
-            hitParticles.Emit(3);
-
-        CameraShakeService.Instance?.Shake(0.15f, 0.2f);
-        HitStopService.Instance?.Stop(0.05f);
+        PlayHitFeedback();
 
         if (lives <= 0)
         {
-            Debug.Log("Game Over");
+            StartCoroutine(DeathRoutine());
             return;
         }
 
         StartInvulnerability();
+    }
+
+    private void PlayHitFeedback()
+    {
+        if (hitParticles != null)
+            hitParticles.Emit(3);
+        else
+            Debug.LogWarning("PlayerHealthSystem -> hitParticles no asignado");
+
+        CameraShakeService.Instance?.Shake(0.15f, 0.2f);
+        HitStopService.Instance?.Stop(0.05f);
+
+        if (flashRoutine != null)
+            StopCoroutine(flashRoutine);
+
+        flashRoutine = StartCoroutine(HitFlashRoutine());
+    }
+
+    private IEnumerator HitFlashRoutine()
+    {
+        if (spriteRenderer == null)
+        {
+            Debug.LogWarning("PlayerHealthSystem -> spriteRenderer no asignado");
+            yield break;
+        }
+
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSecondsRealtime(0.08f);
+
+        spriteRenderer.color = Color.white;
+        yield return new WaitForSecondsRealtime(0.08f);
+
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSecondsRealtime(0.08f);
+
+        spriteRenderer.color = Color.white;
+    }
+
+    private IEnumerator DeathRoutine()
+    {
+        if (isDead)
+            yield break;
+
+        isDead = true;
+
+        Debug.Log("Game Over");
+
+        yield return new WaitForSecondsRealtime(0.25f);
+
+        if (EndGameUI.Instance != null)
+            EndGameUI.Instance.ShowLose();
+        else
+            Debug.LogError("EndGameUI.Instance es null");
     }
 
     private void StartInvulnerability()
@@ -90,12 +158,12 @@ public class PlayerHealthSystem : MonoBehaviour
             if (spriteRenderer != null)
                 spriteRenderer.color = Color.red;
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSecondsRealtime(0.1f);
 
             if (spriteRenderer != null)
                 spriteRenderer.color = Color.white;
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSecondsRealtime(0.1f);
 
             elapsed += 0.2f;
         }
@@ -109,12 +177,16 @@ public class PlayerHealthSystem : MonoBehaviour
 
     public void AddLives(int amount)
     {
+        if (isDead)
+            return;
+
         lives += amount;
 
         if (playerStats != null)
             lives = Mathf.Min(lives, playerStats.maxLives);
 
         UpdateLivesUI();
+
         Debug.Log("Vidas actuales: " + lives + " / " + (playerStats != null ? playerStats.maxLives : lives));
     }
 
@@ -127,27 +199,7 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (livesText != null)
             livesText.text = lives.ToString();
-    }
-
-    public void ForceDamage()
-    {
-        if (isInvulnerable || externalInvulnerable)
-            return;
-
-        if (Time.time - lastHitTime < hitCooldown)
-            return;
-
-        lastHitTime = Time.time;
-
-        lives--;
-        UpdateLivesUI();
-
-        if (lives <= 0)
-        {
-            Debug.Log("Game Over");
-            return;
-        }
-
-        StartInvulnerability();
+        else
+            Debug.LogWarning("PlayerHealthSystem -> livesText no asignado");
     }
 }

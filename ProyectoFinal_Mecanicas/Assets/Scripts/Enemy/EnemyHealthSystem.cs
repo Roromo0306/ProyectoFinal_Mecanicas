@@ -42,6 +42,10 @@ public class EnemyHealthSystem : MonoBehaviour
 
     private void Die()
     {
+        EnemyXPDropper dropper = GetComponent<EnemyXPDropper>();
+        if (dropper != null)
+            dropper.DropXP();
+
         Destroy(gameObject);
     }
 }

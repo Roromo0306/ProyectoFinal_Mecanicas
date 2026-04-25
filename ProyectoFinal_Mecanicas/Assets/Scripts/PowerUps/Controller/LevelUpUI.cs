@@ -9,6 +9,16 @@ public class LevelUpUI : MonoBehaviour
     public GameObject cardPrefab;
     public List<PowerUpData> allPowerUps;
 
+    private bool isShowing = false;
+
+    private void Awake()
+    {
+        if (panel != null)
+            panel.SetActive(false);
+
+        ClearCards();
+    }
+
     private void OnEnable()
     {
         EventBus.Subscribe<LevelUpEvent>(OnLevelUp);
@@ -21,7 +31,9 @@ public class LevelUpUI : MonoBehaviour
 
     private void OnLevelUp(object evt)
     {
-        Debug.Log("EVENTO RECIBIDO EN UI");
+        if (isShowing)
+            return;
+
         StartCoroutine(ShowRoutine());
     }
 
@@ -50,33 +62,57 @@ public class LevelUpUI : MonoBehaviour
         foreach (var data in selection)
         {
             var card = Instantiate(cardPrefab, cardContainer);
-            var ui = card.GetComponent<LevelUpCardUI>();
+
+            var ui = card.GetComponentInChildren<LevelUpCardUI>(true);
             if (ui != null)
                 ui.Setup(data);
+
+            var cg = card.GetComponent<CanvasGroup>();
+            if (cg != null)
+            {
+                cg.blocksRaycasts = true;
+                cg.interactable = true;
+            }
 
             yield return new WaitForSecondsRealtime(0.2f);
         }
     }
 
-    void ClearCards()
+    private void ClearCards()
     {
+        if (cardContainer == null) return;
+
         foreach (Transform child in cardContainer)
             Destroy(child.gameObject);
     }
 
-    IEnumerator MovePanel()
+    private IEnumerator MovePanel()
     {
-        float t = 0;
-        Vector3 start = new Vector3(0, 800, 0);
+        float t = 0f;
+        Vector3 start = new Vector3(0f, 800f, 0f);
         Vector3 end = Vector3.zero;
 
         RectTransform rt = panel.GetComponent<RectTransform>();
 
-        while (t < 1)
+        while (t < 1f)
         {
-            t += Time.unscaledDeltaTime * 3;
-            rt.anchoredPosition = Vector3.Lerp(start, end, t);
+            t += Time.unscaledDeltaTime * 3f;
+
+            if (rt != null)
+                rt.anchoredPosition = Vector3.Lerp(start, end, t);
+
             yield return null;
         }
+    }
+
+    public void Hide()
+    {
+        ClearCards();
+
+        if (panel != null)
+            panel.SetActive(false);
+
+        Time.timeScale = 1f;
+        isShowing = false;
     }
 }
