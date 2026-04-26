@@ -10,35 +10,30 @@ public class WeaponSystem : MonoBehaviour
     private void Awake()
     {
         playerStats = GetComponent<PlayerStats>();
+
         if (playerStats == null)
             playerStats = FindObjectOfType<PlayerStats>();
     }
 
     public void Fire()
     {
-        if (bulletPrefab == null || firePoint == null)
-        {
-            Debug.LogError("WeaponSystem -> falta bulletPrefab o firePoint");
-            return;
-        }
+        if (bulletPrefab == null || firePoint == null) return;
 
         if (playerStats == null)
-        {
-            Debug.LogError("WeaponSystem -> playerStats es null");
-            return;
-        }
+            playerStats = FindObjectOfType<PlayerStats>();
 
-        Vector3 baseDirection = firePoint.right;
+        if (playerStats == null) return;
 
-        Debug.Log("Fire -> Spread activo: " + playerStats.hasSpreadShot);
+        Vector3 baseDirection = firePoint.right.sqrMagnitude <= 0.0001f
+            ? Vector3.right
+            : firePoint.right.normalized;
+
+        FireSingle(baseDirection);
 
         if (playerStats.hasSpreadShot)
         {
-            FireSpread(baseDirection);
-        }
-        else
-        {
-            FireSingle(baseDirection);
+            FireSingle(RotateDirection(baseDirection, -playerStats.spreadAngle));
+            FireSingle(RotateDirection(baseDirection, playerStats.spreadAngle));
         }
     }
 
@@ -49,44 +44,32 @@ public class WeaponSystem : MonoBehaviour
         BulletController bullet = bulletObj.GetComponent<BulletController>();
         if (bullet == null)
         {
-            Debug.LogError("El prefab de bala no tiene BulletController");
+            Destroy(bulletObj);
             return;
         }
 
         bullet.Init(
-      direction,
-     playerStats.damage,
-     playerStats.pierceCount,
-     playerStats.bounceCount,
-     playerStats.bounceSearchRadius,
-     playerStats.hasExplodingBullets,
-     playerStats.explosionRadius,
-     playerStats.explosionDamageMultiplier,
-    playerStats.hasFreezeBullets,
-    playerStats.freezeDuration,
-    playerStats.freezeSlowMultiplier,
-    playerStats.hasBurnBullets,
-    playerStats.burnDuration,
-    playerStats.burnTickDamage,
-    playerStats.burnTickInterval
- );
-    }
-
-    private void FireSpread(Vector3 baseDirection)
-    {
-        float angle = playerStats.spreadAngle;
-
-        Vector3 leftDirection = RotateDirection(baseDirection, -angle);
-        Vector3 rightDirection = RotateDirection(baseDirection, angle);
-
-        FireSingle(baseDirection);
-        FireSingle(leftDirection);
-        FireSingle(rightDirection);
+            direction,
+            playerStats.damage,
+            playerStats.pierceCount,
+            playerStats.bounceCount,
+            playerStats.bounceSearchRadius,
+            playerStats.hasExplodingBullets,
+            playerStats.explosionRadius,
+            playerStats.explosionDamageMultiplier,
+            playerStats.hasFreezeBullets,
+            playerStats.freezeDuration,
+            playerStats.freezeSlowMultiplier,
+            playerStats.hasBurnBullets,
+            playerStats.burnDuration,
+            playerStats.burnTickDamage,
+            playerStats.burnTickInterval
+        );
     }
 
     private Vector3 RotateDirection(Vector3 direction, float angleDegrees)
     {
         Quaternion rotation = Quaternion.Euler(0f, 0f, angleDegrees);
-        return rotation * direction;
+        return (rotation * direction.normalized).normalized;
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour
@@ -9,7 +9,8 @@ public class BulletController : MonoBehaviour
 
     private Vector3 direction;
     private float damage;
-    private int remainingHits;
+
+    private int remainingPierceHits;
     private int remainingBounces;
     private float bounceSearchRadius;
 
@@ -26,7 +27,7 @@ public class BulletController : MonoBehaviour
     private float burnTickDamage;
     private float burnTickInterval;
 
-    private HashSet<GameObject> hitRoots = new HashSet<GameObject>();
+    private readonly HashSet<GameObject> hitRoots = new HashSet<GameObject>();
 
     public void Init(
         Vector3 dir,
@@ -46,11 +47,11 @@ public class BulletController : MonoBehaviour
         float burnTickIntervalValue
     )
     {
-        direction = dir.normalized;
+        direction = dir.sqrMagnitude <= 0.0001f ? Vector3.right : dir.normalized;
         damage = bulletDamage;
 
-        remainingHits = Mathf.Max(pierceCount, bounceCount + 1);
-        remainingBounces = bounceCount;
+        remainingPierceHits = Mathf.Max(1, pierceCount);
+        remainingBounces = Mathf.Max(0, bounceCount);
         bounceSearchRadius = searchRadius;
 
         hasExplosion = exploding;
@@ -86,37 +87,37 @@ public class BulletController : MonoBehaviour
 
     private void HandleHit(GameObject hitObject)
     {
-        if (hitObject == null) return;
-
         GameObject enemyRoot = GetEnemyRoot(hitObject);
         if (enemyRoot == null) return;
 
-        if (hitRoots.Contains(enemyRoot))
-            return;
-
+        if (hitRoots.Contains(enemyRoot)) return;
         hitRoots.Add(enemyRoot);
 
-        DamageEnemy(enemyRoot, damage);
+        GameObject nextBounceTarget = null;
+
+        if (remainingBounces > 0)
+            nextBounceTarget = FindNextEnemy(enemyRoot);
+
         ApplyStatuses(enemyRoot);
 
         if (hasExplosion)
             Explode(enemyRoot);
 
-        remainingHits--;
+        DamageEnemy(enemyRoot, damage);
 
-        if (remainingBounces > 0)
+        remainingPierceHits--;
+
+        if (nextBounceTarget != null && remainingBounces > 0)
         {
-            GameObject nextTarget = FindNextEnemy(enemyRoot);
-
-            if (nextTarget != null)
-            {
-                remainingBounces--;
-                direction = (nextTarget.transform.position - transform.position).normalized;
-            }
+            remainingBounces--;
+            direction = (nextBounceTarget.transform.position - transform.position).normalized;
+            return;
         }
 
-        if (remainingHits <= 0)
-            Destroy(gameObject);
+        if (remainingPierceHits > 0)
+            return;
+
+        Destroy(gameObject);
     }
 
     private GameObject GetEnemyRoot(GameObject obj)
@@ -124,16 +125,13 @@ public class BulletController : MonoBehaviour
         if (obj == null) return null;
 
         EnemyHealthSystem normal = obj.GetComponentInParent<EnemyHealthSystem>();
-        if (normal != null)
-            return normal.gameObject;
+        if (normal != null) return normal.gameObject;
 
         EliteEnemyHealth elite = obj.GetComponentInParent<EliteEnemyHealth>();
-        if (elite != null)
-            return elite.gameObject;
+        if (elite != null) return elite.gameObject;
 
         FinalBossHealth boss = obj.GetComponentInParent<FinalBossHealth>();
-        if (boss != null)
-            return boss.gameObject;
+        if (boss != null) return boss.gameObject;
 
         return null;
     }
@@ -156,16 +154,15 @@ public class BulletController : MonoBehaviour
             return;
         }
 
-        FinalBossHealth boss = enemyRoot.GetComponent<FinalBossHealth>();
+        FinalBossHealth boss = enemyRoot.GetComponentInParent<FinalBossHealth>();
         if (boss != null)
-        {
             boss.TakeDamage(amount);
-            return;
-        }
     }
 
     private void ApplyStatuses(GameObject enemyRoot)
     {
+        if (enemyRoot == null) return;
+
         if (hasFreeze)
         {
             EnemyInstaller normalInstaller = enemyRoot.GetComponent<EnemyInstaller>();
@@ -191,13 +188,17 @@ public class BulletController : MonoBehaviour
 
     private void Explode(GameObject mainTarget)
     {
+        if (mainTarget == null) return;
+
+        Vector3 explosionPosition = mainTarget.transform.position;
+
         if (explosionParticlePrefab != null)
         {
-            GameObject fx = Instantiate(explosionParticlePrefab, mainTarget.transform.position, Quaternion.identity);
+            GameObject fx = Instantiate(explosionParticlePrefab, explosionPosition, Quaternion.identity);
             fx.transform.localScale = Vector3.one * explosionRadius * 0.6f;
         }
 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(mainTarget.transform.position, explosionRadius);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(explosionPosition, explosionRadius);
         float explosionDamage = damage * explosionDamageMultiplier;
 
         foreach (Collider2D hit in hits)
@@ -208,8 +209,8 @@ public class BulletController : MonoBehaviour
             if (enemyRoot == null) continue;
             if (enemyRoot == mainTarget) continue;
 
-            DamageEnemy(enemyRoot, explosionDamage);
             ApplyStatuses(enemyRoot);
+            DamageEnemy(enemyRoot, explosionDamage);
         }
     }
 

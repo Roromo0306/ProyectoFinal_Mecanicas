@@ -9,11 +9,6 @@ public class RadialWeaponEffect : PowerUpEffect
 
     public override void Apply(PlayerStats stats)
     {
-        stats.hasRadialWeapon = true;
-        stats.radialOrbitRadius = orbitRadius;
-        stats.radialOrbitSpeed = orbitSpeed;
-        stats.radialDamageMultiplier = damageMultiplier;
-
-        Debug.Log("Arma radial activada");
+        stats.EnableRadialWeapon(orbitRadius, orbitSpeed, damageMultiplier);
     }
 }

@@ -9,11 +9,6 @@ public class DashEffect : PowerUpEffect
 
     public override void Apply(PlayerStats stats)
     {
-        stats.hasDash = true;
-        stats.dashSpeed = speed;
-        stats.dashDuration = duration;
-        stats.dashCooldown = cooldown;
-
-        Debug.Log("Dash activado");
+        stats.EnableDash(speed, duration, cooldown);
     }
 }

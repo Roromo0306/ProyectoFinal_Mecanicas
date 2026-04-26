@@ -1113,7 +1113,7 @@ GameObject:
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &315368617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1160,7 +1160,6 @@ GameObject:
   - component: {fileID: 317928578}
   - component: {fileID: 317928577}
   - component: {fileID: 317928576}
-  - component: {fileID: 317928575}
   m_Layer: 5
   m_Name: EndGamePanel
   m_TagString: Untagged
@@ -1192,30 +1191,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &317928575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 317928573}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6e0b552444fd9444bdea46313c5d461, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panel: {fileID: 317928573}
-  panelCanvasGroup: {fileID: 317928576}
-  panelRect: {fileID: 317928574}
-  titleText: {fileID: 2137077578}
-  subtitleText: {fileID: 1202502286}
-  replayButton: {fileID: 425902047}
-  mainMenuButton: {fileID: 53966915}
-  fadeDuration: 0.5
-  popDuration: 0.35
-  buttonDelay: 0.25
-  gameplaySceneName: Game
-  mainMenuSceneName: MainMenu
 --- !u!225 &317928576
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1613,6 +1588,7 @@ GameObject:
   - component: {fileID: 448465268}
   - component: {fileID: 448465267}
   - component: {fileID: 448465271}
+  - component: {fileID: 448465272}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1722,6 +1698,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xpBar: {fileID: 628080232}
   levelText: {fileID: 225340209}
+--- !u!114 &448465272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448465266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6e0b552444fd9444bdea46313c5d461, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 317928573}
+  panelCanvasGroup: {fileID: 317928576}
+  panelRect: {fileID: 317928574}
+  titleText: {fileID: 2137077578}
+  subtitleText: {fileID: 1202502286}
+  replayButton: {fileID: 425902047}
+  mainMenuButton: {fileID: 53966915}
+  fadeDuration: 0.5
+  popDuration: 0.35
+  buttonDelay: 0.25
+  gameplaySceneName: Game
+  mainMenuSceneName: MainMenu
 --- !u!1 &469160663
 GameObject:
   m_ObjectHideFlags: 0
@@ -6794,7 +6794,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e999ac91b395dee4f9ad1afe674c3639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotIndex: 0
+  slotIndex: 1
   occupied: 0
   currentCard: {fileID: 0}
 --- !u!114 &544057775
@@ -8745,7 +8745,7 @@ GameObject:
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1290505630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9136,7 +9136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e999ac91b395dee4f9ad1afe674c3639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotIndex: 0
+  slotIndex: 3
   occupied: 0
   currentCard: {fileID: 0}
 --- !u!114 &1575155858

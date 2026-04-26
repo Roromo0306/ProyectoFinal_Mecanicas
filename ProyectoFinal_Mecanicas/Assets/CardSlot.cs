@@ -46,7 +46,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
             SelectionService.Instance.EquipToSlot(dragCard.data, slotIndex);
 
         if (ActivationService.Instance != null)
-            ActivationService.Instance.Activate(dragCard.data);
+            ActivationService.Instance.RecalculateEquippedPowerUps();
     }
 
     public void ClearSlot()

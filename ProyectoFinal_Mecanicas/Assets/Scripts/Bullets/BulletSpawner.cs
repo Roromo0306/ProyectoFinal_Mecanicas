@@ -28,42 +28,34 @@ public class BulletSpawner : MonoBehaviour
     {
         var e = (ShootEvent)evt;
 
-        if (bulletPrefab == null)
-        {
-            Debug.LogError("BulletSpawner -> bulletPrefab es null");
-            return;
-        }
+        if (bulletPrefab == null) return;
 
         if (playerStats == null)
-        {
             playerStats = FindObjectOfType<PlayerStats>();
-            if (playerStats == null)
-            {
-                Debug.LogError("BulletSpawner -> playerStats sigue siendo null");
-                return;
-            }
-        }
+
+        if (playerStats == null) return;
+
+        Vector3 baseDirection = e.direction.sqrMagnitude <= 0.0001f
+            ? Vector3.right
+            : e.direction.normalized;
+
+        FireBullet(e.position, baseDirection);
 
         if (playerStats.hasSpreadShot)
         {
-            FireBullet(e.position, e.direction);
-            FireBullet(e.position, RotateDirection(e.direction, -playerStats.spreadAngle));
-            FireBullet(e.position, RotateDirection(e.direction, playerStats.spreadAngle));
-        }
-        else
-        {
-            FireBullet(e.position, e.direction);
+            FireBullet(e.position, RotateDirection(baseDirection, -playerStats.spreadAngle));
+            FireBullet(e.position, RotateDirection(baseDirection, playerStats.spreadAngle));
         }
     }
 
     private void FireBullet(Vector3 position, Vector3 direction)
     {
-        var bulletObj = Instantiate(bulletPrefab, position, Quaternion.identity);
+        GameObject bulletObj = Instantiate(bulletPrefab, position, Quaternion.identity);
 
         BulletController bullet = bulletObj.GetComponent<BulletController>();
         if (bullet == null)
         {
-            Debug.LogError("La bala no tiene BulletController");
+            Destroy(bulletObj);
             return;
         }
 
@@ -89,6 +81,6 @@ public class BulletSpawner : MonoBehaviour
     private Vector3 RotateDirection(Vector3 direction, float angleDegrees)
     {
         Quaternion rotation = Quaternion.Euler(0f, 0f, angleDegrees);
-        return rotation * direction.normalized;
+        return (rotation * direction.normalized).normalized;
     }
 }

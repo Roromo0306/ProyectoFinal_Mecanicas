@@ -8,9 +8,6 @@ public class FireRateEffect : PowerUpEffect
 
     public override void Apply(PlayerStats stats)
     {
-        stats.fireCooldown -= cooldownReduction;
-        stats.fireCooldown = Mathf.Max(stats.fireCooldown, minimumCooldown);
-
-        Debug.Log("Fire Rate activado -> nuevo cooldown: " + stats.fireCooldown);
+        stats.AddFireRate(cooldownReduction, minimumCooldown);
     }
 }

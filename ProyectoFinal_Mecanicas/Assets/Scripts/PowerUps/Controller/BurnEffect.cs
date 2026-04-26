@@ -9,11 +9,6 @@ public class BurnEffect : PowerUpEffect
 
     public override void Apply(PlayerStats stats)
     {
-        stats.hasBurnBullets = true;
-        stats.burnDuration = duration;
-        stats.burnTickDamage = tickDamage;
-        stats.burnTickInterval = tickInterval;
-
-        Debug.Log("Burn activado -> duración: " + duration);
+        stats.EnableBurnBullets(duration, tickDamage, tickInterval);
     }
 }

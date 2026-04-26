@@ -1,11 +1,13 @@
 using UnityEngine;
-
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public PowerUpData data;
+
+    [Header("Drag Settings")]
+    public bool canDrag = true;
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
@@ -19,12 +21,10 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     private bool isDragging;
 
-
     public bool IsDragging()
     {
         return isDragging;
     }
-
 
     private void Awake()
     {
@@ -34,8 +34,21 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         originalSizeDelta = rectTransform.sizeDelta;
         originalSizeSaved = true;
     }
+
+    private bool CanActuallyDrag()
+    {
+        if (!canDrag) return false;
+
+        if (deckParent == null && currentSlot == null)
+            return false;
+
+        return true;
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (!CanActuallyDrag()) return;
+
         droppedSuccessfully = false;
         isDragging = true;
 
@@ -49,16 +62,23 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
             currentSlot.ClearSlot();
             currentSlot = null;
+
+            if (ActivationService.Instance != null)
+                ActivationService.Instance.RecalculateEquippedPowerUps();
         }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!CanActuallyDrag()) return;
+
         rectTransform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!CanActuallyDrag()) return;
+
         isDragging = false;
 
         if (canvasGroup != null)
@@ -72,12 +92,21 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void ReturnToDeck()
     {
-
         if (deckParent == null)
         {
             Debug.LogError("DragCard -> deckParent es null");
             return;
         }
+
+        if (currentSlot != null)
+        {
+            if (SelectionService.Instance != null)
+                SelectionService.Instance.RemoveFromSlot(currentSlot.slotIndex);
+
+            currentSlot.ClearSlot();
+            currentSlot = null;
+        }
+
         LayoutElement le = GetComponent<LayoutElement>();
         if (le != null)
         {
@@ -85,16 +114,12 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             le.preferredWidth = 180;
             le.preferredHeight = 240;
         }
+
         transform.SetParent(deckParent, false);
 
         CardBalatroVisual visual = GetComponent<CardBalatroVisual>();
         if (visual != null)
             visual.ResetVisual();
-
-        if (le != null)
-            le.ignoreLayout = false;
-
-       
 
         rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
@@ -106,6 +131,9 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (originalSizeSaved)
             rectTransform.sizeDelta = originalSizeDelta;
 
-        currentSlot = null;
+        droppedSuccessfully = false;
+
+        if (ActivationService.Instance != null)
+            ActivationService.Instance.RecalculateEquippedPowerUps();
     }
 }

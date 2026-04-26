@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DeploymentLoader : MonoBehaviour
 {
@@ -26,7 +28,6 @@ public class DeploymentLoader : MonoBehaviour
         foreach (var slot in slots)
             slot.ClearVisualOnly();
 
-        // 1. Pintar cartas equipadas en slots
         for (int i = 0; i < slots.Length; i++)
         {
             PowerUpData equippedCard = SelectionService.Instance.equippedSlots[i];
@@ -37,8 +38,8 @@ public class DeploymentLoader : MonoBehaviour
             }
         }
 
-        // 2. Contar cuántas copias de cada carta hay en el deck total
         Dictionary<PowerUpData, int> totalCounts = new Dictionary<PowerUpData, int>();
+
         foreach (var card in SelectionService.Instance.deckCards)
         {
             if (card == null) continue;
@@ -49,8 +50,8 @@ public class DeploymentLoader : MonoBehaviour
             totalCounts[card]++;
         }
 
-        // 3. Contar cuántas copias de cada carta están equipadas
         Dictionary<PowerUpData, int> equippedCounts = new Dictionary<PowerUpData, int>();
+
         foreach (var card in SelectionService.Instance.equippedSlots)
         {
             if (card == null) continue;
@@ -61,7 +62,6 @@ public class DeploymentLoader : MonoBehaviour
             equippedCounts[card]++;
         }
 
-        // 4. Pintar en deck solo las copias sobrantes
         foreach (var kvp in totalCounts)
         {
             PowerUpData cardData = kvp.Key;
@@ -88,7 +88,19 @@ public class DeploymentLoader : MonoBehaviour
         {
             drag.data = data;
             drag.deckParent = deckParent;
+            drag.canDrag = true;
         }
+
+        Button button = card.GetComponent<Button>();
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners();
+            button.enabled = false;
+        }
+
+        EventTrigger trigger = card.GetComponent<EventTrigger>();
+        if (trigger != null)
+            trigger.enabled = false;
 
         LevelUpCardUI levelUpUI = card.GetComponent<LevelUpCardUI>();
         if (levelUpUI != null)

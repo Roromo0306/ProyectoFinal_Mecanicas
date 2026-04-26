@@ -14,10 +14,25 @@ public class SelectionService : MonoBehaviour
         Instance = this;
     }
 
-    public void AddToDeck(PowerUpData card)
+    public bool HasCard(PowerUpData card)
     {
-        if (card == null) return;
+        if (card == null) return false;
+        return deckCards.Contains(card);
+    }
+
+    public bool AddToDeck(PowerUpData card)
+    {
+        if (card == null) return false;
+
+        if (deckCards.Contains(card))
+        {
+            Debug.Log("Carta ya existe en deck: " + card.title);
+            return false;
+        }
+
         deckCards.Add(card);
+        Debug.Log("Carta añadida al deck: " + card.title);
+        return true;
     }
 
     public void EquipToSlot(PowerUpData card, int slotIndex)
@@ -31,6 +46,7 @@ public class SelectionService : MonoBehaviour
     public void RemoveFromSlot(int slotIndex)
     {
         if (slotIndex < 0 || slotIndex >= equippedSlots.Length) return;
+
         equippedSlots[slotIndex] = null;
     }
 }

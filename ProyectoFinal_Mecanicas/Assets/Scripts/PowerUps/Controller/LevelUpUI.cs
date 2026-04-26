@@ -17,6 +17,7 @@ public class LevelUpUI : MonoBehaviour
             panel.SetActive(false);
 
         ClearCards();
+        isShowing = false;
     }
 
     private void OnEnable()
@@ -39,18 +40,41 @@ public class LevelUpUI : MonoBehaviour
 
     IEnumerator ShowRoutine()
     {
-        panel.SetActive(true);
-        Time.timeScale = 0;
+        isShowing = true;
+
+        if (panel != null)
+            panel.SetActive(true);
+
+        Time.timeScale = 0f;
 
         ClearCards();
 
         RectTransform rt = panel.GetComponent<RectTransform>();
-        rt.anchoredPosition = new Vector2(0, 800);
+        if (rt != null)
+            rt.anchoredPosition = new Vector2(0, 800);
 
         yield return MovePanel();
 
-        List<PowerUpData> pool = new List<PowerUpData>(allPowerUps);
-        List<PowerUpData> selection = new();
+        List<PowerUpData> pool = new List<PowerUpData>();
+
+        foreach (PowerUpData powerUp in allPowerUps)
+        {
+            if (powerUp == null) continue;
+
+            if (SelectionService.Instance != null && SelectionService.Instance.HasCard(powerUp))
+                continue;
+
+            pool.Add(powerUp);
+        }
+
+        if (pool.Count <= 0)
+        {
+            Debug.Log("LevelUpUI -> No quedan cartas nuevas disponibles.");
+            Hide();
+            yield break;
+        }
+
+        List<PowerUpData> selection = new List<PowerUpData>();
 
         for (int i = 0; i < 3 && pool.Count > 0; i++)
         {
@@ -59,15 +83,19 @@ public class LevelUpUI : MonoBehaviour
             pool.RemoveAt(index);
         }
 
-        foreach (var data in selection)
+        foreach (PowerUpData data in selection)
         {
-            var card = Instantiate(cardPrefab, cardContainer);
+            GameObject card = Instantiate(cardPrefab, cardContainer);
 
-            var ui = card.GetComponentInChildren<LevelUpCardUI>(true);
+            LevelUpCardUI ui = card.GetComponentInChildren<LevelUpCardUI>(true);
             if (ui != null)
                 ui.Setup(data);
 
-            var cg = card.GetComponent<CanvasGroup>();
+            DragCard drag = card.GetComponentInChildren<DragCard>(true);
+            if (drag != null)
+                drag.canDrag = false;
+
+            CanvasGroup cg = card.GetComponent<CanvasGroup>();
             if (cg != null)
             {
                 cg.blocksRaycasts = true;
@@ -113,6 +141,11 @@ public class LevelUpUI : MonoBehaviour
             panel.SetActive(false);
 
         Time.timeScale = 1f;
+        isShowing = false;
+    }
+
+    public void MarkClosed()
+    {
         isShowing = false;
     }
 }

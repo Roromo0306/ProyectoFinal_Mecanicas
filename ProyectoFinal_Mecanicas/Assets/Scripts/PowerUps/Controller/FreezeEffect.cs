@@ -8,10 +8,6 @@ public class FreezeEffect : PowerUpEffect
 
     public override void Apply(PlayerStats stats)
     {
-        stats.hasFreezeBullets = true;
-        stats.freezeDuration = duration;
-        stats.freezeSlowMultiplier = slowMultiplier;
-
-        Debug.Log("Freeze activado -> duración: " + duration);
+        stats.EnableFreezeBullets(duration, slowMultiplier);
     }
 }

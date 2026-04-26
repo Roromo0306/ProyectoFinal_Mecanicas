@@ -36,17 +36,30 @@ public class EndGameUI : MonoBehaviour
     {
         Instance = this;
 
-        if (panel != null)
-            panel.SetActive(true);
-
         if (panelCanvasGroup != null)
+        {
             panelCanvasGroup.alpha = 0f;
+            panelCanvasGroup.interactable = false;
+            panelCanvasGroup.blocksRaycasts = false;
+        }
+
+        SetButtonVisible(replayButton, false);
+        SetButtonVisible(mainMenuButton, false);
+
+        if (panel != null)
+            panel.SetActive(false);
 
         if (replayButton != null)
+        {
+            replayButton.onClick.RemoveAllListeners();
             replayButton.onClick.AddListener(Replay);
+        }
 
         if (mainMenuButton != null)
+        {
+            mainMenuButton.onClick.RemoveAllListeners();
             mainMenuButton.onClick.AddListener(BackToMainMenu);
+        }
     }
 
     public void ShowWin()
@@ -81,7 +94,11 @@ public class EndGameUI : MonoBehaviour
             panel.SetActive(true);
 
         if (panelCanvasGroup != null)
+        {
             panelCanvasGroup.alpha = 0f;
+            panelCanvasGroup.interactable = false;
+            panelCanvasGroup.blocksRaycasts = true;
+        }
 
         if (panelRect != null)
             panelRect.localScale = Vector3.one * 0.75f;
@@ -120,22 +137,30 @@ public class EndGameUI : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(buttonDelay);
         yield return StartCoroutine(ShowButtonRoutine(mainMenuButton));
+
+        if (panelCanvasGroup != null)
+        {
+            panelCanvasGroup.interactable = true;
+            panelCanvasGroup.blocksRaycasts = true;
+        }
     }
 
     private IEnumerator ShowButtonRoutine(Button button)
     {
         if (button == null) yield break;
 
-        GameObject obj = button.gameObject;
-        obj.SetActive(true);
+        button.gameObject.SetActive(true);
+        button.interactable = true;
 
-        CanvasGroup cg = obj.GetComponent<CanvasGroup>();
+        CanvasGroup cg = button.GetComponent<CanvasGroup>();
         if (cg == null)
-            cg = obj.AddComponent<CanvasGroup>();
+            cg = button.gameObject.AddComponent<CanvasGroup>();
 
-        RectTransform rt = obj.GetComponent<RectTransform>();
+        RectTransform rt = button.GetComponent<RectTransform>();
 
         cg.alpha = 0f;
+        cg.interactable = true;
+        cg.blocksRaycasts = true;
 
         if (rt != null)
             rt.localScale = Vector3.one * 0.8f;
@@ -153,6 +178,11 @@ public class EndGameUI : MonoBehaviour
 
             yield return null;
         }
+
+        cg.alpha = 1f;
+        cg.interactable = true;
+        cg.blocksRaycasts = true;
+        button.interactable = true;
     }
 
     private void SetButtonVisible(Button button, bool visible)
@@ -160,6 +190,15 @@ public class EndGameUI : MonoBehaviour
         if (button == null) return;
 
         button.gameObject.SetActive(visible);
+        button.interactable = visible;
+
+        CanvasGroup cg = button.GetComponent<CanvasGroup>();
+        if (cg != null)
+        {
+            cg.alpha = visible ? 1f : 0f;
+            cg.interactable = visible;
+            cg.blocksRaycasts = visible;
+        }
     }
 
     private float EaseOutBack(float x)

@@ -7,7 +7,6 @@ public class MoveSpeedEffect : PowerUpEffect
 
     public override void Apply(PlayerStats stats)
     {
-        stats.moveSpeed += speedBonus;
-        Debug.Log("Velocidad aumentada -> " + stats.moveSpeed);
+        stats.AddMoveSpeed(speedBonus);
     }
 }

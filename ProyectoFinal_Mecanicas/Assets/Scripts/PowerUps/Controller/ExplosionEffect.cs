@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "PowerUps/Effects/Explosion")]
@@ -9,10 +8,6 @@ public class ExplosionEffect : PowerUpEffect
 
     public override void Apply(PlayerStats stats)
     {
-        stats.hasExplodingBullets = true;
-        stats.explosionRadius = radiusBonus;
-        stats.explosionDamageMultiplier = damageMultiplier;
-
-        //Debug.Log("Exploding Bullets activado -> radio: " + stats.explosionRadius);
+        stats.EnableExplodingBullets(radiusBonus, damageMultiplier);
     }
 }
