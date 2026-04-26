@@ -5,7 +5,7 @@ public class PlayerStats : MonoBehaviour
     [Header("Combat")]
     public float damage = 1f;
     public int pierceCount = 1;
-    public float fireCooldown = 0.3f;
+    public float fireCooldown = 0.6f;
 
     [Header("Projectiles")]
     public bool hasSpreadShot = false;
@@ -57,7 +57,7 @@ public class PlayerStats : MonoBehaviour
     private BaseStats baseStats;
     private bool baseSaved;
 
-    private void Awake()
+    private void Start()
     {
         SaveBaseStats();
     }

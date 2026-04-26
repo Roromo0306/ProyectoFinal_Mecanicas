@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class ActivationService : MonoBehaviour
 {
     public static ActivationService Instance;
 
     private PlayerStats playerStats;
+    private HashSet<PowerUpData> consumedLifeGrantCards = new HashSet<PowerUpData>();
 
     private void Awake()
     {
@@ -16,7 +18,70 @@ public class ActivationService : MonoBehaviour
     {
         RecalculateEquippedPowerUps();
     }
+    private int CalculateOneTimeLifeGrants()
+    {
+        int livesToGrant = 0;
 
+        if (SelectionService.Instance == null)
+            return 0;
+
+        foreach (PowerUpData card in SelectionService.Instance.equippedSlots)
+        {
+            if (card == null || card.effects == null) continue;
+
+            if (consumedLifeGrantCards.Contains(card))
+                continue;
+
+            foreach (PowerUpEffect effect in card.effects)
+            {
+                ExtraLifeEffect extraLife = effect as ExtraLifeEffect;
+                if (extraLife != null)
+                {
+                    livesToGrant += extraLife.extraLives;
+                    consumedLifeGrantCards.Add(card);
+                    break;
+                }
+
+                SupportPetEffect supportPet = effect as SupportPetEffect;
+                if (supportPet != null)
+                {
+                    livesToGrant += supportPet.extraLives;
+                    consumedLifeGrantCards.Add(card);
+                    break;
+                }
+            }
+        }
+
+        return livesToGrant;
+    }
+
+    private bool HasNewLifeGrantCard()
+    {
+        if (SelectionService.Instance == null)
+            return false;
+
+        bool foundNewLifeCard = false;
+
+        foreach (PowerUpData card in SelectionService.Instance.equippedSlots)
+        {
+            if (card == null || card.effects == null) continue;
+
+            if (consumedLifeGrantCards.Contains(card))
+                continue;
+
+            foreach (PowerUpEffect effect in card.effects)
+            {
+                if (effect is ExtraLifeEffect || effect is SupportPetEffect)
+                {
+                    consumedLifeGrantCards.Add(card);
+                    foundNewLifeCard = true;
+                    break;
+                }
+            }
+        }
+
+        return foundNewLifeCard;
+    }
     public void RecalculateEquippedPowerUps()
     {
         if (playerStats == null)
@@ -51,13 +116,19 @@ public class ActivationService : MonoBehaviour
             " | AttackPet " + playerStats.hasAttackPet +
             " | SupportPet " + playerStats.hasSupportPet
         );
+
+        bool shouldGrantLife = HasNewLifeGrantCard();
+
+        PlayerHealthSystem health = FindObjectOfType<PlayerHealthSystem>();
+        if (health != null)
+            health.SyncMaxLivesFromStats(shouldGrantLife);
     }
 
     private void ResetStatsToBase()
     {
         playerStats.damage = 1f;
         playerStats.pierceCount = 1;
-        playerStats.fireCooldown = 0.3f;
+        playerStats.fireCooldown = 0.6f;
 
         playerStats.hasSpreadShot = false;
         playerStats.spreadAngle = 20f;

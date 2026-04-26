@@ -7,6 +7,7 @@ public class ExtraLifeEffect : PowerUpEffect
 
     public override void Apply(PlayerStats stats)
     {
-        stats.AddMaxLives(extraLives);
+        stats.maxLives += extraLives;
+        Debug.Log("ExtraLife -> maxLives: " + stats.maxLives);
     }
 }

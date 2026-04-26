@@ -22,6 +22,7 @@ public class PlayerHealthSystem : MonoBehaviour
 
     private float lastHitTime = -999f;
     private PlayerStats playerStats;
+    private int lastKnownMaxLives;
 
     private void Awake()
     {
@@ -44,7 +45,10 @@ public class PlayerHealthSystem : MonoBehaviour
     private void Start()
     {
         if (playerStats != null)
+        {
             lives = playerStats.maxLives;
+            lastKnownMaxLives = playerStats.maxLives;
+        }
 
         UpdateLivesUI();
     }
@@ -57,6 +61,31 @@ public class PlayerHealthSystem : MonoBehaviour
     public void ForceDamage()
     {
         TakeDamage();
+    }
+
+
+    
+
+    public void SyncMaxLivesFromStats(bool grantDifference)
+    {
+        if (playerStats == null)
+            playerStats = GetComponent<PlayerStats>();
+
+        if (playerStats == null)
+            return;
+
+        int newMaxLives = playerStats.maxLives;
+        int difference = newMaxLives - lastKnownMaxLives;
+
+        if (grantDifference && difference > 0)
+            lives += difference;
+
+        lives = Mathf.Clamp(lives, 0, newMaxLives);
+        lastKnownMaxLives = newMaxLives;
+
+        UpdateLivesUI();
+
+        Debug.Log("SYNC VIDAS -> " + lives + " / " + newMaxLives + " | grant: " + grantDifference);
     }
 
     private void TakeDamage()

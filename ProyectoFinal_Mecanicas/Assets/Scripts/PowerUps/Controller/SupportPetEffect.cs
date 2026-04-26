@@ -6,13 +6,12 @@ public class SupportPetEffect : PowerUpEffect
     public int extraLives = 2;
     public float speedBonus = 1f;
 
-    public float orbitRadius = 2.2f;
-    public float orbitSpeed = 160f;
-
     public override void Apply(PlayerStats stats)
     {
-        stats.EnableSupportPet(orbitRadius, orbitSpeed);
-        stats.AddMaxLives(extraLives);
-        stats.AddMoveSpeed(speedBonus);
+        stats.hasSupportPet = true;
+        stats.maxLives += extraLives;
+        stats.moveSpeed += speedBonus;
+
+        Debug.Log("SupportPet -> maxLives: " + stats.maxLives);
     }
 }
