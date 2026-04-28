@@ -100,6 +100,12 @@ public class BulletController : MonoBehaviour
         if (hitRoots.Contains(enemyRoot)) return;
         hitRoots.Add(enemyRoot);
 
+        if (hitParticlePrefab != null)
+        {
+            GameObject fx = Instantiate(hitParticlePrefab, enemyRoot.transform.position, Quaternion.identity);
+            Destroy(fx, 1.5f);
+        }
+
         GameObject nextBounceTarget = null;
 
         if (remainingBounces > 0)

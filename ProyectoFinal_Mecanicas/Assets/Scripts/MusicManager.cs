@@ -28,7 +28,12 @@ public class MusicManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        audioSource = gameObject.AddComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
         audioSource.loop = true;
         audioSource.playOnAwake = false;
         audioSource.volume = 0f;
@@ -51,9 +56,9 @@ public class MusicManager : MonoBehaviour
     {
         AudioClip targetClip = null;
 
-        if (sceneName == "MainMenu")
+        if (sceneName == "Menu")
             targetClip = mainMenuMusic;
-        else if (sceneName == "GameScene")
+        else if (sceneName == "Game")
             targetClip = gameplayMusic;
 
         if (targetClip == null) return;
