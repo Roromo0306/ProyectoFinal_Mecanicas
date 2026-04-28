@@ -47,6 +47,13 @@ public class LevelUpCardUI : MonoBehaviour
         if (levelUpUI != null)
             levelUpUI.MarkClosed();
 
-        UIFlowController.Instance.OpenDeployment();
+        if (GameplayDeckMenu.Instance != null)
+        {
+            GameplayDeckMenu.Instance.OpenDeck();
+        }
+        else if (UIFlowController.Instance != null)
+        {
+            UIFlowController.Instance.OpenDeployment();
+        }
     }
 }

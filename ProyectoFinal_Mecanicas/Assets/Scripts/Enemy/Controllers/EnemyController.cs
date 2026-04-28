@@ -28,6 +28,9 @@ public class EnemyController
     private Color freezeColor = new Color(0.3f, 0.7f, 1f);
     private Color burnColor = Color.yellow;
 
+    private float hitFlashTimer = 0f;
+    private Color hitColor = Color.white;
+
     public EnemyController(Transform enemyTransform)
     {
         this.enemyTransform = enemyTransform;
@@ -51,6 +54,7 @@ public class EnemyController
 
         UpdateFreeze();
         UpdateBurn();
+        UpdateHitFlash();
         UpdateKnockback();
 
         Vector3 direction = (playerTransform.position - enemyTransform.position).normalized;
@@ -168,6 +172,12 @@ public class EnemyController
         if (spriteRenderer == null)
             return;
 
+        if (hitFlashTimer > 0f)
+        {
+            spriteRenderer.color = hitColor;
+            return;
+        }
+
         if (isFrozen)
         {
             spriteRenderer.color = freezeColor;
@@ -195,6 +205,32 @@ public class EnemyController
         {
             knockbackVelocity = Vector2.zero;
             knockbackForce = 0f;
+        }
+    }
+
+    public void ApplyBulletHitFeedback(Vector3 sourcePosition, float force)
+    {
+        if (enemyTransform == null) return;
+
+        Vector2 dir = (enemyTransform.position - sourcePosition).normalized;
+        knockbackVelocity = dir * force;
+        knockbackForce = force;
+
+        hitFlashTimer = 0.08f;
+        RefreshVisualState();
+    }
+
+    private void UpdateHitFlash()
+    {
+        if (hitFlashTimer <= 0f)
+            return;
+
+        hitFlashTimer -= Time.deltaTime;
+
+        if (hitFlashTimer <= 0f)
+        {
+            hitFlashTimer = 0f;
+            RefreshVisualState();
         }
     }
 }

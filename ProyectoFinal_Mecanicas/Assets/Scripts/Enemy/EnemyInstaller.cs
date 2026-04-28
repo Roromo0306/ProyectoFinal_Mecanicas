@@ -52,4 +52,9 @@ public class EnemyInstaller : MonoBehaviour
     {
         controller.ApplyBurn(duration, tickDamage, tickInterval);
     }
+
+    public void ApplyBulletHitFeedback(Vector3 sourcePosition, float force)
+    {
+        controller?.ApplyBulletHitFeedback(sourcePosition, force);
+    }
 }

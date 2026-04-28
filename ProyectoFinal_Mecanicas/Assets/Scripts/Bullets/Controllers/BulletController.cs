@@ -1,8 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
+    [Header("Hit Feedback")]
+    public float hitKnockbackForce = 3f;
+
+    [Header("Hit FX")]
+    public GameObject hitParticlePrefab;
+
     public float speed = 10f;
     public float lifetime = 3f;
     public GameObject explosionParticlePrefab;
@@ -104,6 +111,7 @@ public class BulletController : MonoBehaviour
             Explode(enemyRoot);
 
         DamageEnemy(enemyRoot, damage);
+        ApplyHitFeedback(enemyRoot);
 
         remainingPierceHits--;
 
@@ -240,5 +248,41 @@ public class BulletController : MonoBehaviour
         }
 
         return closestEnemy;
+    }
+
+    private void ApplyHitFeedback(GameObject enemyRoot)
+    {
+        if (enemyRoot == null) return;
+
+        if (hitParticlePrefab != null)
+        {
+            Instantiate(hitParticlePrefab, enemyRoot.transform.position, Quaternion.identity);
+        }
+
+        EnemyInstaller normalInstaller = enemyRoot.GetComponent<EnemyInstaller>();
+        if (normalInstaller != null)
+        {
+            normalInstaller.ApplyBulletHitFeedback(transform.position, hitKnockbackForce);
+            return;
+        }
+
+        SpriteRenderer sr = enemyRoot.GetComponentInChildren<SpriteRenderer>();
+        if (sr != null)
+        {
+            StartCoroutine(FlashWhite(sr));
+        }
+    }
+
+    private IEnumerator FlashWhite(SpriteRenderer sr)
+    {
+        if (sr == null) yield break;
+
+        Color originalColor = sr.color;
+
+        sr.color = Color.white;
+        yield return new WaitForSeconds(0.08f);
+
+        if (sr != null)
+            sr.color = originalColor;
     }
 }

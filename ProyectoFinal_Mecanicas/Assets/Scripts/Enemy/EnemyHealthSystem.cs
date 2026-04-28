@@ -1,9 +1,13 @@
+using System.Collections;
 using UnityEngine;
 
 public class EnemyHealthSystem : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 1f;
+    [SerializeField] private float deathDelay = 0.08f;
+
     private float currentHealth;
+    private bool isDead = false;
 
     private void Awake()
     {
@@ -32,16 +36,27 @@ public class EnemyHealthSystem : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (isDead) return;
+
         currentHealth -= damage;
 
         if (currentHealth <= 0f)
         {
-            Die();
+            StartCoroutine(DieRoutine());
         }
     }
 
-    private void Die()
+    private IEnumerator DieRoutine()
     {
+        isDead = true;
+
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        if (sr != null)
+        {
+            sr.color = Color.white;
+            yield return new WaitForSeconds(deathDelay);
+        }
+
         EnemyXPDropper dropper = GetComponent<EnemyXPDropper>();
         if (dropper != null)
             dropper.DropXP();
