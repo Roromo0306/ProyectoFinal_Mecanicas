@@ -19,6 +19,9 @@ public class LevelUpCardUI : MonoBehaviour
         if (icon != null) icon.sprite = d.icon;
         if (title != null) title.text = d.title;
         if (desc != null) desc.text = d.description;
+        CardTooltipTrigger tooltip = GetComponent<CardTooltipTrigger>();
+        if (tooltip != null)
+            tooltip.SetData(data);
     }
 
     public void Select()

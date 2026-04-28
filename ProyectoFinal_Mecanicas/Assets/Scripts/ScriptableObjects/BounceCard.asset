@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BounceCard
   m_EditorClassIdentifier: 
   title: Bounce
-  description: boing
+  description: Bullets <wave><color=#55AAFF>bounce</color></wave> to nearby enemies.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: 61497ae26decbbb42aaa416e94e0170c, type: 2}

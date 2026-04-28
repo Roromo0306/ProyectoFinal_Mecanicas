@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PierceCard
   m_EditorClassIdentifier: 
   title: Pierce
-  description: lol
+  description: Bullets <wave><color=#FFD700>pierce</color></wave> through enemies.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: 44935a1122bf40f49a763abc3123e3b7, type: 2}

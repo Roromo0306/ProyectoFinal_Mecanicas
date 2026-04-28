@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpreadShotCard
   m_EditorClassIdentifier: 
   title: Spread shot
-  description: byee
+  description: Fire <wave><color=#FFD700>3 bullets</color></wave> in a <color=#FF9BFF>spread</color>.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: 31138c233fc39334f84229c220dcd29c, type: 2}

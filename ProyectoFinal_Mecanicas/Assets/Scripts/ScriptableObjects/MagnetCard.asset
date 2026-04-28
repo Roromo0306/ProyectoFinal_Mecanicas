@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MagnetCard
   m_EditorClassIdentifier: 
   title: "im\xE1n"
-  description: yo
+  description: Increase your <wave><color=#55AAFF>pickup range</color></wave>.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: d2a5ea918ae38f24bbaa18911ea0edbd, type: 2}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BurnEffect 1
   m_EditorClassIdentifier: 
   title: Burn
-  description: me quemo
+  description: Bullets <wave><color=#FF8844>burn</color></wave> enemies over time.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: 23802701b64ec38469fd31e6d09f652b, type: 2}

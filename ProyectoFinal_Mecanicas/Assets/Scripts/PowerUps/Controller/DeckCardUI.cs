@@ -19,6 +19,9 @@ public class DeckCardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (icon != null) icon.sprite = data.icon;
         if (title != null) title.text = data.title;
         if (description != null) description.text = data.description;
+        CardTooltipTrigger tooltip = GetComponent<CardTooltipTrigger>();
+        if (tooltip != null)
+            tooltip.SetData(data);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

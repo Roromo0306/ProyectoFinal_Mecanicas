@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RadialCard
   m_EditorClassIdentifier: 
   title: Radial
-  description: lolazo
+  description: A <wave><color=#C77DFF>weapon orbits</color></wave> around you.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: 1c86262991d28c744924304b73455070, type: 2}

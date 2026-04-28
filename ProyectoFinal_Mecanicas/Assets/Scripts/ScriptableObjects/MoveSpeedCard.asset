@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MoveSpeedCard
   m_EditorClassIdentifier: 
   title: Velocidad
-  description: formula1
+  description: Increase your <wave><color=#55FFAA>movement speed</color></wave>.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: a16083c6a1693e449a8dfb4c5896bde5, type: 2}

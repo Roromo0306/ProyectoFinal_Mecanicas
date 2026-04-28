@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DashCard
   m_EditorClassIdentifier: 
   title: dash
-  description: fium
+  description: Perform a <wave><color=#FFD700>dash</color></wave> to evade enemies.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: c0c74c24ffc658248b56aed1d00cfa66, type: 2}

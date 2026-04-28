@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ExplosionCard
   m_EditorClassIdentifier: 
   title: explosion
-  description: boom boom
+  description: Bullets <wave><color=#FF5555>explode</color></wave> on impact.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: 163d2ad1c5300b24c84a99c6a1e444bc, type: 2}

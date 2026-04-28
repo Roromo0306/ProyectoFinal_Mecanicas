@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ExtraLifeCard
   m_EditorClassIdentifier: 
   title: Extra life
-  description: ou yeah
+  description: Increase your <wave><color=#55FFAA>max health</color></wave>.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: 047af9643733e6f4992bae7dd4f03129, type: 2}

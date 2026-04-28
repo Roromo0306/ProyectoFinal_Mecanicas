@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DamageCard
   m_EditorClassIdentifier: 
   title: "DA\xF1o"
-  description: duele
+  description: Increase your <wave><color=#FF5555>damage</color></wave>.
   icon: {fileID: 0}
   effects:
   - {fileID: 11400000, guid: ca98f70ba60570b4591465b75b8610ba, type: 2}
