@@ -12,6 +12,7 @@ public class XPCollector : MonoBehaviour
 
             var xp = GetComponent<XPView>();
             EventBus.Publish(new ExperienceCollectedEvent(xp.amount));
+            SFXManager.Instance?.PlayXPPickup();
 
             Destroy(gameObject);
         }

@@ -32,6 +32,7 @@ public class LevelUpUI : MonoBehaviour
 
     private void OnLevelUp(object evt)
     {
+        SFXManager.Instance?.PlayLevelUp();
         if (isShowing)
             return;
 

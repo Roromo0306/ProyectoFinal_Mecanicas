@@ -135,6 +135,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitKnockbackForce: 10
   hitParticlePrefab: {fileID: 7548780520399808274, guid: 08138b57927efaa42bf2e392c2c07eba, type: 3}
-  speed: 10
+  speed: 20
   lifetime: 3
   explosionParticlePrefab: {fileID: 7548780520399808274, guid: 923e6d52a29129f4d88d7a194b2c408d, type: 3}

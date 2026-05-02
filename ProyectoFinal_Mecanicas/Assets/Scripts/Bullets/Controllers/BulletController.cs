@@ -99,6 +99,7 @@ public class BulletController : MonoBehaviour
 
         if (hitRoots.Contains(enemyRoot)) return;
         hitRoots.Add(enemyRoot);
+        SFXManager.Instance?.PlayEnemyHit();
 
         if (hitParticlePrefab != null)
         {

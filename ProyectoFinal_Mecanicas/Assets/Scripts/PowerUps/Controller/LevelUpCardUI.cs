@@ -29,6 +29,8 @@ public class LevelUpCardUI : MonoBehaviour
         if (alreadySelected) return;
         alreadySelected = true;
 
+        SFXManager.Instance?.PlayCardSelect();
+
         if (data == null)
         {
             Debug.LogError("LevelUpCardUI.Select -> data es null");

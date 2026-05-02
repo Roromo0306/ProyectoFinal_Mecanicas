@@ -27,6 +27,7 @@ public class RecycleZone : MonoBehaviour, IDropHandler
 
         if (ActivationService.Instance != null)
             ActivationService.Instance.RecalculateEquippedPowerUps();
+        SFXManager.Instance?.PlayRecycle();
 
         Destroy(card.gameObject);
 

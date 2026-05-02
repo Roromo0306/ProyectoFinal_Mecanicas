@@ -51,6 +51,7 @@ public class BulletSpawner : MonoBehaviour
     private void FireBullet(Vector3 position, Vector3 direction)
     {
         GameObject bulletObj = Instantiate(bulletPrefab, position, Quaternion.identity);
+        SFXManager.Instance?.PlayShoot();
 
         BulletController bullet = bulletObj.GetComponent<BulletController>();
         if (bullet == null)

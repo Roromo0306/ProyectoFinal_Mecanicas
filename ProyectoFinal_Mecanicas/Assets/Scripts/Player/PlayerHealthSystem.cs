@@ -102,6 +102,7 @@ public class PlayerHealthSystem : MonoBehaviour
         lastHitTime = Time.time;
 
         lives--;
+        SFXManager.Instance?.PlayPlayerHit();
         UpdateLivesUI();
 
         PlayHitFeedback();

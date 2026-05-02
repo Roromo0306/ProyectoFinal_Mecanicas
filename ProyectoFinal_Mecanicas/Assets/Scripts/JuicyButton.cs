@@ -38,6 +38,7 @@ public class JuicyButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerDown(PointerEventData eventData)
     {
         if (button != null && !button.interactable) return;
+        SFXManager.Instance?.PlayButtonClick();
 
         SetTargetScale(originalScale * clickScale);
     }
