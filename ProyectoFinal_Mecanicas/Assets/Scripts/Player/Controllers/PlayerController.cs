@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 
 public class PlayerController
 {
@@ -44,7 +44,6 @@ public class PlayerController
         if (playerStats == null || view == null || view.rb == null)
             return;
 
-        // Terminar dash
         if (isDashing && Time.time >= dashEndTime)
         {
             isDashing = false;
@@ -132,6 +131,10 @@ public class PlayerController
         }
 
         if (!input.GetFire())
+            return;
+
+        // Evita disparar cuando el cursor está sobre botones, cartas, deck, tooltips o cualquier UI.
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             return;
 
         if (Time.time - model.lastShootTime < playerStats.fireCooldown)

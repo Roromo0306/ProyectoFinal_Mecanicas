@@ -64,11 +64,17 @@ public class EndGameUI : MonoBehaviour
 
     public void ShowWin()
     {
+        if (MusicManager.Instance != null)
+            MusicManager.Instance.PlayYouWinMusic();
+
         ShowEndScreen("YOU WIN!", "You survived until the end.");
     }
 
     public void ShowLose()
     {
+        if (MusicManager.Instance != null)
+            MusicManager.Instance.PlayGameOverMusic();
+
         ShowEndScreen("GAME OVER", "You were defeated.");
     }
 

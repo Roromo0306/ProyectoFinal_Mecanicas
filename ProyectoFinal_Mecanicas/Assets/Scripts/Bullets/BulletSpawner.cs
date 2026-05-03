@@ -39,6 +39,9 @@ public class BulletSpawner : MonoBehaviour
             ? Vector3.right
             : e.direction.normalized;
 
+        // Sonido una sola vez por disparo, aunque tengas Spread Shot.
+        SFXManager.Instance?.PlayShoot();
+
         FireBullet(e.position, baseDirection);
 
         if (playerStats.hasSpreadShot)
@@ -51,7 +54,6 @@ public class BulletSpawner : MonoBehaviour
     private void FireBullet(Vector3 position, Vector3 direction)
     {
         GameObject bulletObj = Instantiate(bulletPrefab, position, Quaternion.identity);
-        SFXManager.Instance?.PlayShoot();
 
         BulletController bullet = bulletObj.GetComponent<BulletController>();
         if (bullet == null)

@@ -9,6 +9,8 @@ public class MusicManager : MonoBehaviour
     [Header("Music Clips")]
     public AudioClip mainMenuMusic;
     public AudioClip gameplayMusic;
+    public AudioClip gameOverMusic;
+    public AudioClip youWinMusic;
 
     [Header("Settings")]
     public float volume = 0.6f;
@@ -16,6 +18,8 @@ public class MusicManager : MonoBehaviour
 
     private AudioSource audioSource;
     private Coroutine fadeRoutine;
+
+    private bool endGameMusicPlaying = false;
 
     private void Awake()
     {
@@ -49,6 +53,7 @@ public class MusicManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        endGameMusicPlaying = false;
         PlayMusicForScene(scene.name);
     }
 
@@ -61,6 +66,45 @@ public class MusicManager : MonoBehaviour
         else if (sceneName == "Game" || sceneName == "GameScene")
             targetClip = gameplayMusic;
 
+        if (targetClip == null) return;
+
+        PlayMusic(targetClip);
+    }
+
+    public void PlayGameOverMusic()
+    {
+        endGameMusicPlaying = true;
+
+        if (gameOverMusic != null)
+            PlayMusic(gameOverMusic);
+    }
+
+    public void PlayYouWinMusic()
+    {
+        endGameMusicPlaying = true;
+
+        if (youWinMusic != null)
+            PlayMusic(youWinMusic);
+    }
+
+    public void PlayGameplayMusic()
+    {
+        endGameMusicPlaying = false;
+
+        if (gameplayMusic != null)
+            PlayMusic(gameplayMusic);
+    }
+
+    public void PlayMainMenuMusic()
+    {
+        endGameMusicPlaying = false;
+
+        if (mainMenuMusic != null)
+            PlayMusic(mainMenuMusic);
+    }
+
+    private void PlayMusic(AudioClip targetClip)
+    {
         if (targetClip == null) return;
 
         if (audioSource.clip == targetClip && audioSource.isPlaying)
