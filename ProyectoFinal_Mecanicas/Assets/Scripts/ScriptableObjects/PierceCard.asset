@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1043ab6f7458c6a47bbf2799c4c47ff9, type: 3}
   m_Name: PierceCard
   m_EditorClassIdentifier: 
-  title: Pierce
+  title: 'Needle '
   description: Bullets <wave><color=#FFD700>pierce</color></wave> through enemies.
   icon: {fileID: 0}
   effects:

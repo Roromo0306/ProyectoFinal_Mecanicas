@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1043ab6f7458c6a47bbf2799c4c47ff9, type: 3}
   m_Name: SpreadShotCard
   m_EditorClassIdentifier: 
-  title: Spread shot
+  title: Triple Shot
   description: Fire <wave><color=#FFD700>3 bullets</color></wave> in a <color=#FF9BFF>spread</color>.
   icon: {fileID: 0}
   effects:

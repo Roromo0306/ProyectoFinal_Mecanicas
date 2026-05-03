@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1043ab6f7458c6a47bbf2799c4c47ff9, type: 3}
   m_Name: ExplosionCard
   m_EditorClassIdentifier: 
-  title: explosion
+  title: Blast Rounds
   description: Bullets <wave><color=#FF5555>explode</color></wave> on impact.
   icon: {fileID: 0}
   effects:

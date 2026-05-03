@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1043ab6f7458c6a47bbf2799c4c47ff9, type: 3}
   m_Name: FreezeCard
   m_EditorClassIdentifier: 
-  title: freeze
+  title: Frostbite
   description: Bullets <wave><color=#55AAFF>freeze</color></wave> enemies.
   icon: {fileID: 0}
   effects:

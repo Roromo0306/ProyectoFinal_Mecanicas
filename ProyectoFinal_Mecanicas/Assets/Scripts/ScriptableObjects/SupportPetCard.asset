@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1043ab6f7458c6a47bbf2799c4c47ff9, type: 3}
   m_Name: SupportPetCard
   m_EditorClassIdentifier: 
-  title: dragocin
+  title: Lucky Guardian
   description: Summon a pet that <wave><color=#55FFAA>improves your health</color></wave>.
   icon: {fileID: 0}
   effects:
