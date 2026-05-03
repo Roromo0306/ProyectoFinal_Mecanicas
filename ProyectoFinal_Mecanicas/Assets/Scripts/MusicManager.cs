@@ -56,9 +56,9 @@ public class MusicManager : MonoBehaviour
     {
         AudioClip targetClip = null;
 
-        if (sceneName == "Menu")
+        if (sceneName == "Menu" || sceneName == "MainMenu")
             targetClip = mainMenuMusic;
-        else if (sceneName == "Game")
+        else if (sceneName == "Game" || sceneName == "GameScene")
             targetClip = gameplayMusic;
 
         if (targetClip == null) return;

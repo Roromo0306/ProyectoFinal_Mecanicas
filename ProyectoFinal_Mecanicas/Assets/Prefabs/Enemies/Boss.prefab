@@ -167,6 +167,9 @@ MonoBehaviour:
   orbitSpeed: 30
   chaseDistance: 9
   moveSpeed: 3
+  maxAttackDistance: 7
+  minAttackDistance: 4
+  isReadyToAttack: 0
 --- !u!114 &9120829490497433880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4375e14577fa3384488106c930f7f095, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 200
+  maxHealth: 150
 --- !u!114 &6478342653286607758
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d0086fd7a053b4e9826b394923ac0b, type: 3}
   m_Name: AttackPetEffect
   m_EditorClassIdentifier: 
-  damageBonus: 2
-  fireCooldownReduction: 0.05
+  damageBonus: 1
+  fireCooldownReduction: 0.08
   minimumCooldown: 0.08
+  orbitRadius: 2.2
+  orbitSpeed: 20

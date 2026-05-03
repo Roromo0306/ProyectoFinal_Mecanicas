@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e140c425a85a0140aef3b7ea7bcc36c, type: 3}
   m_Name: SupportPetEffect
   m_EditorClassIdentifier: 
-  extraLives: 2
-  speedBonus: 1
+  extraLives: 1
+  speedBonus: 0.5

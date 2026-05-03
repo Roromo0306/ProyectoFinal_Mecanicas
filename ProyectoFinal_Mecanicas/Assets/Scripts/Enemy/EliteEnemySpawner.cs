@@ -7,20 +7,44 @@ public class EliteEnemySpawner : MonoBehaviour
     public GameObject eliteEnemyPrefab;
     public ArenaClosureController arenaClosure;
 
-    [SerializeField] private float spawnAfterSeconds = 300f;
+    [Header("Spawn Timing")]
+    [SerializeField] private float firstSpawnAfterSeconds = 150f;
+    [SerializeField] private float spawnInterval = 90f;
+
+    [Header("Spawn Limits")]
+    [SerializeField] private int maxElitesAlive = 1;
+    [SerializeField] private int maxElitesTotal = 5;
+
+    [Header("Spawn Position")]
     [SerializeField] private float spawnMargin = 3f;
 
-    private bool hasSpawned = false;
-    private GameObject currentElite;
+    private float nextSpawnTime;
+    private int aliveElites = 0;
+    private int spawnedElitesTotal = 0;
+
+    private void Start()
+    {
+        nextSpawnTime = firstSpawnAfterSeconds;
+
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+    }
 
     private void Update()
     {
-        if (hasSpawned) return;
-        if (gameTimer == null || eliteEnemyPrefab == null || mainCamera == null) return;
+        if (gameTimer == null || eliteEnemyPrefab == null || mainCamera == null)
+            return;
 
-        if (gameTimer.ElapsedTime >= spawnAfterSeconds)
+        if (spawnedElitesTotal >= maxElitesTotal)
+            return;
+
+        if (aliveElites >= maxElitesAlive)
+            return;
+
+        if (gameTimer.ElapsedTime >= nextSpawnTime)
         {
             SpawnElite();
+            nextSpawnTime += spawnInterval;
         }
     }
 
@@ -28,18 +52,19 @@ public class EliteEnemySpawner : MonoBehaviour
     {
         Vector3 spawnPos = GetSpawnPositionOutsideCamera();
 
-        currentElite = Instantiate(eliteEnemyPrefab, spawnPos, Quaternion.identity);
+        GameObject elite = Instantiate(eliteEnemyPrefab, spawnPos, Quaternion.identity);
 
-        EliteEnemyHealth health = currentElite.GetComponent<EliteEnemyHealth>();
+        EliteEnemyHealth health = elite.GetComponent<EliteEnemyHealth>();
         if (health != null)
             health.spawner = this;
 
-        hasSpawned = true;
+        aliveElites++;
+        spawnedElitesTotal++;
 
         if (arenaClosure != null)
             arenaClosure.ActivateArena();
 
-        Debug.Log("Elite spawnado");
+        Debug.Log("Elite spawnado. Vivos: " + aliveElites + " | Total: " + spawnedElitesTotal);
     }
 
     private Vector3 GetSpawnPositionOutsideCamera()
@@ -56,20 +81,27 @@ public class EliteEnemySpawner : MonoBehaviour
 
         switch (side)
         {
-            case 0: return new Vector3(left, Random.Range(bottom, top), 0f);
-            case 1: return new Vector3(right, Random.Range(bottom, top), 0f);
-            case 2: return new Vector3(Random.Range(left, right), top, 0f);
-            default: return new Vector3(Random.Range(left, right), bottom, 0f);
+            case 0:
+                return new Vector3(left, Random.Range(bottom, top), 0f);
+
+            case 1:
+                return new Vector3(right, Random.Range(bottom, top), 0f);
+
+            case 2:
+                return new Vector3(Random.Range(left, right), top, 0f);
+
+            default:
+                return new Vector3(Random.Range(left, right), bottom, 0f);
         }
     }
 
     public void OnEliteDefeated()
     {
-        currentElite = null;
+        aliveElites = Mathf.Max(0, aliveElites - 1);
 
-        if (arenaClosure != null)
+        if (arenaClosure != null && aliveElites <= 0)
             arenaClosure.DeactivateArena();
 
-        Debug.Log("Elite derrotado");
+        Debug.Log("Elite derrotado. Vivos restantes: " + aliveElites);
     }
 }

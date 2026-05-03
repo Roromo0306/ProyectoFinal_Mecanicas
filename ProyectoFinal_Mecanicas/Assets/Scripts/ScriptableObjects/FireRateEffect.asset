@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef15de730b234fb46a3d4868cbd53d95, type: 3}
   m_Name: FireRateEffect
   m_EditorClassIdentifier: 
-  cooldownReduction: 0.05
-  minimumCooldown: 0.08
+  cooldownReduction: 0.12
+  minimumCooldown: 0.25

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DashEffect
   m_EditorClassIdentifier: 
   speed: 18
-  duration: 0.18
+  duration: 0.25
   cooldown: 1.2

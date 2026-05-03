@@ -2,11 +2,18 @@ using UnityEngine;
 
 public class FinalBossController : MonoBehaviour
 {
+    [Header("Orbit")]
     public float orbitDistance = 6f;
     public float orbitSpeed = 30f;
 
+    [Header("Movement")]
     public float chaseDistance = 9f;
     public float moveSpeed = 3f;
+
+    [Header("Attack Positioning")]
+    public float maxAttackDistance = 7f;
+    public float minAttackDistance = 4f;
+    public bool isReadyToAttack = false;
 
     private Transform player;
     private float currentAngle;
@@ -15,7 +22,11 @@ public class FinalBossController : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObj != null)
+            player = playerObj.transform;
+
         laserAttack = GetComponent<BossLaserAttack>();
 
         currentAngle = Random.Range(0f, 360f);
@@ -25,24 +36,42 @@ public class FinalBossController : MonoBehaviour
     {
         if (player == null) return;
 
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+        // Si está atacando, no moverlo.
         if (laserAttack != null && laserAttack.IsAttacking)
             return;
 
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+        // Solo está listo para atacar si está cerca del player.
+        isReadyToAttack = distanceToPlayer <= maxAttackDistance;
 
-        if (distanceToPlayer > chaseDistance)
+        // Si está demasiado lejos, acercarse antes de atacar.
+        if (distanceToPlayer > maxAttackDistance)
         {
             FollowPlayer();
+            return;
         }
-        else
+
+        // Si está demasiado cerca, se separa un poco.
+        if (distanceToPlayer < minAttackDistance)
         {
-            OrbitPlayer();
+            MoveAwayFromPlayer();
+            return;
         }
+
+        // Si está en buena distancia, orbita.
+        OrbitPlayer();
     }
 
     private void FollowPlayer()
     {
         Vector3 dir = (player.position - transform.position).normalized;
+        transform.position += dir * moveSpeed * Time.deltaTime;
+    }
+
+    private void MoveAwayFromPlayer()
+    {
+        Vector3 dir = (transform.position - player.position).normalized;
         transform.position += dir * moveSpeed * Time.deltaTime;
     }
 
@@ -65,5 +94,13 @@ public class FinalBossController : MonoBehaviour
             targetPos,
             Time.deltaTime * 2f
         );
+    }
+
+    public bool CanUseLaserAttack()
+    {
+        if (player == null) return false;
+
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+        return distanceToPlayer <= maxAttackDistance && distanceToPlayer >= minAttackDistance;
     }
 }

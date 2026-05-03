@@ -2,19 +2,30 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [Header("Activation")]
+    public bool startActive = true;
+    public float activationTime = 0f;
+
+    [Header("Enemy")]
     public GameObject enemyPrefab;
 
+    [Header("Spawn Rate")]
     public float minSpawnRate = 0.2f;
     public float maxSpawnRate = 2f;
 
+    [Header("Phases")]
     public float rampDuration = 60f;
     public float peakDuration = 180f;
     public float cooldownDuration = 60f;
 
+    [Header("Spawn Position")]
     public float spawnDistance = 10f;
 
     private float timer;
     private float phaseTimer;
+    private float gameTimer;
+
+    private bool isActive;
 
     private enum SpawnPhase
     {
@@ -29,11 +40,37 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindWithTag("Player").transform;
+        GameObject playerObject = GameObject.FindWithTag("Player");
+
+        if (playerObject != null)
+            player = playerObject.transform;
+        else
+            Debug.LogError("EnemySpawner -> No se encontró Player con tag Player");
+
+        isActive = startActive;
+
+        if (!startActive)
+            gameObject.SetActive(true);
     }
 
     private void Update()
     {
+        gameTimer += Time.deltaTime;
+
+        if (!isActive)
+        {
+            if (gameTimer >= activationTime)
+            {
+                ActivateSpawner();
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        if (player == null) return;
+
         phaseTimer += Time.deltaTime;
         timer += Time.deltaTime;
 
@@ -43,9 +80,19 @@ public class EnemySpawner : MonoBehaviour
 
         if (timer >= currentSpawnRate)
         {
-            timer = 0;
+            timer = 0f;
             Spawn();
         }
+    }
+
+    private void ActivateSpawner()
+    {
+        isActive = true;
+        timer = 0f;
+        phaseTimer = 0f;
+        currentPhase = SpawnPhase.Ramp;
+
+        Debug.Log(gameObject.name + " activado en segundo: " + gameTimer);
     }
 
     private void UpdatePhase()
@@ -55,7 +102,7 @@ public class EnemySpawner : MonoBehaviour
             case SpawnPhase.Ramp:
                 if (phaseTimer >= rampDuration)
                 {
-                    phaseTimer = 0;
+                    phaseTimer = 0f;
                     currentPhase = SpawnPhase.Peak;
                 }
                 break;
@@ -63,7 +110,7 @@ public class EnemySpawner : MonoBehaviour
             case SpawnPhase.Peak:
                 if (phaseTimer >= peakDuration)
                 {
-                    phaseTimer = 0;
+                    phaseTimer = 0f;
                     currentPhase = SpawnPhase.Cooldown;
                 }
                 break;
@@ -71,7 +118,7 @@ public class EnemySpawner : MonoBehaviour
             case SpawnPhase.Cooldown:
                 if (phaseTimer >= cooldownDuration)
                 {
-                    phaseTimer = 0;
+                    phaseTimer = 0f;
                     currentPhase = SpawnPhase.Ramp;
                 }
                 break;
@@ -83,7 +130,7 @@ public class EnemySpawner : MonoBehaviour
         switch (currentPhase)
         {
             case SpawnPhase.Ramp:
-                float t = phaseTimer / rampDuration;
+                float t = rampDuration > 0f ? phaseTimer / rampDuration : 1f;
                 return Mathf.Lerp(maxSpawnRate, minSpawnRate, t);
 
             case SpawnPhase.Peak:
@@ -99,6 +146,9 @@ public class EnemySpawner : MonoBehaviour
 
     private void Spawn()
     {
+        if (enemyPrefab == null) return;
+        if (player == null) return;
+
         Vector2 dir = Random.insideUnitCircle.normalized;
         Vector2 pos = (Vector2)player.position + dir * spawnDistance;
 

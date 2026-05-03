@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 176c53d3dd41d8140b1ec77a7b739d53, type: 3}
   m_Name: ExplosionEffect
   m_EditorClassIdentifier: 
-  radiusBonus: 2.5
-  damageMultiplier: 1
+  radiusBonus: 2.2
+  damageMultiplier: 0.6

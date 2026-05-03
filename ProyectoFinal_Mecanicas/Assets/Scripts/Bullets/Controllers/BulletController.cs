@@ -34,6 +34,9 @@ public class BulletController : MonoBehaviour
     private float burnTickDamage;
     private float burnTickInterval;
 
+    private Dictionary<SpriteRenderer, Coroutine> activeFlashCoroutines = new Dictionary<SpriteRenderer, Coroutine>();
+    private Dictionary<SpriteRenderer, Color> originalSpriteColors = new Dictionary<SpriteRenderer, Color>();
+
     private readonly HashSet<GameObject> hitRoots = new HashSet<GameObject>();
 
     public void Init(
@@ -276,7 +279,13 @@ public class BulletController : MonoBehaviour
         SpriteRenderer sr = enemyRoot.GetComponentInChildren<SpriteRenderer>();
         if (sr != null)
         {
-            StartCoroutine(FlashWhite(sr));
+            if (activeFlashCoroutines.ContainsKey(sr))
+            {
+                StopCoroutine(activeFlashCoroutines[sr]);
+                activeFlashCoroutines.Remove(sr);
+            }
+
+            activeFlashCoroutines[sr] = StartCoroutine(FlashWhite(sr));
         }
     }
 
@@ -284,12 +293,21 @@ public class BulletController : MonoBehaviour
     {
         if (sr == null) yield break;
 
-        Color originalColor = sr.color;
+        if (!originalSpriteColors.ContainsKey(sr))
+            originalSpriteColors[sr] = sr.color;
 
         sr.color = Color.white;
+
         yield return new WaitForSeconds(0.08f);
 
-        if (sr != null)
-            sr.color = originalColor;
+        if (sr != null && originalSpriteColors.ContainsKey(sr))
+        {
+            sr.color = originalSpriteColors[sr];
+            originalSpriteColors.Remove(sr);
+        }
+
+        if (sr != null && activeFlashCoroutines.ContainsKey(sr))
+            activeFlashCoroutines.Remove(sr);
     }
+
 }

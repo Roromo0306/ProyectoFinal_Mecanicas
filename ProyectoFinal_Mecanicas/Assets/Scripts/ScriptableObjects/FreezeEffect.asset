@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 688de85f2184a254f97932f9e3f3371d, type: 3}
   m_Name: FreezeEffect
   m_EditorClassIdentifier: 
-  duration: 2
-  slowMultiplier: 0.4
+  duration: 1.5
+  slowMultiplier: 0.45

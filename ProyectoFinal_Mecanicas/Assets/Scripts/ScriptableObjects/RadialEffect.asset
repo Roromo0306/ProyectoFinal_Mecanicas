@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e11a337542464c47bf773e9c41b0d94, type: 3}
   m_Name: RadialEffect
   m_EditorClassIdentifier: 
-  orbitRadius: 1.8
+  orbitRadius: 3
   orbitSpeed: 180
-  damageMultiplier: 1
+  damageMultiplier: 0.75

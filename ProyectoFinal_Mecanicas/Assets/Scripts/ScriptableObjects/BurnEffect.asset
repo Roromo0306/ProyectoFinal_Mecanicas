@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BurnEffect
   m_EditorClassIdentifier: 
   duration: 3
-  tickDamage: 0.2
-  tickInterval: 0.4
+  tickDamage: 0.25
+  tickInterval: 0.5

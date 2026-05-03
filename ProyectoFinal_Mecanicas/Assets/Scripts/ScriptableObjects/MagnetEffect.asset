@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c362220a96e36943ad5094e5004f90f, type: 3}
   m_Name: MagnetEffect
   m_EditorClassIdentifier: 
-  amount: 2
+  amount: 3

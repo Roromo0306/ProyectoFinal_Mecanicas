@@ -15,9 +15,11 @@ public class BossLaserAttack : MonoBehaviour
     public bool IsAttacking { get; private set; }
 
     private Vector3 originalPosition;
+    private FinalBossController bossController;
 
     private void Start()
     {
+        bossController = GetComponent<FinalBossController>();
         StartCoroutine(AttackRoutine());
     }
 
@@ -27,12 +29,18 @@ public class BossLaserAttack : MonoBehaviour
         {
             yield return new WaitForSeconds(attackCooldown);
 
+            if (bossController != null && !bossController.CanUseLaserAttack())
+                continue;
+
             yield return StartCoroutine(PerformAttack());
         }
     }
 
     IEnumerator PerformAttack()
     {
+        if (bossController != null && !bossController.CanUseLaserAttack())
+            yield break;
+
         IsAttacking = true;
 
         originalPosition = transform.position;
@@ -50,6 +58,12 @@ public class BossLaserAttack : MonoBehaviour
         }
 
         transform.position = originalPosition;
+
+        if (bossController != null && !bossController.CanUseLaserAttack())
+        {
+            IsAttacking = false;
+            yield break;
+        }
 
         bool diagonal = Random.value > 0.5f;
         bool rotating = Random.value > 0.5f;
