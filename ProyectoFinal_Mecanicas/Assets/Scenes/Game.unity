@@ -1784,8 +1784,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startActive: 0
   activationTime: 240
-  enemyPrefab: {fileID: 478209527870574442, guid: b29a64c172587ae49815f3ab7ddd9e74, type: 3}
-  tankEnemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 478209527870574442, guid: 2aca68b60263e0541bbf063c7e3638d2, type: 3}
+  tankEnemyPrefab: {fileID: 478209527870574442, guid: b29a64c172587ae49815f3ab7ddd9e74, type: 3}
   spawnTanks: 1
   tankSpawnChance: 0.5
   minSpawnRate: 0.25
@@ -8145,10 +8145,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startActive: 1
   activationTime: 0
-  enemyPrefab: {fileID: 478209527870574442, guid: b29a64c172587ae49815f3ab7ddd9e74, type: 3}
-  tankEnemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 478209527870574442, guid: 2aca68b60263e0541bbf063c7e3638d2, type: 3}
+  tankEnemyPrefab: {fileID: 478209527870574442, guid: b29a64c172587ae49815f3ab7ddd9e74, type: 3}
   spawnTanks: 0
-  tankSpawnChance: 1
+  tankSpawnChance: 0
   minSpawnRate: 0.35
   maxSpawnRate: 1.4
   minEnemiesPerSpawn: 1
@@ -10075,10 +10075,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcbdd8ed7b5adf74d813129c1d1458ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startActive: 1
+  startActive: 0
   activationTime: 120
-  enemyPrefab: {fileID: 478209527870574442, guid: b29a64c172587ae49815f3ab7ddd9e74, type: 3}
-  tankEnemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 478209527870574442, guid: 2aca68b60263e0541bbf063c7e3638d2, type: 3}
+  tankEnemyPrefab: {fileID: 478209527870574442, guid: b29a64c172587ae49815f3ab7ddd9e74, type: 3}
   spawnTanks: 1
   tankSpawnChance: 0.3
   minSpawnRate: 0.35
@@ -10854,7 +10854,7 @@ MonoBehaviour:
   mainCamera: {fileID: 158742223}
   eliteEnemyPrefab: {fileID: 3532044227380647055, guid: 8740aa17c6e60574da6cba7b6c3a2380, type: 3}
   arenaClosure: {fileID: 1751955916}
-  firstSpawnAfterSeconds: 150
+  firstSpawnAfterSeconds: 120
   spawnInterval: 90
   maxElitesAlive: 1
   maxElitesTotal: 5
@@ -11336,7 +11336,7 @@ MonoBehaviour:
   bossPrefab: {fileID: 8079791531597769146, guid: 546ca3ff38a7af549a3004d65235f452, type: 3}
   spawnPoint: {fileID: 1738325043}
   gameTimer: {fileID: 1804573105}
-  spawnAfterSeconds: 480
+  spawnAfterSeconds: 500
 --- !u!1 &1751955915
 GameObject:
   m_ObjectHideFlags: 0
