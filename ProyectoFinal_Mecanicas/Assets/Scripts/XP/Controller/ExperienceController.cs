@@ -3,21 +3,31 @@ using UnityEngine;
 public class ExperienceController
 {
     private ExperienceModel model;
+    private bool disposed = false;
 
     public ExperienceController(ExperienceModel model)
     {
         this.model = model;
-
         EventBus.Subscribe<ExperienceCollectedEvent>(OnXPCollected);
+    }
+
+    public void Dispose()
+    {
+        if (disposed) return;
+
+        EventBus.Unsubscribe<ExperienceCollectedEvent>(OnXPCollected);
+        disposed = true;
     }
 
     private void OnXPCollected(object evt)
     {
+        if (disposed) return;
+
         var e = (ExperienceCollectedEvent)evt;
 
         model.currentXP += e.amount;
 
-        if (model.currentXP >= model.xpToNextLevel)
+        while (model.currentXP >= model.xpToNextLevel)
         {
             LevelUp();
         }
@@ -28,9 +38,9 @@ public class ExperienceController
         model.currentXP -= model.xpToNextLevel;
         model.currentLevel++;
 
-        model.xpToNextLevel = Mathf.RoundToInt(model.xpToNextLevel * 1.5f);
+        model.xpToNextLevel = Mathf.RoundToInt(model.xpToNextLevel * 1.75f);
 
-        Debug.Log("LEVEL UP LANZADO");
+        Debug.Log("LEVEL UP LANZADO -> Nivel " + model.currentLevel);
         EventBus.Publish(new LevelUpEvent(model.currentLevel));
     }
 }

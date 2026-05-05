@@ -7,6 +7,9 @@ public class EliteEnemyHealth : MonoBehaviour
 
     [HideInInspector] public EliteEnemySpawner spawner;
 
+    private bool isDead = false;
+    private bool defeatNotified = false;
+
     private void Awake()
     {
         currentHealth = maxHealth;
@@ -14,6 +17,8 @@ public class EliteEnemyHealth : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
+        if (isDead) return;
+
         currentHealth -= amount;
 
         Debug.Log("Elite recibe daño: " + amount + " | vida: " + currentHealth);
@@ -24,13 +29,29 @@ public class EliteEnemyHealth : MonoBehaviour
 
     private void Die()
     {
+        if (isDead) return;
+        isDead = true;
+
+        NotifyDefeated();
+
         PlayerHealthSystem playerHealth = FindObjectOfType<PlayerHealthSystem>();
         if (playerHealth != null)
             playerHealth.AddLives(1);
 
+        Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        NotifyDefeated();
+    }
+
+    private void NotifyDefeated()
+    {
+        if (defeatNotified) return;
+        defeatNotified = true;
+
         if (spawner != null)
             spawner.OnEliteDefeated();
-
-        Destroy(gameObject);
     }
 }

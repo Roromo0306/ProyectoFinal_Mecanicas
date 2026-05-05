@@ -266,7 +266,8 @@ public class BulletController : MonoBehaviour
 
         if (hitParticlePrefab != null)
         {
-            Instantiate(hitParticlePrefab, enemyRoot.transform.position, Quaternion.identity);
+            GameObject fx = Instantiate(hitParticlePrefab, enemyRoot.transform.position, Quaternion.identity);
+            Destroy(fx, 1.5f);
         }
 
         EnemyInstaller normalInstaller = enemyRoot.GetComponent<EnemyInstaller>();
@@ -276,19 +277,17 @@ public class BulletController : MonoBehaviour
             return;
         }
 
+        EliteEnemyController eliteController = enemyRoot.GetComponent<EliteEnemyController>();
+        if (eliteController != null)
+        {
+            eliteController.ApplyBulletHitFeedback(transform.position, hitKnockbackForce);
+            return;
+        }
+
         SpriteRenderer sr = enemyRoot.GetComponentInChildren<SpriteRenderer>();
         if (sr != null)
-        {
-            if (activeFlashCoroutines.ContainsKey(sr))
-            {
-                StopCoroutine(activeFlashCoroutines[sr]);
-                activeFlashCoroutines.Remove(sr);
-            }
-
-            activeFlashCoroutines[sr] = StartCoroutine(FlashWhite(sr));
-        }
+            StartCoroutine(FlashWhite(sr));
     }
-
     private IEnumerator FlashWhite(SpriteRenderer sr)
     {
         if (sr == null) yield break;

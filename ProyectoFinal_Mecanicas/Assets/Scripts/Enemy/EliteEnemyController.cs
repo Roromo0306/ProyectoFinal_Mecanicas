@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class EliteEnemyController : MonoBehaviour
@@ -20,6 +21,10 @@ public class EliteEnemyController : MonoBehaviour
     public float repositionDistance = 2.5f;
     public float contactDamageCooldown = 0.4f;
 
+    [Header("Hit Feedback")]
+    public float hitFlashDuration = 0.08f;
+    public Color hitColor = Color.white;
+
     private Transform player;
     private Camera mainCamera;
 
@@ -31,6 +36,27 @@ public class EliteEnemyController : MonoBehaviour
     private float stateTimer;
     private float lastHitTime = -999f;
 
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
+
+    private Coroutine hitFlashRoutine;
+    private Coroutine freezeRoutine;
+    private Coroutine burnRoutine;
+
+    private bool isFrozen = false;
+    private bool isBurning = false;
+    private bool burnFlashYellow = false;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if (spriteRenderer != null)
+            originalColor = spriteRenderer.color;
+        else
+            originalColor = Color.white;
+    }
+
     private void Start()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -39,6 +65,8 @@ public class EliteEnemyController : MonoBehaviour
 
         mainCamera = Camera.main;
         enterTarget = GetPointInsideCamera();
+
+        RefreshVisualState();
     }
 
     private void Update()
@@ -148,26 +176,42 @@ public class EliteEnemyController : MonoBehaviour
         EventBus.Publish(new PlayerHitEvent(collision.transform.position));
     }
 
-    public void ApplyFreeze(float duration, float slowMultiplier)
+    public void ApplyBulletHitFeedback(Vector3 sourcePosition, float force)
     {
-        // Versión simple: ralentiza temporalmente el movimiento del élite
-        StartCoroutine(FreezeRoutine(duration, slowMultiplier));
+        if (hitFlashRoutine != null)
+            StopCoroutine(hitFlashRoutine);
+
+        hitFlashRoutine = StartCoroutine(HitFlashRoutine());
     }
 
-    private System.Collections.IEnumerator FreezeRoutine(float duration, float slowMultiplier)
+    private IEnumerator HitFlashRoutine()
     {
+        if (spriteRenderer == null) yield break;
+
+        spriteRenderer.color = hitColor;
+
+        yield return new WaitForSeconds(hitFlashDuration);
+
+        hitFlashRoutine = null;
+        RefreshVisualState();
+    }
+
+    public void ApplyFreeze(float duration, float slowMultiplier)
+    {
+        if (freezeRoutine != null)
+            StopCoroutine(freezeRoutine);
+
+        freezeRoutine = StartCoroutine(FreezeRoutine(duration, slowMultiplier));
+    }
+
+    private IEnumerator FreezeRoutine(float duration, float slowMultiplier)
+    {
+        isFrozen = true;
+        RefreshVisualState();
+
         float originalEnterSpeed = enterSpeed;
         float originalChargeSpeed = chargeSpeed;
         float originalRepositionSpeed = repositionSpeed;
-
-        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-        Color originalColor = Color.white;
-
-        if (sr != null)
-        {
-            originalColor = sr.color;
-            sr.color = Color.cyan;
-        }
 
         enterSpeed *= slowMultiplier;
         chargeSpeed *= slowMultiplier;
@@ -179,33 +223,33 @@ public class EliteEnemyController : MonoBehaviour
         chargeSpeed = originalChargeSpeed;
         repositionSpeed = originalRepositionSpeed;
 
-        if (sr != null)
-            sr.color = originalColor;
+        isFrozen = false;
+        freezeRoutine = null;
+        RefreshVisualState();
     }
 
     public void ApplyBurn(float duration, float tickDamage, float tickInterval)
     {
-        StartCoroutine(BurnRoutine(duration, tickDamage, tickInterval));
+        if (burnRoutine != null)
+            StopCoroutine(burnRoutine);
+
+        burnRoutine = StartCoroutine(BurnRoutine(duration, tickDamage, tickInterval));
     }
 
-    private System.Collections.IEnumerator BurnRoutine(float duration, float tickDamage, float tickInterval)
+    private IEnumerator BurnRoutine(float duration, float tickDamage, float tickInterval)
     {
+        isBurning = true;
+
         float timer = duration;
         float tickTimer = 0f;
-
-        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-        Color originalColor = Color.white;
-
-        if (sr != null)
-            originalColor = sr.color;
 
         while (timer > 0f)
         {
             timer -= Time.deltaTime;
             tickTimer -= Time.deltaTime;
 
-            if (sr != null)
-                sr.color = sr.color == Color.yellow ? originalColor : Color.yellow;
+            burnFlashYellow = !burnFlashYellow;
+            RefreshVisualState();
 
             if (tickTimer <= 0f)
             {
@@ -219,7 +263,35 @@ public class EliteEnemyController : MonoBehaviour
             yield return new WaitForSeconds(0.12f);
         }
 
-        if (sr != null)
-            sr.color = originalColor;
+        isBurning = false;
+        burnFlashYellow = false;
+        burnRoutine = null;
+        RefreshVisualState();
+    }
+
+    private void RefreshVisualState()
+    {
+        if (spriteRenderer == null)
+            return;
+
+        if (hitFlashRoutine != null)
+        {
+            spriteRenderer.color = hitColor;
+            return;
+        }
+
+        if (isFrozen)
+        {
+            spriteRenderer.color = Color.cyan;
+            return;
+        }
+
+        if (isBurning)
+        {
+            spriteRenderer.color = burnFlashYellow ? Color.yellow : originalColor;
+            return;
+        }
+
+        spriteRenderer.color = originalColor;
     }
 }

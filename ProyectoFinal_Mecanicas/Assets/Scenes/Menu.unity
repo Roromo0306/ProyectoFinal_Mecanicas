@@ -1632,6 +1632,16 @@ MonoBehaviour:
   openDeckClip: {fileID: 0}
   closeDeckClip: {fileID: 0}
   volume: 0.5
+  shootVolume: 0.65
+  shootMinPitch: 0.9
+  shootMaxPitch: 2
+  enemyHitVolume: 0.8
+  enemyHitMinPitch: 0.85
+  enemyHitMaxPitch: 4
+  xpPickupVolume: 0.3
+  xpPickupMinPitch: 0.95
+  xpPickupMaxPitch: 1.15
+  xpPickupSoundCooldown: 0.06
 --- !u!4 &1237008744
 Transform:
   m_ObjectHideFlags: 0

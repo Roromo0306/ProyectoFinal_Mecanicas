@@ -13,13 +13,19 @@ public class EnemySpawner : MonoBehaviour
     public float minSpawnRate = 0.2f;
     public float maxSpawnRate = 2f;
 
+    [Header("Spawn Amount")]
+    public int minEnemiesPerSpawn = 1;
+    public int maxEnemiesPerSpawn = 5;
+    public float amountRampDuration = 300f;
+
     [Header("Phases")]
     public float rampDuration = 60f;
     public float peakDuration = 180f;
     public float cooldownDuration = 60f;
 
     [Header("Spawn Position")]
-    public float spawnDistance = 10f;
+    public float spawnDistance = 20f;
+    public float spawnSpreadRadius = 3f;
 
     private float timer;
     private float phaseTimer;
@@ -48,9 +54,6 @@ public class EnemySpawner : MonoBehaviour
             Debug.LogError("EnemySpawner -> No se encontró Player con tag Player");
 
         isActive = startActive;
-
-        if (!startActive)
-            gameObject.SetActive(true);
     }
 
     private void Update()
@@ -60,13 +63,9 @@ public class EnemySpawner : MonoBehaviour
         if (!isActive)
         {
             if (gameTimer >= activationTime)
-            {
                 ActivateSpawner();
-            }
             else
-            {
                 return;
-            }
         }
 
         if (player == null) return;
@@ -81,7 +80,7 @@ public class EnemySpawner : MonoBehaviour
         if (timer >= currentSpawnRate)
         {
             timer = 0f;
-            Spawn();
+            SpawnGroup();
         }
     }
 
@@ -144,14 +143,30 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private void Spawn()
+    private int GetCurrentEnemiesPerSpawn()
+    {
+        float t = amountRampDuration > 0f ? gameTimer / amountRampDuration : 1f;
+        t = Mathf.Clamp01(t);
+
+        return Mathf.RoundToInt(Mathf.Lerp(minEnemiesPerSpawn, maxEnemiesPerSpawn, t));
+    }
+
+    private void SpawnGroup()
     {
         if (enemyPrefab == null) return;
         if (player == null) return;
 
-        Vector2 dir = Random.insideUnitCircle.normalized;
-        Vector2 pos = (Vector2)player.position + dir * spawnDistance;
+        int amount = GetCurrentEnemiesPerSpawn();
 
-        Instantiate(enemyPrefab, pos, Quaternion.identity);
+        Vector2 baseDir = Random.insideUnitCircle.normalized;
+        Vector2 basePos = (Vector2)player.position + baseDir * spawnDistance;
+
+        for (int i = 0; i < amount; i++)
+        {
+            Vector2 offset = Random.insideUnitCircle * spawnSpreadRadius;
+            Vector2 spawnPos = basePos + offset;
+
+            Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+        }
     }
 }

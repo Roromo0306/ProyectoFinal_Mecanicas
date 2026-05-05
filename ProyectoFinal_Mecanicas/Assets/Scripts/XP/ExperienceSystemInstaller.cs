@@ -9,4 +9,13 @@ public class ExperienceSystemInstaller : MonoBehaviour
         var model = new ExperienceModel();
         controller = new ExperienceController(model);
     }
+
+    private void OnDestroy()
+    {
+        if (controller != null)
+        {
+            controller.Dispose();
+            controller = null;
+        }
+    }
 }

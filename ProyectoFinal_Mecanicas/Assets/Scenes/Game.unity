@@ -1783,14 +1783,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startActive: 0
-  activationTime: 400
+  activationTime: 240
   enemyPrefab: {fileID: 478209527870574442, guid: 2aca68b60263e0541bbf063c7e3638d2, type: 3}
-  minSpawnRate: 0.5
-  maxSpawnRate: 2
-  rampDuration: 60
-  peakDuration: 180
-  cooldownDuration: 60
-  spawnDistance: 20
+  minSpawnRate: 0.25
+  maxSpawnRate: 1.4
+  minEnemiesPerSpawn: 2
+  maxEnemiesPerSpawn: 7
+  amountRampDuration: 300
+  rampDuration: 40
+  peakDuration: 240
+  cooldownDuration: 20
+  spawnDistance: 24
+  spawnSpreadRadius: 5
 --- !u!4 &315368618
 Transform:
   m_ObjectHideFlags: 0
@@ -8139,12 +8143,16 @@ MonoBehaviour:
   startActive: 1
   activationTime: 0
   enemyPrefab: {fileID: 478209527870574442, guid: 2aca68b60263e0541bbf063c7e3638d2, type: 3}
-  minSpawnRate: 0.5
-  maxSpawnRate: 2
-  rampDuration: 60
+  minSpawnRate: 0.35
+  maxSpawnRate: 1.4
+  minEnemiesPerSpawn: 1
+  maxEnemiesPerSpawn: 4
+  amountRampDuration: 300
+  rampDuration: 45
   peakDuration: 180
-  cooldownDuration: 60
+  cooldownDuration: 30
   spawnDistance: 20
+  spawnSpreadRadius: 3
 --- !u!4 &686504495
 Transform:
   m_ObjectHideFlags: 0
@@ -10062,14 +10070,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startActive: 1
-  activationTime: 0
+  activationTime: 120
   enemyPrefab: {fileID: 478209527870574442, guid: 2aca68b60263e0541bbf063c7e3638d2, type: 3}
-  minSpawnRate: 0.5
-  maxSpawnRate: 2
-  rampDuration: 60
+  minSpawnRate: 0.35
+  maxSpawnRate: 1.6
+  minEnemiesPerSpawn: 1
+  maxEnemiesPerSpawn: 5
+  amountRampDuration: 300
+  rampDuration: 45
   peakDuration: 180
-  cooldownDuration: 60
-  spawnDistance: 20
+  cooldownDuration: 30
+  spawnDistance: 22
+  spawnSpreadRadius: 4
 --- !u!4 &1290505631
 Transform:
   m_ObjectHideFlags: 0

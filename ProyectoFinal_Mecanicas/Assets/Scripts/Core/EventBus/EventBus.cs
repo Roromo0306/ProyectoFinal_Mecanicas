@@ -29,4 +29,9 @@ public static class EventBus
         if (events.ContainsKey(type))
             events[type]?.Invoke(evt);
     }
+
+    public static void ClearAll()
+    {
+        events.Clear();
+    }
 }
