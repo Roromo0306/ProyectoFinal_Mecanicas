@@ -1784,7 +1784,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startActive: 0
   activationTime: 240
-  enemyPrefab: {fileID: 478209527870574442, guid: 2aca68b60263e0541bbf063c7e3638d2, type: 3}
+  enemyPrefab: {fileID: 478209527870574442, guid: b29a64c172587ae49815f3ab7ddd9e74, type: 3}
+  tankEnemyPrefab: {fileID: 0}
+  spawnTanks: 1
+  tankSpawnChance: 0.5
   minSpawnRate: 0.25
   maxSpawnRate: 1.4
   minEnemiesPerSpawn: 2
@@ -8142,7 +8145,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startActive: 1
   activationTime: 0
-  enemyPrefab: {fileID: 478209527870574442, guid: 2aca68b60263e0541bbf063c7e3638d2, type: 3}
+  enemyPrefab: {fileID: 478209527870574442, guid: b29a64c172587ae49815f3ab7ddd9e74, type: 3}
+  tankEnemyPrefab: {fileID: 0}
+  spawnTanks: 0
+  tankSpawnChance: 1
   minSpawnRate: 0.35
   maxSpawnRate: 1.4
   minEnemiesPerSpawn: 1
@@ -10071,7 +10077,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startActive: 1
   activationTime: 120
-  enemyPrefab: {fileID: 478209527870574442, guid: 2aca68b60263e0541bbf063c7e3638d2, type: 3}
+  enemyPrefab: {fileID: 478209527870574442, guid: b29a64c172587ae49815f3ab7ddd9e74, type: 3}
+  tankEnemyPrefab: {fileID: 0}
+  spawnTanks: 1
+  tankSpawnChance: 0.3
   minSpawnRate: 0.35
   maxSpawnRate: 1.6
   minEnemiesPerSpawn: 1

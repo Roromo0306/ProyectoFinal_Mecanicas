@@ -2,11 +2,15 @@ using UnityEngine;
 
 public class EnemyInstaller : MonoBehaviour
 {
+    [Header("Enemy Stats")]
+    public float moveSpeed = 3f;
+
     private EnemyController controller;
 
     private void Awake()
     {
         controller = new EnemyController(transform);
+        controller.SetMoveSpeed(moveSpeed);
     }
 
     private void OnEnable()

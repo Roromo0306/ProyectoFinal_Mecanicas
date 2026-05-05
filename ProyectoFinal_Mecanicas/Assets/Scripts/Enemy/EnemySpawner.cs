@@ -6,8 +6,15 @@ public class EnemySpawner : MonoBehaviour
     public bool startActive = true;
     public float activationTime = 0f;
 
-    [Header("Enemy")]
+    [Header("Enemies")]
     public GameObject enemyPrefab;
+    public GameObject tankEnemyPrefab;
+
+    [Header("Tank Settings")]
+    public bool spawnTanks = false;
+
+    [Range(0f, 1f)]
+    public float tankSpawnChance = 0.2f;
 
     [Header("Spawn Rate")]
     public float minSpawnRate = 0.2f;
@@ -166,7 +173,21 @@ public class EnemySpawner : MonoBehaviour
             Vector2 offset = Random.insideUnitCircle * spawnSpreadRadius;
             Vector2 spawnPos = basePos + offset;
 
-            Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            GameObject prefabToSpawn = GetEnemyPrefabToSpawn();
+
+            if (prefabToSpawn != null)
+                Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
         }
+    }
+
+    private GameObject GetEnemyPrefabToSpawn()
+    {
+        if (spawnTanks && tankEnemyPrefab != null)
+        {
+            if (Random.value <= tankSpawnChance)
+                return tankEnemyPrefab;
+        }
+
+        return enemyPrefab;
     }
 }

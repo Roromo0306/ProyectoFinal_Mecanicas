@@ -46,7 +46,10 @@ public class EnemyController
                 originalColor = spriteRenderer.color;
         }
     }
-
+    public void SetMoveSpeed(float newSpeed)
+    {
+        baseSpeed = newSpeed;
+    }
     public void Tick()
     {
         if (enemyTransform == null || playerTransform == null)
