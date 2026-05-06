@@ -30,11 +30,13 @@ public class EnemyController
     private bool burnFlashYellow = false;
 
     private Color originalColor = Color.white;
-    private Color freezeColor = new Color(0.3f, 0.7f, 1f);
-    private Color burnColor = Color.yellow;
+    private Color freezeColor = new Color(0.3f, 0.7f, 1f, 1f);
+    private Color burnColor = new Color(1f, 0.55f, 0.05f, 1f);
 
     private float hitFlashTimer = 0f;
-    private Color hitColor = Color.white;
+
+    // Cambia este color si quieres otro flash.
+    private Color hitColor = new Color(1f, 0.2f, 0.2f, 1f);
 
     public EnemyController(Transform enemyTransform)
     {
@@ -215,9 +217,7 @@ public class EnemyController
 
             EnemyHealthSystem health = enemyTransform.GetComponent<EnemyHealthSystem>();
             if (health != null)
-            {
                 health.TakeDamage(burnTickDamage);
-            }
         }
 
         if (burnTimer <= 0f)
@@ -280,7 +280,7 @@ public class EnemyController
         knockbackVelocity = dir * force;
         knockbackForce = force;
 
-        hitFlashTimer = 0.08f;
+        hitFlashTimer = 0.12f;
         RefreshVisualState();
     }
 
@@ -308,9 +308,6 @@ public class EnemyController
         if (Mathf.Abs(directionToPlayer) < 0.01f)
             return;
 
-        // El sprite base mira a la derecha.
-        // Si el player está a la izquierda, flipX true.
-        // Si el player está a la derecha, flipX false.
         spriteRenderer.flipX = directionToPlayer < 0f;
     }
 }
