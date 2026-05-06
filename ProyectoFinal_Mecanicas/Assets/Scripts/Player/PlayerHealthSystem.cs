@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.UI;
 
 public class PlayerHealthSystem : MonoBehaviour
 {
@@ -9,7 +10,15 @@ public class PlayerHealthSystem : MonoBehaviour
     public float invulnerabilityTime = 1.5f;
     public float hitCooldown = 0.2f;
 
+    [Header("Old Text UI")]
     public TextMeshProUGUI livesText;
+
+    [Header("Heart UI")]
+    public Transform heartsContainer;
+    public GameObject heartPrefab;
+    public Sprite fullHeartSprite;
+    public Sprite emptyHeartSprite;
+
     public ParticleSystem hitParticles;
     private SpriteRenderer spriteRenderer;
 
@@ -62,9 +71,6 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         TakeDamage();
     }
-
-
-    
 
     public void SyncMaxLivesFromStats(bool grantDifference)
     {
@@ -229,7 +235,42 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (livesText != null)
             livesText.text = lives.ToString();
-        else
-            Debug.LogWarning("PlayerHealthSystem -> livesText no asignado");
+
+        UpdateHeartUI();
+    }
+
+    private void UpdateHeartUI()
+    {
+        if (heartsContainer == null || heartPrefab == null)
+            return;
+
+        int maxLives = lives;
+
+        if (playerStats != null)
+            maxLives = playerStats.maxLives;
+
+        while (heartsContainer.childCount < maxLives)
+        {
+            Instantiate(heartPrefab, heartsContainer);
+        }
+
+        while (heartsContainer.childCount > maxLives)
+        {
+            Transform lastHeart = heartsContainer.GetChild(heartsContainer.childCount - 1);
+            Destroy(lastHeart.gameObject);
+        }
+
+        for (int i = 0; i < heartsContainer.childCount; i++)
+        {
+            Image heartImage = heartsContainer.GetChild(i).GetComponent<Image>();
+
+            if (heartImage == null)
+                continue;
+
+            if (i < lives)
+                heartImage.sprite = fullHeartSprite;
+            else
+                heartImage.sprite = emptyHeartSprite;
+        }
     }
 }

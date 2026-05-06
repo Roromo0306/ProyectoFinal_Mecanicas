@@ -126,6 +126,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 0.75
+  separationRadius: 0.8
+  separationForce: 0.8
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &2256385065829826808
 MonoBehaviour:
   m_ObjectHideFlags: 0

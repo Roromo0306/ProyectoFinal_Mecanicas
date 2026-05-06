@@ -3,14 +3,21 @@ using UnityEngine;
 public class EnemyInstaller : MonoBehaviour
 {
     [Header("Enemy Stats")]
-    public float moveSpeed = 3f;
+    public float moveSpeed = 2f;
+
+    [Header("Separation")]
+    public float separationRadius = 0.6f;
+    public float separationForce = 2.5f;
+    public LayerMask enemyLayer;
 
     private EnemyController controller;
 
     private void Awake()
     {
         controller = new EnemyController(transform);
+
         controller.SetMoveSpeed(moveSpeed);
+        controller.SetSeparation(separationRadius, separationForce, enemyLayer);
     }
 
     private void OnEnable()

@@ -10,6 +10,11 @@ public class EnemyController
     private float knockbackForce = 0f;
     private Vector2 knockbackVelocity;
 
+    // Separation
+    private float separationRadius = 0.6f;
+    private float separationForce = 2.5f;
+    private LayerMask enemyLayer;
+
     // Freeze
     private bool isFrozen = false;
     private float freezeTimer = 0f;
@@ -46,10 +51,19 @@ public class EnemyController
                 originalColor = spriteRenderer.color;
         }
     }
+
     public void SetMoveSpeed(float newSpeed)
     {
         baseSpeed = newSpeed;
     }
+
+    public void SetSeparation(float radius, float force, LayerMask layer)
+    {
+        separationRadius = radius;
+        separationForce = force;
+        enemyLayer = layer;
+    }
+
     public void Tick()
     {
         if (enemyTransform == null || playerTransform == null)
@@ -60,16 +74,61 @@ public class EnemyController
         UpdateHitFlash();
         UpdateKnockback();
 
-        Vector3 direction = (playerTransform.position - enemyTransform.position).normalized;
+        Vector2 direction = (playerTransform.position - enemyTransform.position).normalized;
+        Vector2 separation = GetSeparationDirection();
+
+        Vector2 finalDirection = direction + separation * separationForce * 0.35f;
+
+        if (finalDirection.sqrMagnitude > 0.001f)
+            finalDirection.Normalize();
+        else
+            finalDirection = direction;
 
         float currentSpeed = baseSpeed;
         if (isFrozen)
             currentSpeed *= freezeSlowMultiplier;
 
-        Vector3 move = direction * currentSpeed * Time.deltaTime;
+        Vector3 move = (Vector3)(finalDirection * currentSpeed * Time.deltaTime);
         Vector3 knockbackMove = (Vector3)knockbackVelocity * Time.deltaTime;
 
         enemyTransform.position += move + knockbackMove;
+    }
+
+    private Vector2 GetSeparationDirection()
+    {
+        if (enemyLayer.value == 0)
+            return Vector2.zero;
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(
+            enemyTransform.position,
+            separationRadius,
+            enemyLayer
+        );
+
+        Vector2 separation = Vector2.zero;
+        int count = 0;
+
+        foreach (Collider2D hit in hits)
+        {
+            if (hit == null) continue;
+            if (hit.transform == enemyTransform) continue;
+
+            Vector2 away = (Vector2)(enemyTransform.position - hit.transform.position);
+            float distance = away.magnitude;
+
+            if (distance <= 0.01f)
+                away = Random.insideUnitCircle.normalized;
+            else
+                away /= distance;
+
+            separation += away;
+            count++;
+        }
+
+        if (count > 0)
+            separation /= count;
+
+        return separation.normalized;
     }
 
     public void OnPlayerCollision(Transform player)
