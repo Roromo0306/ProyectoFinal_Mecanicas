@@ -8914,8 +8914,8 @@ MonoBehaviour:
   livesText: {fileID: 1227978235}
   heartsContainer: {fileID: 1276680007}
   heartPrefab: {fileID: 5160806483269605884, guid: 992a23210e5643d46b0601722d7987dd, type: 3}
-  fullHeartSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  emptyHeartSprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  fullHeartSprite: {fileID: -1441365602, guid: 6c4273a5e36d5f942b509abe6b92c275, type: 3}
+  emptyHeartSprite: {fileID: 586732481, guid: ec6f8e6f32031f54ead3a47b2daa4d76, type: 3}
   hitParticles: {fileID: 469160666}
 --- !u!114 &963126771
 MonoBehaviour:
