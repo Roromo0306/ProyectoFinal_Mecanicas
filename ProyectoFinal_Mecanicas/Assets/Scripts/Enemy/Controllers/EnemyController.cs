@@ -92,6 +92,8 @@ public class EnemyController
         Vector3 knockbackMove = (Vector3)knockbackVelocity * Time.deltaTime;
 
         enemyTransform.position += move + knockbackMove;
+
+        UpdateSpriteFlip();
     }
 
     private Vector2 GetSeparationDirection()
@@ -294,5 +296,21 @@ public class EnemyController
             hitFlashTimer = 0f;
             RefreshVisualState();
         }
+    }
+
+    private void UpdateSpriteFlip()
+    {
+        if (spriteRenderer == null || playerTransform == null || enemyTransform == null)
+            return;
+
+        float directionToPlayer = playerTransform.position.x - enemyTransform.position.x;
+
+        if (Mathf.Abs(directionToPlayer) < 0.01f)
+            return;
+
+        // El sprite base mira a la derecha.
+        // Si el player está a la izquierda, flipX true.
+        // Si el player está a la derecha, flipX false.
+        spriteRenderer.flipX = directionToPlayer < 0f;
     }
 }

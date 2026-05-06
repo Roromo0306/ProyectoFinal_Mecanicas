@@ -98,6 +98,7 @@ public class PlayerController
         if (isDashing)
         {
             view.rb.velocity = dashDirection * playerStats.dashSpeed;
+            UpdateSpriteFlip(dashDirection);
             return;
         }
 
@@ -108,6 +109,8 @@ public class PlayerController
             currentSpeed = playerStats.moveSpeed;
 
         view.rb.velocity = movement.normalized * currentSpeed;
+
+        UpdateSpriteFlip(movement);
     }
 
     private void Shoot()
@@ -146,5 +149,16 @@ public class PlayerController
         Vector3 dir = (mousePos - view.firePoint.position).normalized;
 
         EventBus.Publish(new ShootEvent(view.firePoint.position, dir));
+    }
+
+    private void UpdateSpriteFlip(Vector2 direction)
+    {
+        if (view == null || view.spriteRenderer == null)
+            return;
+
+        if (Mathf.Abs(direction.x) < 0.01f)
+            return;
+
+        view.spriteRenderer.flipX = direction.x < 0f;
     }
 }
