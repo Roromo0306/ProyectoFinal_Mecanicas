@@ -39,19 +39,25 @@ public class BulletSpawner : MonoBehaviour
             ? Vector3.right
             : e.direction.normalized;
 
-        // Sonido una sola vez por disparo, aunque tengas Spread Shot.
-        SFXManager.Instance?.PlayShoot();
-
-        FireBullet(e.position, baseDirection);
-
         if (playerStats.hasSpreadShot)
         {
-            FireBullet(e.position, RotateDirection(baseDirection, -playerStats.spreadAngle));
-            FireBullet(e.position, RotateDirection(baseDirection, playerStats.spreadAngle));
+            float splitDamage = playerStats.damage / 3f;
+
+            SFXManager.Instance?.PlayShoot();
+
+            FireBullet(e.position, baseDirection, splitDamage);
+            FireBullet(e.position, RotateDirection(baseDirection, -playerStats.spreadAngle), splitDamage);
+            FireBullet(e.position, RotateDirection(baseDirection, playerStats.spreadAngle), splitDamage);
+        }
+        else
+        {
+            SFXManager.Instance?.PlayShoot();
+
+            FireBullet(e.position, baseDirection, playerStats.damage);
         }
     }
 
-    private void FireBullet(Vector3 position, Vector3 direction)
+    private void FireBullet(Vector3 position, Vector3 direction, float bulletDamage)
     {
         GameObject bulletObj = Instantiate(bulletPrefab, position, Quaternion.identity);
 
@@ -64,7 +70,7 @@ public class BulletSpawner : MonoBehaviour
 
         bullet.Init(
             direction,
-            playerStats.damage,
+            bulletDamage,
             playerStats.pierceCount,
             playerStats.bounceCount,
             playerStats.bounceSearchRadius,
