@@ -8510,7 +8510,7 @@ Transform:
   m_GameObject: {fileID: 813996905}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3, y: 0.205, z: 0}
+  m_LocalPosition: {x: 0.235, y: 0.152, z: 0}
   m_LocalScale: {x: 1.18, y: 1.18, z: 1.18}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -10070,7 +10070,7 @@ Transform:
   m_GameObject: {fileID: 1236669431}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.211, y: -0.411, z: 0}
+  m_LocalPosition: {x: 0.346, y: -0.376, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11230,7 +11230,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deckParent: {fileID: 141492498}
   cardPrefab: {fileID: 4995290879565325688, guid: 56e967f0c653b6740b01dfee27579a57, type: 3}
-  slots: []
+  slots:
+  - {fileID: 401959893}
+  - {fileID: 544057774}
+  - {fileID: 1575155857}
+  - {fileID: 1929812578}
+  - {fileID: 1595907259}
+  - {fileID: 201904513}
 --- !u!114 &1619590198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11391,7 +11397,6 @@ MonoBehaviour:
   selected: {fileID: 0}
   deckCards: []
   equippedSlots:
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

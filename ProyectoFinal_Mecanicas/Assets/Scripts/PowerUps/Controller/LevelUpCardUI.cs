@@ -19,6 +19,7 @@ public class LevelUpCardUI : MonoBehaviour
         if (icon != null) icon.sprite = d.icon;
         if (title != null) title.text = d.title;
         if (desc != null) desc.text = d.description;
+
         CardTooltipTrigger tooltip = GetComponent<CardTooltipTrigger>();
         if (tooltip != null)
             tooltip.SetData(data);
@@ -44,7 +45,14 @@ public class LevelUpCardUI : MonoBehaviour
         }
 
         SelectionService.Instance.selected = data;
-        SelectionService.Instance.AddToDeck(data);
+
+        // CAMBIO IMPORTANTE:
+        // Si hay slot vacío, la carta se equipa automáticamente.
+        // Si están los 6 llenos, se queda solo en deck.
+        SelectionService.Instance.AddCardAndAutoEquipIfPossible(data);
+
+        if (ActivationService.Instance != null)
+            ActivationService.Instance.RecalculateEquippedPowerUps();
 
         Debug.Log("Seleccionada -> " + data.title);
 

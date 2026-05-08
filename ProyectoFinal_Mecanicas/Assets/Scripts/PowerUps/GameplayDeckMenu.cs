@@ -52,9 +52,6 @@ public class GameplayDeckMenu : MonoBehaviour
         isOpen = true;
         Time.timeScale = 0f;
 
-        if (deploymentLoader != null)
-            deploymentLoader.Init();
-
         if (currentRoutine != null)
             StopCoroutine(currentRoutine);
 
@@ -78,7 +75,17 @@ public class GameplayDeckMenu : MonoBehaviour
 
     private IEnumerator OpenRoutine()
     {
-        deckPanel.SetActive(true);
+        if (deckPanel != null)
+            deckPanel.SetActive(true);
+
+        // CAMBIO IMPORTANTE:
+        // Primero activamos el panel, luego repintamos las cartas.
+        if (deploymentLoader != null)
+            deploymentLoader.Init();
+        else
+            Debug.LogError("GameplayDeckMenu -> deploymentLoader no asignado");
+
+        Canvas.ForceUpdateCanvases();
 
         if (canvasGroup != null)
         {
