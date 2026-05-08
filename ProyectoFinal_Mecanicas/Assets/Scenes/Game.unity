@@ -196,7 +196,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1822702636, guid: 8544bb6eab41c404eb7c1a3e6d455025, type: 3}
+  m_Sprite: {fileID: 1648322088, guid: df4f9f301512a114e9fba20648517024, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -8484,6 +8484,90 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelUpPanel: {fileID: 162427300}
   deploymentPanel: {fileID: 1619590192}
+--- !u!1 &813996905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 813996906}
+  - component: {fileID: 813996907}
+  m_Layer: 0
+  m_Name: pistola
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &813996906
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813996905}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.3, y: 0.205, z: 0}
+  m_LocalScale: {x: 1.18, y: 1.18, z: 1.18}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1236669432}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &813996907
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813996905}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: ebe2090fea43ea14b9595bdfa6a43b81, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.96, y: 0.96}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &824739013
 GameObject:
   m_ObjectHideFlags: 0
@@ -8809,6 +8893,7 @@ GameObject:
   - component: {fileID: 963126775}
   - component: {fileID: 963126776}
   - component: {fileID: 963126777}
+  - component: {fileID: 963126778}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -8848,9 +8933,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.0099003315}
+  m_Offset: {x: 0.04644835, y: -0.11440903}
   serializedVersion: 2
-  m_Radius: 0.50990033
+  m_Radius: 0.5679606
 --- !u!50 &963126768
 Rigidbody2D:
   serializedVersion: 4
@@ -8894,6 +8979,7 @@ Transform:
   - {fileID: 18641330}
   - {fileID: 368049260}
   - {fileID: 469160664}
+  - {fileID: 1236669432}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &963126770
@@ -8917,6 +9003,10 @@ MonoBehaviour:
   fullHeartSprite: {fileID: -1441365602, guid: 6c4273a5e36d5f942b509abe6b92c275, type: 3}
   emptyHeartSprite: {fileID: 586732481, guid: ec6f8e6f32031f54ead3a47b2daa4d76, type: 3}
   hitParticles: {fileID: 469160666}
+  deathParticles: {fileID: 0}
+  deathEffectPrefab: {fileID: 0}
+  deathDelayBeforePanel: 0.45
+  hideSpriteOnDeath: 1
 --- !u!114 &963126771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9040,6 +9130,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPetPrefab: {fileID: 2972187758541132346, guid: eeb809e887f78e84ea2faa42bde65751, type: 3}
   supportPetPrefab: {fileID: 3125143055084087038, guid: 3072a740ccc8bec41a2e8a30a6248ede, type: 3}
+--- !u!114 &963126778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963126766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c59b0986850f7a74f989151c4732bccd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 158742223}
+  gunPivot: {fileID: 1236669432}
+  gunSpriteRenderer: {fileID: 813996907}
+  spriteFacesRightByDefault: 1
 --- !u!1 &990782318
 GameObject:
   m_ObjectHideFlags: 0
@@ -9939,6 +10045,38 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1233465865}
   m_CullTransparentMesh: 1
+--- !u!1 &1236669431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1236669432}
+  m_Layer: 6
+  m_Name: GunPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1236669432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236669431}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.211, y: -0.411, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 813996906}
+  m_Father: {fileID: 963126769}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1276680006
 GameObject:
   m_ObjectHideFlags: 0
@@ -10942,8 +11080,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 68b1b8329dd3b454aa3d4cb5f4079ab8, type: 2}
   - {fileID: 11400000, guid: 45f476a237f5c45429897766f434992b, type: 2}
   - {fileID: 11400000, guid: 1cdf5d76448b6e34dbd009f83b8a4634, type: 2}
-  - {fileID: 11400000, guid: e5d1d9113132b2647bd0302b2facb506, type: 2}
-  - {fileID: 11400000, guid: fa57204d1d43b034b9a68b5075c07024, type: 2}
   - {fileID: 11400000, guid: 83452dcab3945b9448960c25be50999f, type: 2}
   - {fileID: 11400000, guid: 2d240854ddaeea249ae82d01343063f0, type: 2}
 --- !u!1 &1616765074

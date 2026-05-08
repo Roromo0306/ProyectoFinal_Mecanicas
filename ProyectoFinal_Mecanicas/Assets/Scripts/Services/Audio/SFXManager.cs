@@ -8,6 +8,7 @@ public class SFXManager : MonoBehaviour
     public AudioClip shootClip;
     public AudioClip enemyHitClip;
     public AudioClip playerHitClip;
+    public AudioClip playerDeathClip;
     public AudioClip enemyDeathClip;
 
     [Header("Progression")]
@@ -116,6 +117,11 @@ public class SFXManager : MonoBehaviour
     public void PlayPlayerHit()
     {
         Play(playerHitClip);
+    }
+
+    public void PlayPlayerDeath()
+    {
+        Play(playerDeathClip);
     }
 
     public void PlayEnemyDeath()

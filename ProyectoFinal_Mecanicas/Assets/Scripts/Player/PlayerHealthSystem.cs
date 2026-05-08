@@ -19,7 +19,15 @@ public class PlayerHealthSystem : MonoBehaviour
     public Sprite fullHeartSprite;
     public Sprite emptyHeartSprite;
 
+    [Header("Hit Feedback")]
     public ParticleSystem hitParticles;
+
+    [Header("Death Feedback")]
+    public ParticleSystem deathParticles;
+    public GameObject deathEffectPrefab;
+    public float deathDelayBeforePanel = 0.45f;
+    public bool hideSpriteOnDeath = true;
+
     private SpriteRenderer spriteRenderer;
 
     private bool isInvulnerable;
@@ -167,7 +175,33 @@ public class PlayerHealthSystem : MonoBehaviour
 
         Debug.Log("Game Over");
 
-        yield return new WaitForSecondsRealtime(0.25f);
+        if (invRoutine != null)
+            StopCoroutine(invRoutine);
+
+        if (flashRoutine != null)
+            StopCoroutine(flashRoutine);
+
+        SFXManager.Instance?.PlayPlayerDeath();
+
+        CameraShakeService.Instance?.Shake(0.35f, 0.35f);
+        HitStopService.Instance?.Stop(0.08f);
+
+        if (deathParticles != null)
+        {
+            deathParticles.transform.position = transform.position;
+            deathParticles.Play();
+        }
+
+        if (deathEffectPrefab != null)
+        {
+            GameObject fx = Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+            Destroy(fx, 2f);
+        }
+
+        if (hideSpriteOnDeath && spriteRenderer != null)
+            spriteRenderer.enabled = false;
+
+        yield return new WaitForSecondsRealtime(deathDelayBeforePanel);
 
         if (EndGameUI.Instance != null)
             EndGameUI.Instance.ShowLose();
