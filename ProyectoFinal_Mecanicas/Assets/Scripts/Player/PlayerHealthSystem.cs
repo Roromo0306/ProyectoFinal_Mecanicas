@@ -307,4 +307,31 @@ public class PlayerHealthSystem : MonoBehaviour
                 heartImage.sprite = emptyHeartSprite;
         }
     }
+
+    public void AddMaxHeartAndHeal(int amount)
+    {
+        if (isDead)
+            return;
+
+        if (amount <= 0)
+            return;
+
+        if (playerStats == null)
+            playerStats = GetComponent<PlayerStats>();
+
+        if (playerStats != null)
+        {
+            playerStats.maxLives += amount;
+            lastKnownMaxLives = playerStats.maxLives;
+        }
+
+        lives += amount;
+
+        if (playerStats != null)
+            lives = Mathf.Min(lives, playerStats.maxLives);
+
+        UpdateLivesUI();
+
+        Debug.Log("Corazón ganado -> " + lives + " / " + (playerStats != null ? playerStats.maxLives : lives));
+    }
 }

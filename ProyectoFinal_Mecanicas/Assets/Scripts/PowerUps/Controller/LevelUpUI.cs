@@ -32,14 +32,16 @@ public class LevelUpUI : MonoBehaviour
 
     private void OnLevelUp(object evt)
     {
-        SFXManager.Instance?.PlayLevelUp();
         if (isShowing)
             return;
 
-        StartCoroutine(ShowRoutine());
+        SFXManager.Instance?.PlayLevelUp();
+
+        LevelUpEvent levelUpEvent = (LevelUpEvent)evt;
+        StartCoroutine(ShowRoutine(levelUpEvent.newLevel));
     }
 
-    IEnumerator ShowRoutine()
+    IEnumerator ShowRoutine(int playerLevel)
     {
         isShowing = true;
 
@@ -63,6 +65,9 @@ public class LevelUpUI : MonoBehaviour
             if (powerUp == null) continue;
 
             if (SelectionService.Instance != null && SelectionService.Instance.HasCard(powerUp))
+                continue;
+
+            if (playerLevel < powerUp.unlockLevel)
                 continue;
 
             pool.Add(powerUp);

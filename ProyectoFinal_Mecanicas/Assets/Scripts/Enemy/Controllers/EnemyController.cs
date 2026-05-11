@@ -158,6 +158,9 @@ public class EnemyController
 
     public void ApplyFreeze(float duration, float slowMultiplier)
     {
+        if (isFrozen)
+            return;
+
         isFrozen = true;
         freezeTimer = duration;
         freezeSlowMultiplier = slowMultiplier;

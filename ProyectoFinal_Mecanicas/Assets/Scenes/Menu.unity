@@ -1624,6 +1624,7 @@ MonoBehaviour:
   playerHitClip: {fileID: 8300000, guid: 1e0157d27e0ce474bb9795ebcd02764c, type: 3}
   playerDeathClip: {fileID: 8300000, guid: 4601531ad261c284c8bfe6208ffecb38, type: 3}
   enemyDeathClip: {fileID: 0}
+  eliteEnemyDeathClip: {fileID: 8300000, guid: 5ddc2a3ef8888cb419dd34c08b33ce55, type: 3}
   levelUpClip: {fileID: 8300000, guid: 637c8a6f3c8109d47918ddea02dac900, type: 3}
   cardSelectClip: {fileID: 8300000, guid: 552d91c8e9fb3984995689e2dee56392, type: 3}
   recycleClip: {fileID: 8300000, guid: 1305663e5d09eb74b8e4bb5a1b74d10b, type: 3}
@@ -1633,13 +1634,13 @@ MonoBehaviour:
   openDeckClip: {fileID: 0}
   closeDeckClip: {fileID: 0}
   volume: 0.5
-  shootVolume: 0.526
+  shootVolume: 0.2
   shootMinPitch: 0.9
   shootMaxPitch: 2
-  enemyHitVolume: 0.671
+  enemyHitVolume: 0.5
   enemyHitMinPitch: 0.85
   enemyHitMaxPitch: 4
-  xpPickupVolume: 0.3
+  xpPickupVolume: 0.1
   xpPickupMinPitch: 0.95
   xpPickupMaxPitch: 1.15
   xpPickupSoundCooldown: 0.06

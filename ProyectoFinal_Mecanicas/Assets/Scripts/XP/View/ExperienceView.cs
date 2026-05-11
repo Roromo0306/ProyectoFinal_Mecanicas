@@ -7,37 +7,82 @@ public class ExperienceView : MonoBehaviour
     public Slider xpBar;
     public TextMeshProUGUI levelText;
 
+    [Header("XP Text")]
+    public TextMeshProUGUI xpText;
+
+    [Header("Smooth Bar")]
+    public float smoothSpeed = 8f;
+
+    private float targetXPValue = 0f;
+    private int currentXP = 0;
+    private int xpToNext = 10;
+    private int currentLevel = 1;
+
     private void OnEnable()
     {
-        EventBus.Subscribe<ExperienceCollectedEvent>(OnXP);
-        EventBus.Subscribe<LevelUpEvent>(OnLevelUp);
+        EventBus.Subscribe<ExperienceUpdatedEvent>(OnExperienceUpdated);
     }
 
     private void OnDisable()
     {
-        EventBus.Unsubscribe<ExperienceCollectedEvent>(OnXP);
-        EventBus.Unsubscribe<LevelUpEvent>(OnLevelUp);
+        EventBus.Unsubscribe<ExperienceUpdatedEvent>(OnExperienceUpdated);
     }
 
-    private int currentXP = 0;
-    private int xpToNext = 10;
-
-    private void OnXP(object evt)
+    private void Start()
     {
-        var e = (ExperienceCollectedEvent)evt;
-
-        currentXP += e.amount;
-        xpBar.value = (float)currentXP / xpToNext;
+        RefreshInstant();
     }
 
-    private void OnLevelUp(object evt)
+    private void Update()
     {
-        var e = (LevelUpEvent)evt;
+        if (xpBar == null) return;
 
-        currentXP = 0;
-        xpToNext = Mathf.RoundToInt(xpToNext * 1.5f);
+        xpBar.value = Mathf.Lerp(
+            xpBar.value,
+            targetXPValue,
+            Time.unscaledDeltaTime * smoothSpeed
+        );
 
-        levelText.text = "Level " + e.newLevel;
-        xpBar.value = 0;
+        if (Mathf.Abs(xpBar.value - targetXPValue) < 0.01f)
+            xpBar.value = targetXPValue;
+    }
+
+    private void OnExperienceUpdated(object evt)
+    {
+        var e = (ExperienceUpdatedEvent)evt;
+
+        currentXP = e.currentXP;
+        xpToNext = e.xpToNextLevel;
+        currentLevel = e.currentLevel;
+
+        if (xpBar != null)
+        {
+            xpBar.minValue = 0;
+            xpBar.maxValue = xpToNext;
+            targetXPValue = currentXP;
+        }
+
+        if (levelText != null)
+            levelText.text = "Level " + currentLevel;
+
+        if (xpText != null)
+            xpText.text = "EXP - " + currentXP + "/" + xpToNext;
+    }
+
+    private void RefreshInstant()
+    {
+        if (xpBar != null)
+        {
+            xpBar.minValue = 0;
+            xpBar.maxValue = xpToNext;
+            xpBar.value = currentXP;
+            targetXPValue = currentXP;
+        }
+
+        if (levelText != null)
+            levelText.text = "Level " + currentLevel;
+
+        if (xpText != null)
+            xpText.text = "EXP - " + currentXP + "/" + xpToNext;
     }
 }

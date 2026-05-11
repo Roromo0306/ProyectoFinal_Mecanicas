@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
 public class PlayerController
@@ -137,7 +138,7 @@ public class PlayerController
             return;
 
         // Evita disparar cuando el cursor está sobre botones, cartas, deck, tooltips o cualquier UI.
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        if (IsPointerOverBlockingUI())
             return;
 
         if (Time.time - model.lastShootTime < playerStats.fireCooldown)
@@ -160,5 +161,36 @@ public class PlayerController
             return;
 
         view.spriteRenderer.flipX = direction.x < 0f;
+    }
+
+    private bool IsPointerOverBlockingUI()
+    {
+        if (EventSystem.current == null)
+            return false;
+
+        PointerEventData pointerData = new PointerEventData(EventSystem.current);
+        pointerData.position = Input.mousePosition;
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        if (results.Count == 0)
+            return false;
+
+        foreach (RaycastResult result in results)
+        {
+            if (result.gameObject == null)
+                continue;
+
+            AllowShootingThroughUI allowShoot =
+                result.gameObject.GetComponentInParent<AllowShootingThroughUI>();
+
+            if (allowShoot != null)
+                continue;
+
+            return true;
+        }
+
+        return false;
     }
 }

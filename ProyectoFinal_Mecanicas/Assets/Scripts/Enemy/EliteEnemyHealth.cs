@@ -36,7 +36,9 @@ public class EliteEnemyHealth : MonoBehaviour
 
         PlayerHealthSystem playerHealth = FindObjectOfType<PlayerHealthSystem>();
         if (playerHealth != null)
-            playerHealth.AddLives(1);
+            playerHealth.AddMaxHeartAndHeal(1);
+
+        SFXManager.Instance?.PlayEliteEnemyDeath();
 
         Destroy(gameObject);
     }
@@ -51,7 +53,18 @@ public class EliteEnemyHealth : MonoBehaviour
         if (defeatNotified) return;
         defeatNotified = true;
 
+        if (spawner == null)
+            spawner = FindObjectOfType<EliteEnemySpawner>();
+
         if (spawner != null)
+        {
             spawner.OnEliteDefeated();
+        }
+        else
+        {
+            ArenaClosureController arena = FindObjectOfType<ArenaClosureController>();
+            if (arena != null)
+                arena.DeactivateArena();
+        }
     }
 }

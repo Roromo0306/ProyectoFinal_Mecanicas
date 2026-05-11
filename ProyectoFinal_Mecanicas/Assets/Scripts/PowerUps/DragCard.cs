@@ -14,6 +14,7 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     [HideInInspector] public bool droppedSuccessfully = false;
     [HideInInspector] public CardSlot currentSlot = null;
+    [HideInInspector] public CardSlot previousSlot = null;
     [HideInInspector] public Transform deckParent = null;
 
     private Vector2 originalSizeDelta;
@@ -52,6 +53,8 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         droppedSuccessfully = false;
         isDragging = true;
 
+        previousSlot = currentSlot;
+
         if (canvasGroup != null)
             canvasGroup.blocksRaycasts = false;
 
@@ -88,6 +91,8 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         {
             ReturnToDeck();
         }
+
+        previousSlot = null;
     }
 
     public void ReturnToDeck()
@@ -105,6 +110,15 @@ public class DragCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
             currentSlot.ClearSlot();
             currentSlot = null;
+        }
+
+        if (previousSlot != null)
+        {
+            if (SelectionService.Instance != null)
+                SelectionService.Instance.RemoveFromSlot(previousSlot.slotIndex);
+
+            previousSlot.ClearSlot();
+            previousSlot = null;
         }
 
         LayoutElement le = GetComponent<LayoutElement>();

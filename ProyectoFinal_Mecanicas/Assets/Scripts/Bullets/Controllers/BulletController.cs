@@ -190,6 +190,10 @@ public class BulletController : MonoBehaviour
             EliteEnemyController eliteController = enemyRoot.GetComponent<EliteEnemyController>();
             if (eliteController != null)
                 eliteController.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
+
+            FinalBossController bossController = enemyRoot.GetComponent<FinalBossController>();
+            if (bossController != null)
+                bossController.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
         }
 
         if (hasBurn)
@@ -201,6 +205,10 @@ public class BulletController : MonoBehaviour
             EliteEnemyController eliteController = enemyRoot.GetComponent<EliteEnemyController>();
             if (eliteController != null)
                 eliteController.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
+
+            FinalBossController bossController = enemyRoot.GetComponent<FinalBossController>();
+            if (bossController != null)
+                bossController.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
         }
     }
 
@@ -284,9 +292,12 @@ public class BulletController : MonoBehaviour
             return;
         }
 
-        SpriteRenderer sr = enemyRoot.GetComponentInChildren<SpriteRenderer>();
-        if (sr != null)
-            StartCoroutine(FlashWhite(sr));
+        FinalBossController bossController = enemyRoot.GetComponent<FinalBossController>();
+        if (bossController != null)
+        {
+            bossController.ApplyBulletHitFeedback(transform.position, hitKnockbackForce);
+            return;
+        }
     }
     private IEnumerator FlashWhite(SpriteRenderer sr)
     {

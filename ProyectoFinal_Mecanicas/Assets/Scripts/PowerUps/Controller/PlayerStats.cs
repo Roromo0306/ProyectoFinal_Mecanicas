@@ -15,8 +15,8 @@ public class PlayerStats : MonoBehaviour
     public float bounceSearchRadius = 6f;
 
     public bool hasExplodingBullets = false;
-    public float explosionRadius = 2.5f;
-    public float explosionDamageMultiplier = 1f;
+    public float explosionRadius = 1.15f;
+    public float explosionDamageMultiplier = 0f;
 
     public bool hasFreezeBullets = false;
     public float freezeDuration = 2f;

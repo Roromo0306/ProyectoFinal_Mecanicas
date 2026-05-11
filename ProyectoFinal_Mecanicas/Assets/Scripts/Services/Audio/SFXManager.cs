@@ -10,6 +10,9 @@ public class SFXManager : MonoBehaviour
     public AudioClip playerHitClip;
     public AudioClip playerDeathClip;
     public AudioClip enemyDeathClip;
+    public AudioClip eliteEnemyDeathClip;
+
+
 
     [Header("Progression")]
     public AudioClip levelUpClip;
@@ -114,6 +117,10 @@ public class SFXManager : MonoBehaviour
         PlayWithPitch(xpPickupClip, xpPickupVolume, xpPickupMinPitch, xpPickupMaxPitch);
     }
 
+    public void PlayEliteEnemyDeath()
+    {
+        Play(eliteEnemyDeathClip);
+    }
     public void PlayPlayerHit()
     {
         Play(playerHitClip);

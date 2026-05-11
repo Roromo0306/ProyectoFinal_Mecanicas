@@ -144,6 +144,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xpPrefab: {fileID: 2460968092890710249, guid: 55711f05f0eeb2b4d8af49e49d508960, type: 3}
+  bigXPPrefab: {fileID: 2460968092890710249, guid: d4b30e0210b652243a78ca34ad0ad076, type: 3}
+  bigXPStartTime: 300
+  bigXPDropChance: 0.65
 --- !u!1 &4755238638165898845
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,7 +219,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 0.8784314, g: 0.3795102, b: 0, a: 1}
   m_FlipX: 0

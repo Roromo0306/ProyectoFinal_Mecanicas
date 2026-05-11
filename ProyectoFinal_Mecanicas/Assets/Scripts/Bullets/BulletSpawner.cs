@@ -4,6 +4,10 @@ public class BulletSpawner : MonoBehaviour
 {
     public GameObject bulletPrefab;
 
+    [Header("Spread Shot Balance")]
+    [Range(0f, 1f)]
+    public float spreadBulletDamageMultiplier = 0.35f;
+
     private PlayerStats playerStats;
 
     private void Awake()
@@ -28,33 +32,33 @@ public class BulletSpawner : MonoBehaviour
     {
         var e = (ShootEvent)evt;
 
-        if (bulletPrefab == null) return;
+        if (bulletPrefab == null)
+            return;
 
         if (playerStats == null)
             playerStats = FindObjectOfType<PlayerStats>();
 
-        if (playerStats == null) return;
+        if (playerStats == null)
+            return;
 
         Vector3 baseDirection = e.direction.sqrMagnitude <= 0.0001f
             ? Vector3.right
             : e.direction.normalized;
 
+        SFXManager.Instance?.PlayShoot();
+
         if (playerStats.hasSpreadShot)
         {
-            float splitDamage = playerStats.damage / 3f;
+            float spreadDamage = playerStats.damage * spreadBulletDamageMultiplier;
 
-            SFXManager.Instance?.PlayShoot();
+            FireBullet(e.position, baseDirection, spreadDamage);
+            FireBullet(e.position, RotateDirection(baseDirection, -playerStats.spreadAngle), spreadDamage);
+            FireBullet(e.position, RotateDirection(baseDirection, playerStats.spreadAngle), spreadDamage);
 
-            FireBullet(e.position, baseDirection, splitDamage);
-            FireBullet(e.position, RotateDirection(baseDirection, -playerStats.spreadAngle), splitDamage);
-            FireBullet(e.position, RotateDirection(baseDirection, playerStats.spreadAngle), splitDamage);
+            return;
         }
-        else
-        {
-            SFXManager.Instance?.PlayShoot();
 
-            FireBullet(e.position, baseDirection, playerStats.damage);
-        }
+        FireBullet(e.position, baseDirection, playerStats.damage);
     }
 
     private void FireBullet(Vector3 position, Vector3 direction, float bulletDamage)

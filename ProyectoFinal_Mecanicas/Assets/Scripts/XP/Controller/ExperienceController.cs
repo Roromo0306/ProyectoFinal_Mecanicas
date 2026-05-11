@@ -9,6 +9,8 @@ public class ExperienceController
     {
         this.model = model;
         EventBus.Subscribe<ExperienceCollectedEvent>(OnXPCollected);
+
+        PublishExperienceState();
     }
 
     public void Dispose()
@@ -31,6 +33,8 @@ public class ExperienceController
         {
             LevelUp();
         }
+
+        PublishExperienceState();
     }
 
     private void LevelUp()
@@ -42,5 +46,14 @@ public class ExperienceController
 
         Debug.Log("LEVEL UP LANZADO -> Nivel " + model.currentLevel);
         EventBus.Publish(new LevelUpEvent(model.currentLevel));
+    }
+
+    private void PublishExperienceState()
+    {
+        EventBus.Publish(new ExperienceUpdatedEvent(
+            model.currentXP,
+            model.xpToNextLevel,
+            model.currentLevel
+        ));
     }
 }

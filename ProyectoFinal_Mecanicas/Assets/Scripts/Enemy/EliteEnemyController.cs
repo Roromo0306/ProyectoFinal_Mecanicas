@@ -167,13 +167,34 @@ public class EliteEnemyController : MonoBehaviour
         );
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        TryDamagePlayer(collision.transform);
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Player")) return;
+        TryDamagePlayer(collision.transform);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        TryDamagePlayer(collision.transform);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        TryDamagePlayer(collision.transform);
+    }
+
+    private void TryDamagePlayer(Transform target)
+    {
+        if (target == null) return;
+        if (!target.CompareTag("Player")) return;
         if (Time.time - lastHitTime < contactDamageCooldown) return;
 
         lastHitTime = Time.time;
-        EventBus.Publish(new PlayerHitEvent(collision.transform.position));
+        EventBus.Publish(new PlayerHitEvent(target.position));
     }
 
     public void ApplyBulletHitFeedback(Vector3 sourcePosition, float force)
@@ -198,12 +219,11 @@ public class EliteEnemyController : MonoBehaviour
 
     public void ApplyFreeze(float duration, float slowMultiplier)
     {
-        if (freezeRoutine != null)
-            StopCoroutine(freezeRoutine);
+        if (isFrozen || freezeRoutine != null)
+            return;
 
         freezeRoutine = StartCoroutine(FreezeRoutine(duration, slowMultiplier));
     }
-
     private IEnumerator FreezeRoutine(float duration, float slowMultiplier)
     {
         isFrozen = true;
