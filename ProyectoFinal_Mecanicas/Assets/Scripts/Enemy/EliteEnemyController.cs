@@ -73,6 +73,8 @@ public class EliteEnemyController : MonoBehaviour
     {
         if (player == null) return;
 
+        UpdateSpriteFlip();
+
         switch (currentState)
         {
             case EliteState.Entering:
@@ -313,5 +315,21 @@ public class EliteEnemyController : MonoBehaviour
         }
 
         spriteRenderer.color = originalColor;
+    }
+
+    private void UpdateSpriteFlip()
+    {
+        if (spriteRenderer == null || player == null)
+            return;
+
+        float directionToPlayer = player.position.x - transform.position.x;
+
+        if (Mathf.Abs(directionToPlayer) < 0.01f)
+            return;
+
+        // El sprite base mira a la derecha.
+        // Si el player está a la izquierda, flipX true.
+        // Si el player está a la derecha, flipX false.
+        spriteRenderer.flipX = directionToPlayer < 0f;
     }
 }
