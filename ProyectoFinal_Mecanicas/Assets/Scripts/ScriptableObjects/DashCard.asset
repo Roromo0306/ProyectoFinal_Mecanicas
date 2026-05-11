@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1043ab6f7458c6a47bbf2799c4c47ff9, type: 3}
   m_Name: DashCard
   m_EditorClassIdentifier: 
+  unlockLevel: 1
+  hudIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   title: Quick Escape
   description: Perform a <wave><color=#FFD700>dash</color></wave> to evade enemies.
   icon: {fileID: 0}

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ExplosionCard
   m_EditorClassIdentifier: 
   unlockLevel: 5
+  hudIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   title: Blast Rounds
   description: Bullets <wave><color=#FF5555>explode</color></wave> on impact.
   icon: {fileID: 0}

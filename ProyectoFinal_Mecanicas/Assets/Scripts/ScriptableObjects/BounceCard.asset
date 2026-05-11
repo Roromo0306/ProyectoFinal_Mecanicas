@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BounceCard
   m_EditorClassIdentifier: 
   unlockLevel: 6
+  hudIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   title: Ricochet Rounds
   description: Bullets <wave><color=#55AAFF>bounce</color></wave> to nearby enemies.
   icon: {fileID: 0}

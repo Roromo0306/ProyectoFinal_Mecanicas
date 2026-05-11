@@ -69,6 +69,7 @@ public class SelectionService : MonoBehaviour
         {
             Debug.Log("DECK -> Slots llenos, carta al deck: " + card.title);
         }
+        RefreshHUD();
     }
 
     private int GetFirstEmptySlotIndex()
@@ -97,6 +98,8 @@ public class SelectionService : MonoBehaviour
             if (equippedSlots[i] == card)
                 equippedSlots[i] = null;
         }
+
+        RefreshHUD();
     }
 
     public void EquipToSlot(PowerUpData card, int slotIndex)
@@ -109,6 +112,7 @@ public class SelectionService : MonoBehaviour
             return;
 
         equippedSlots[slotIndex] = card;
+        RefreshHUD();
     }
 
     public void RemoveFromSlot(int slotIndex)
@@ -119,5 +123,13 @@ public class SelectionService : MonoBehaviour
             return;
 
         equippedSlots[slotIndex] = null;
+
+        RefreshHUD();
+    }
+
+    private void RefreshHUD()
+    {
+        if (EquippedCardsHUD.Instance != null)
+            EquippedCardsHUD.Instance.Refresh();
     }
 }
