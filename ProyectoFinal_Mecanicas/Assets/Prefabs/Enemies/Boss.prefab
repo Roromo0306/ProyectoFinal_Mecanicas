@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5525775759228357281}
   - component: {fileID: 9120829490497433880}
   - component: {fileID: 6478342653286607758}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,6 +170,13 @@ MonoBehaviour:
   maxAttackDistance: 7
   minAttackDistance: 4
   isReadyToAttack: 0
+  bossFreezeDurationMultiplier: 0.35
+  freezeColor: {r: 0.3, g: 0.7, b: 1, a: 1}
+  bossBurnDurationMultiplier: 0.5
+  burnColor: {r: 1, g: 0.55, b: 0.05, a: 1}
+  burnFlashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hitColor: {r: 1, g: 0.2, b: 0.2, a: 1}
+  hitFlashDuration: 0.08
 --- !u!114 &9120829490497433880
 MonoBehaviour:
   m_ObjectHideFlags: 0
