@@ -30,35 +30,36 @@ public class BulletSpawner : MonoBehaviour
 
     private void OnShoot(object evt)
     {
-        var e = (ShootEvent)evt;
+        ShootEvent shootEvent = (ShootEvent)evt;
 
         if (bulletPrefab == null)
             return;
 
-        if (playerStats == null)
-            playerStats = FindObjectOfType<PlayerStats>();
+        RefreshPlayerStatsIfNeeded();
 
         if (playerStats == null)
             return;
 
-        Vector3 baseDirection = e.direction.sqrMagnitude <= 0.0001f
-            ? Vector3.right
-            : e.direction.normalized;
+        Vector3 baseDirection = BulletRuntimeData.NormalizeDirection(shootEvent.direction);
 
         SFXManager.Instance?.PlayShoot();
 
         if (playerStats.hasSpreadShot)
         {
-            float spreadDamage = playerStats.damage * spreadBulletDamageMultiplier;
-
-            FireBullet(e.position, baseDirection, spreadDamage);
-            FireBullet(e.position, RotateDirection(baseDirection, -playerStats.spreadAngle), spreadDamage);
-            FireBullet(e.position, RotateDirection(baseDirection, playerStats.spreadAngle), spreadDamage);
-
+            FireSpreadShot(shootEvent.position, baseDirection);
             return;
         }
 
-        FireBullet(e.position, baseDirection, playerStats.damage);
+        FireBullet(shootEvent.position, baseDirection, playerStats.damage);
+    }
+
+    private void FireSpreadShot(Vector3 position, Vector3 baseDirection)
+    {
+        float spreadDamage = playerStats.damage * spreadBulletDamageMultiplier;
+
+        FireBullet(position, baseDirection, spreadDamage);
+        FireBullet(position, RotateDirection(baseDirection, -playerStats.spreadAngle), spreadDamage);
+        FireBullet(position, RotateDirection(baseDirection, playerStats.spreadAngle), spreadDamage);
     }
 
     private void FireBullet(Vector3 position, Vector3 direction, float bulletDamage)
@@ -66,29 +67,28 @@ public class BulletSpawner : MonoBehaviour
         GameObject bulletObj = Instantiate(bulletPrefab, position, Quaternion.identity);
 
         BulletController bullet = bulletObj.GetComponent<BulletController>();
+
         if (bullet == null)
         {
             Destroy(bulletObj);
             return;
         }
 
-        bullet.Init(
+        BulletRuntimeData runtimeData = BulletRuntimeData.FromPlayerStats(
             direction,
             bulletDamage,
-            playerStats.pierceCount,
-            playerStats.bounceCount,
-            playerStats.bounceSearchRadius,
-            playerStats.hasExplodingBullets,
-            playerStats.explosionRadius,
-            playerStats.explosionDamageMultiplier,
-            playerStats.hasFreezeBullets,
-            playerStats.freezeDuration,
-            playerStats.freezeSlowMultiplier,
-            playerStats.hasBurnBullets,
-            playerStats.burnDuration,
-            playerStats.burnTickDamage,
-            playerStats.burnTickInterval
+            playerStats
         );
+
+        bullet.Init(runtimeData);
+    }
+
+    private void RefreshPlayerStatsIfNeeded()
+    {
+        if (playerStats != null)
+            return;
+
+        playerStats = FindObjectOfType<PlayerStats>();
     }
 
     private Vector3 RotateDirection(Vector3 direction, float angleDegrees)

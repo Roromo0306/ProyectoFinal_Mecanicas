@@ -1,43 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
+    [Header("Movement")]
+    public float speed = 10f;
+    public float lifetime = 3f;
+
     [Header("Hit Feedback")]
     public float hitKnockbackForce = 3f;
 
     [Header("Hit FX")]
     public GameObject hitParticlePrefab;
-
-    public float speed = 10f;
-    public float lifetime = 3f;
     public GameObject explosionParticlePrefab;
 
-    private Vector3 direction;
-    private float damage;
+    [SerializeField] private float hitFxLifetime = 1.5f;
+    [SerializeField] private float explosionFxLifetime = 1.5f;
+
+    private BulletRuntimeData data;
 
     private int remainingPierceHits;
     private int remainingBounces;
-    private float bounceSearchRadius;
-
-    private bool hasExplosion;
-    private float explosionRadius;
-    private float explosionDamageMultiplier;
-
-    private bool hasFreeze;
-    private float freezeDuration;
-    private float freezeSlowMultiplier;
-
-    private bool hasBurn;
-    private float burnDuration;
-    private float burnTickDamage;
-    private float burnTickInterval;
-
-    private Dictionary<SpriteRenderer, Coroutine> activeFlashCoroutines = new Dictionary<SpriteRenderer, Coroutine>();
-    private Dictionary<SpriteRenderer, Color> originalSpriteColors = new Dictionary<SpriteRenderer, Color>();
 
     private readonly HashSet<GameObject> hitRoots = new HashSet<GameObject>();
+
+    public void Init(BulletRuntimeData runtimeData)
+    {
+        data = runtimeData;
+        data.direction = BulletRuntimeData.NormalizeDirection(data.direction);
+
+        remainingPierceHits = Mathf.Max(1, data.pierceCount);
+        remainingBounces = Mathf.Max(0, data.bounceCount);
+
+        hitRoots.Clear();
+
+        Destroy(gameObject, lifetime);
+    }
 
     public void Init(
         Vector3 dir,
@@ -57,32 +55,35 @@ public class BulletController : MonoBehaviour
         float burnTickIntervalValue
     )
     {
-        direction = dir.sqrMagnitude <= 0.0001f ? Vector3.right : dir.normalized;
-        damage = bulletDamage;
+        BulletRuntimeData runtimeData = new BulletRuntimeData
+        {
+            direction = dir,
+            damage = bulletDamage,
 
-        remainingPierceHits = Mathf.Max(1, pierceCount);
-        remainingBounces = Mathf.Max(0, bounceCount);
-        bounceSearchRadius = searchRadius;
+            pierceCount = pierceCount,
+            bounceCount = bounceCount,
+            bounceSearchRadius = searchRadius,
 
-        hasExplosion = exploding;
-        explosionRadius = explosionRadiusValue;
-        explosionDamageMultiplier = explosionDamageMultiplierValue;
+            hasExplosion = exploding,
+            explosionRadius = explosionRadiusValue,
+            explosionDamageMultiplier = explosionDamageMultiplierValue,
 
-        hasFreeze = freezing;
-        freezeDuration = freezeDurationValue;
-        freezeSlowMultiplier = freezeSlowMultiplierValue;
+            hasFreeze = freezing,
+            freezeDuration = freezeDurationValue,
+            freezeSlowMultiplier = freezeSlowMultiplierValue,
 
-        hasBurn = burning;
-        burnDuration = burnDurationValue;
-        burnTickDamage = burnTickDamageValue;
-        burnTickInterval = burnTickIntervalValue;
+            hasBurn = burning,
+            burnDuration = burnDurationValue,
+            burnTickDamage = burnTickDamageValue,
+            burnTickInterval = burnTickIntervalValue
+        };
 
-        Destroy(gameObject, lifetime);
+        Init(runtimeData);
     }
 
     private void Update()
     {
-        transform.position += direction * speed * Time.deltaTime;
+        transform.position += data.direction * speed * Time.deltaTime;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -98,6 +99,7 @@ public class BulletController : MonoBehaviour
     private void HandleHit(GameObject hitObject)
     {
         GameObject enemyRoot = GetEnemyRoot(hitObject);
+
         if (enemyRoot == null)
             return;
 
@@ -107,7 +109,6 @@ public class BulletController : MonoBehaviour
         hitRoots.Add(enemyRoot);
 
         SFXManager.Instance?.PlayEnemyHit();
-
         SpawnHitParticle(enemyRoot.transform.position);
 
         GameObject nextBounceTarget = null;
@@ -115,20 +116,29 @@ public class BulletController : MonoBehaviour
         if (remainingBounces > 0)
             nextBounceTarget = FindNextEnemy(enemyRoot);
 
+        ApplyDirectHit(enemyRoot);
+        ResolvePierceAndBounce(nextBounceTarget);
+    }
+
+    private void ApplyDirectHit(GameObject enemyRoot)
+    {
         ApplyStatuses(enemyRoot);
 
-        if (hasExplosion)
+        if (data.hasExplosion)
             Explode(enemyRoot);
 
-        DamageEnemy(enemyRoot, damage);
+        DamageEnemy(enemyRoot, data.damage);
         ApplyHitFeedback(enemyRoot);
+    }
 
+    private void ResolvePierceAndBounce(GameObject nextBounceTarget)
+    {
         remainingPierceHits--;
 
         if (nextBounceTarget != null && remainingBounces > 0)
         {
             remainingBounces--;
-            direction = (nextBounceTarget.transform.position - transform.position).normalized;
+            data.direction = (nextBounceTarget.transform.position - transform.position).normalized;
             return;
         }
 
@@ -145,6 +155,9 @@ public class BulletController : MonoBehaviour
 
     private void DamageEnemy(GameObject enemyRoot, float amount)
     {
+        if (enemyRoot == null)
+            return;
+
         if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IDamageable damageable))
             damageable.TakeDamage(amount);
     }
@@ -154,15 +167,11 @@ public class BulletController : MonoBehaviour
         if (enemyRoot == null)
             return;
 
-        if (hasFreeze && CombatTargetFinder.TryGetOnRoot(enemyRoot, out IFreezable freezable))
-        {
-            freezable.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
-        }
+        if (data.hasFreeze && CombatTargetFinder.TryGetOnRoot(enemyRoot, out IFreezable freezable))
+            freezable.ApplyFreeze(data.freezeDuration, data.freezeSlowMultiplier);
 
-        if (hasBurn && CombatTargetFinder.TryGetOnRoot(enemyRoot, out IBurnable burnable))
-        {
-            burnable.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
-        }
+        if (data.hasBurn && CombatTargetFinder.TryGetOnRoot(enemyRoot, out IBurnable burnable))
+            burnable.ApplyBurn(data.burnDuration, data.burnTickDamage, data.burnTickInterval);
     }
 
     private void Explode(GameObject mainTarget)
@@ -172,14 +181,10 @@ public class BulletController : MonoBehaviour
 
         Vector3 explosionPosition = mainTarget.transform.position;
 
-        if (explosionParticlePrefab != null)
-        {
-            GameObject fx = Instantiate(explosionParticlePrefab, explosionPosition, Quaternion.identity);
-            fx.transform.localScale = Vector3.one * explosionRadius * 0.6f;
-        }
+        SpawnExplosionParticle(explosionPosition);
 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(explosionPosition, explosionRadius);
-        float explosionDamage = damage * explosionDamageMultiplier;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(explosionPosition, data.explosionRadius);
+        float explosionDamage = data.damage * data.explosionDamageMultiplier;
 
         foreach (Collider2D hit in hits)
         {
@@ -201,10 +206,10 @@ public class BulletController : MonoBehaviour
 
     private GameObject FindNextEnemy(GameObject currentTarget)
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, bounceSearchRadius);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.bounceSearchRadius);
 
         GameObject closestEnemy = null;
-        float closestDistance = float.MaxValue;
+        float closestSqrDistance = float.MaxValue;
 
         foreach (Collider2D hit in hits)
         {
@@ -222,11 +227,11 @@ public class BulletController : MonoBehaviour
             if (hitRoots.Contains(enemyRoot))
                 continue;
 
-            float distance = Vector2.Distance(transform.position, enemyRoot.transform.position);
+            float sqrDistance = (enemyRoot.transform.position - transform.position).sqrMagnitude;
 
-            if (distance < closestDistance)
+            if (sqrDistance < closestSqrDistance)
             {
-                closestDistance = distance;
+                closestSqrDistance = sqrDistance;
                 closestEnemy = enemyRoot;
             }
         }
@@ -249,28 +254,16 @@ public class BulletController : MonoBehaviour
             return;
 
         GameObject fx = Instantiate(hitParticlePrefab, position, Quaternion.identity);
-        Destroy(fx, 1.5f);
+        Destroy(fx, hitFxLifetime);
     }
 
-    private IEnumerator FlashWhite(SpriteRenderer sr)
+    private void SpawnExplosionParticle(Vector3 position)
     {
-        if (sr == null)
-            yield break;
+        if (explosionParticlePrefab == null)
+            return;
 
-        if (!originalSpriteColors.ContainsKey(sr))
-            originalSpriteColors[sr] = sr.color;
-
-        sr.color = Color.white;
-
-        yield return new WaitForSeconds(0.08f);
-
-        if (sr != null && originalSpriteColors.ContainsKey(sr))
-        {
-            sr.color = originalSpriteColors[sr];
-            originalSpriteColors.Remove(sr);
-        }
-
-        if (sr != null && activeFlashCoroutines.ContainsKey(sr))
-            activeFlashCoroutines.Remove(sr);
+        GameObject fx = Instantiate(explosionParticlePrefab, position, Quaternion.identity);
+        fx.transform.localScale = Vector3.one * data.explosionRadius * 0.6f;
+        Destroy(fx, explosionFxLifetime);
     }
 }

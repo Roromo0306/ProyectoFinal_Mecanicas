@@ -17,16 +17,15 @@ public class WeaponSystem : MonoBehaviour
 
     public void Fire()
     {
-        if (bulletPrefab == null || firePoint == null) return;
+        if (bulletPrefab == null || firePoint == null)
+            return;
+
+        RefreshPlayerStatsIfNeeded();
 
         if (playerStats == null)
-            playerStats = FindObjectOfType<PlayerStats>();
+            return;
 
-        if (playerStats == null) return;
-
-        Vector3 baseDirection = firePoint.right.sqrMagnitude <= 0.0001f
-            ? Vector3.right
-            : firePoint.right.normalized;
+        Vector3 baseDirection = BulletRuntimeData.NormalizeDirection(firePoint.right);
 
         FireSingle(baseDirection);
 
@@ -42,29 +41,28 @@ public class WeaponSystem : MonoBehaviour
         GameObject bulletObj = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
 
         BulletController bullet = bulletObj.GetComponent<BulletController>();
+
         if (bullet == null)
         {
             Destroy(bulletObj);
             return;
         }
 
-        bullet.Init(
+        BulletRuntimeData runtimeData = BulletRuntimeData.FromPlayerStats(
             direction,
             playerStats.damage,
-            playerStats.pierceCount,
-            playerStats.bounceCount,
-            playerStats.bounceSearchRadius,
-            playerStats.hasExplodingBullets,
-            playerStats.explosionRadius,
-            playerStats.explosionDamageMultiplier,
-            playerStats.hasFreezeBullets,
-            playerStats.freezeDuration,
-            playerStats.freezeSlowMultiplier,
-            playerStats.hasBurnBullets,
-            playerStats.burnDuration,
-            playerStats.burnTickDamage,
-            playerStats.burnTickInterval
+            playerStats
         );
+
+        bullet.Init(runtimeData);
+    }
+
+    private void RefreshPlayerStatsIfNeeded()
+    {
+        if (playerStats != null)
+            return;
+
+        playerStats = FindObjectOfType<PlayerStats>();
     }
 
     private Vector3 RotateDirection(Vector3 direction, float angleDegrees)
