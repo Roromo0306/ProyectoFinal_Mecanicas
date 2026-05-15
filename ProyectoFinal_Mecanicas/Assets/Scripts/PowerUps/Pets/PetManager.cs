@@ -57,16 +57,18 @@ public class PetManager : MonoBehaviour
     private void EnableAttackPet()
     {
         if (currentAttackPet == null)
+        {
             CreateAttackPet();
-
-        if (currentAttackPet == null)
             return;
+        }
 
         if (!currentAttackPet.activeSelf)
+        {
             currentAttackPet.SetActive(true);
 
-        if (attackPetOrbiter != null)
-            attackPetOrbiter.Init(transform, playerStats, 0f, true);
+            if (attackPetOrbiter != null)
+                attackPetOrbiter.Init(transform, playerStats, 0f, true);
+        }
     }
 
     private void DisableAttackPet()
@@ -81,16 +83,18 @@ public class PetManager : MonoBehaviour
     private void EnableSupportPet()
     {
         if (currentSupportPet == null)
+        {
             CreateSupportPet();
-
-        if (currentSupportPet == null)
             return;
+        }
 
         if (!currentSupportPet.activeSelf)
+        {
             currentSupportPet.SetActive(true);
 
-        if (supportPetOrbiter != null)
-            supportPetOrbiter.Init(transform, playerStats, 180f, false);
+            if (supportPetOrbiter != null)
+                supportPetOrbiter.Init(transform, playerStats, 180f, false);
+        }
     }
 
     private void DisableSupportPet()

@@ -34,16 +34,18 @@ public class RadialWeaponManager : MonoBehaviour
     private void EnableOrbital()
     {
         if (currentOrbital == null)
+        {
             CreateOrbital();
-
-        if (currentOrbital == null)
             return;
+        }
 
         if (!currentOrbital.activeSelf)
+        {
             currentOrbital.SetActive(true);
 
-        if (currentOrbiter != null)
-            currentOrbiter.Init(transform, playerStats, 0f);
+            if (currentOrbiter != null)
+                currentOrbiter.Init(transform, playerStats, 0f);
+        }
     }
 
     private void DisableOrbital()

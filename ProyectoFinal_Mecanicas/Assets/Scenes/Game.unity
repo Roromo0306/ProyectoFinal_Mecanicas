@@ -1932,6 +1932,7 @@ MonoBehaviour:
   cooldownDuration: 20
   spawnDistance: 24
   spawnSpreadRadius: 5
+  showDebugLogs: 0
 --- !u!4 &315368618
 Transform:
   m_ObjectHideFlags: 0
@@ -2843,8 +2844,8 @@ RectTransform:
   - {fileID: 1608308715}
   - {fileID: 681845965}
   - {fileID: 557145958}
-  - {fileID: 824739014}
   - {fileID: 347785693}
+  - {fileID: 824739014}
   - {fileID: 1292658089}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7886,6 +7887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 151ff324eeb3e6a41a8598c4153c000e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebugLogs: 0
 --- !u!4 &473624450
 Transform:
   m_ObjectHideFlags: 0
@@ -8674,6 +8676,7 @@ MonoBehaviour:
   cooldownDuration: 30
   spawnDistance: 20
   spawnSpreadRadius: 3
+  showDebugLogs: 0
 --- !u!4 &686504495
 Transform:
   m_ObjectHideFlags: 0
@@ -9468,8 +9471,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1236669432}
   - {fileID: 18641330}
+  - {fileID: 1236669432}
   - {fileID: 469160664}
   - {fileID: 1408587311}
   m_Father: {fileID: 0}
@@ -9577,12 +9580,12 @@ MonoBehaviour:
   dashCooldown: 1.5
   hasRadialWeapon: 0
   radialOrbitRadius: 2.5
-  radialOrbitSpeed: 250
+  radialOrbitSpeed: 100
   radialDamageMultiplier: 2
   hasAttackPet: 0
   hasSupportPet: 0
-  petOrbitRadius: 2.2
-  petOrbitSpeed: 20
+  petOrbitRadius: 1.5
+  petOrbitSpeed: 10
 --- !u!114 &963126775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10903,6 +10906,7 @@ MonoBehaviour:
   cooldownDuration: 30
   spawnDistance: 22
   spawnSpreadRadius: 4
+  showDebugLogs: 0
 --- !u!4 &1290505631
 Transform:
   m_ObjectHideFlags: 0
@@ -12155,6 +12159,7 @@ MonoBehaviour:
   maxElitesAlive: 1
   maxElitesTotal: 5
   spawnMargin: 3
+  showDebugLogs: 0
 --- !u!4 &1616765076
 Transform:
   m_ObjectHideFlags: 0
@@ -12527,7 +12532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.8235294}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
