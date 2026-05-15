@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class WeaponSystem : MonoBehaviour
 {
-    public GameObject bulletPrefab;
-    public Transform firePoint;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform firePoint;
 
     private PlayerStats playerStats;
 

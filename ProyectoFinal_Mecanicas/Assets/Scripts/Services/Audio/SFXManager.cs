@@ -5,45 +5,47 @@ public class SFXManager : MonoBehaviour
     public static SFXManager Instance;
 
     [Header("Combat")]
-    public AudioClip shootClip;
-    public AudioClip enemyHitClip;
-    public AudioClip playerHitClip;
-    public AudioClip playerDeathClip;
-    public AudioClip enemyDeathClip;
-    public AudioClip eliteEnemyDeathClip;
-
-
+    [SerializeField] private AudioClip shootClip;
+    [SerializeField] private AudioClip enemyHitClip;
+    [SerializeField] private AudioClip playerHitClip;
+    [SerializeField] private AudioClip playerDeathClip;
+    [SerializeField] private AudioClip enemyDeathClip;
+    [SerializeField] private AudioClip eliteEnemyDeathClip;
 
     [Header("Progression")]
-    public AudioClip levelUpClip;
-    public AudioClip cardSelectClip;
-    public AudioClip recycleClip;
-    public AudioClip xpPickupClip;
+    [SerializeField] private AudioClip levelUpClip;
+    [SerializeField] private AudioClip cardSelectClip;
+    [SerializeField] private AudioClip recycleClip;
+    [SerializeField] private AudioClip xpPickupClip;
 
     [Header("UI")]
-    public AudioClip buttonHoverClip;
-    public AudioClip buttonClickClip;
-    public AudioClip openDeckClip;
-    public AudioClip closeDeckClip;
+    [SerializeField] private AudioClip buttonHoverClip;
+    [SerializeField] private AudioClip buttonClickClip;
+    [SerializeField] private AudioClip openDeckClip;
+    [SerializeField] private AudioClip closeDeckClip;
 
     [Header("Global Settings")]
-    [Range(0f, 1f)] public float volume = 0.8f;
+    [Range(0f, 1f)]
+    [SerializeField] private float volume = 0.8f;
 
     [Header("Shoot Settings")]
-    [Range(0f, 1f)] public float shootVolume = 0.65f;
-    public float shootMinPitch = 0.9f;
-    public float shootMaxPitch = 1.1f;
+    [Range(0f, 1f)]
+    [SerializeField] private float shootVolume = 0.65f;
+    [SerializeField] private float shootMinPitch = 0.9f;
+    [SerializeField] private float shootMaxPitch = 1.1f;
 
     [Header("Enemy Hit Settings")]
-    [Range(0f, 1f)] public float enemyHitVolume = 0.8f;
-    public float enemyHitMinPitch = 0.85f;
-    public float enemyHitMaxPitch = 1.15f;
+    [Range(0f, 1f)]
+    [SerializeField] private float enemyHitVolume = 0.8f;
+    [SerializeField] private float enemyHitMinPitch = 0.85f;
+    [SerializeField] private float enemyHitMaxPitch = 1.15f;
 
     [Header("XP Pickup Settings")]
-    [Range(0f, 1f)] public float xpPickupVolume = 0.45f;
-    public float xpPickupMinPitch = 0.95f;
-    public float xpPickupMaxPitch = 1.15f;
-    public float xpPickupSoundCooldown = 0.06f;
+    [Range(0f, 1f)]
+    [SerializeField] private float xpPickupVolume = 0.45f;
+    [SerializeField] private float xpPickupMinPitch = 0.95f;
+    [SerializeField] private float xpPickupMaxPitch = 1.15f;
+    [SerializeField] private float xpPickupSoundCooldown = 0.06f;
 
     private float lastXPPickupSoundTime = -999f;
 
@@ -76,7 +78,8 @@ public class SFXManager : MonoBehaviour
 
     private void PlayOneShotPitched(AudioClip clip, float customVolume, float minPitch, float maxPitch)
     {
-        if (clip == null) return;
+        if (clip == null)
+            return;
 
         float pitch = Random.Range(minPitch, maxPitch);
 
@@ -121,6 +124,7 @@ public class SFXManager : MonoBehaviour
     {
         Play(eliteEnemyDeathClip);
     }
+
     public void PlayPlayerHit()
     {
         Play(playerHitClip);

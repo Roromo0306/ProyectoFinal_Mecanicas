@@ -4,15 +4,15 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     [Header("Movement")]
-    public float speed = 10f;
-    public float lifetime = 3f;
+    [SerializeField] private float speed = 10f;
+    [SerializeField] private float lifetime = 3f;
 
     [Header("Hit Feedback")]
-    public float hitKnockbackForce = 3f;
+    [SerializeField] private float hitKnockbackForce = 3f;
 
     [Header("Hit FX")]
-    public GameObject hitParticlePrefab;
-    public GameObject explosionParticlePrefab;
+    [SerializeField] private GameObject hitParticlePrefab;
+    [SerializeField] private GameObject explosionParticlePrefab;
 
     [SerializeField] private float hitFxLifetime = 1.5f;
     [SerializeField] private float explosionFxLifetime = 1.5f;

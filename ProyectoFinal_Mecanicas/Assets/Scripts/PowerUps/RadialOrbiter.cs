@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class RadialOrbiter : MonoBehaviour
 {
+    [Header("Hit Feedback")]
+    [SerializeField] private float hitKnockbackForce = 2f;
+
     private Transform player;
     private PlayerStats playerStats;
 
     private float currentAngle = 0f;
     private float damageCooldown = 0.15f;
     private float lastDamageTime = -999f;
-
-    [Header("Hit Feedback")]
-    public float hitKnockbackForce = 2f;
 
     public void Init(Transform playerTransform, PlayerStats stats, float startAngle)
     {
@@ -46,6 +46,7 @@ public class RadialOrbiter : MonoBehaviour
             return;
 
         GameObject enemyRoot = GetEnemyRoot(collision.gameObject);
+
         if (enemyRoot == null)
             return;
 

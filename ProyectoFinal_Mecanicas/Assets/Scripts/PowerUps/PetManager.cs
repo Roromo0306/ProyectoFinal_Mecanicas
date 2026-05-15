@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PetManager : MonoBehaviour
 {
-    public GameObject attackPetPrefab;
-    public GameObject supportPetPrefab;
+    [SerializeField] private GameObject attackPetPrefab;
+    [SerializeField] private GameObject supportPetPrefab;
 
     private PlayerStats playerStats;
 
@@ -38,7 +38,7 @@ public class PetManager : MonoBehaviour
                 PetOrbiter orbiter = currentAttackPet.GetComponent<PetOrbiter>();
 
                 if (orbiter != null)
-                    orbiter.Init(transform, playerStats, 0f, true); // horario
+                    orbiter.Init(transform, playerStats, 0f, true);
             }
         }
         else
@@ -62,7 +62,7 @@ public class PetManager : MonoBehaviour
                 PetOrbiter orbiter = currentSupportPet.GetComponent<PetOrbiter>();
 
                 if (orbiter != null)
-                    orbiter.Init(transform, playerStats, 180f, false); // antihorario
+                    orbiter.Init(transform, playerStats, 180f, false);
             }
         }
         else

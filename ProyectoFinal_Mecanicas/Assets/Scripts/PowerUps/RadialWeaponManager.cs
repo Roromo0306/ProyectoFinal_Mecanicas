@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RadialWeaponManager : MonoBehaviour
 {
-    public GameObject radialWeaponPrefab;
+    [SerializeField] private GameObject radialWeaponPrefab;
 
     private PlayerStats playerStats;
     private GameObject currentOrbital;
@@ -10,6 +10,7 @@ public class RadialWeaponManager : MonoBehaviour
     private void Awake()
     {
         playerStats = GetComponent<PlayerStats>();
+
         if (playerStats == null)
             playerStats = FindObjectOfType<PlayerStats>();
     }
@@ -22,9 +23,7 @@ public class RadialWeaponManager : MonoBehaviour
         if (playerStats.hasRadialWeapon)
         {
             if (currentOrbital == null)
-            {
                 SpawnOrbital();
-            }
         }
         else
         {
@@ -41,9 +40,8 @@ public class RadialWeaponManager : MonoBehaviour
         currentOrbital = Instantiate(radialWeaponPrefab, transform.position, Quaternion.identity);
 
         RadialOrbiter orbiter = currentOrbital.GetComponent<RadialOrbiter>();
+
         if (orbiter != null)
-        {
             orbiter.Init(transform, playerStats, 0f);
-        }
     }
 }

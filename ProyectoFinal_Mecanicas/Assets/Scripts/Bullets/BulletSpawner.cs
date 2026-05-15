@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class BulletSpawner : MonoBehaviour
 {
-    public GameObject bulletPrefab;
+    [SerializeField] private GameObject bulletPrefab;
 
     [Header("Spread Shot Balance")]
     [Range(0f, 1f)]
-    public float spreadBulletDamageMultiplier = 0.35f;
+    [SerializeField] private float spreadBulletDamageMultiplier = 0.35f;
 
     private PlayerStats playerStats;
 
