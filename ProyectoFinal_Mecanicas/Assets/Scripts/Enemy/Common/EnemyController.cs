@@ -35,6 +35,8 @@ public class EnemyController
     private float hitFlashTimer = 0f;
     private readonly Color hitColor = new Color(1f, 0.2f, 0.2f, 1f);
 
+    private readonly Collider2D[] separationBuffer = new Collider2D[16];
+
     public EnemyController(Transform enemyTransform)
     {
         this.enemyTransform = enemyTransform;
@@ -227,17 +229,20 @@ public class EnemyController
         if (enemyLayer.value == 0)
             return Vector2.zero;
 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(
+        int hitCount = Physics2D.OverlapCircleNonAlloc(
             enemyTransform.position,
             separationRadius,
+            separationBuffer,
             enemyLayer
         );
 
         Vector2 separation = Vector2.zero;
         int count = 0;
 
-        foreach (Collider2D hit in hits)
+        for (int i = 0; i < hitCount; i++)
         {
+            Collider2D hit = separationBuffer[i];
+
             if (hit == null)
                 continue;
 
