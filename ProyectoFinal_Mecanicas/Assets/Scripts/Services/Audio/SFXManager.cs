@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SFXManager : MonoBehaviour
@@ -28,6 +29,10 @@ public class SFXManager : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float volume = 0.8f;
 
+    [Header("Pool Settings")]
+    [SerializeField] private int initialPoolSize = 12;
+    [SerializeField] private int maxPoolSize = 32;
+
     [Header("Shoot Settings")]
     [Range(0f, 1f)]
     [SerializeField] private float shootVolume = 0.65f;
@@ -47,6 +52,9 @@ public class SFXManager : MonoBehaviour
     [SerializeField] private float xpPickupMaxPitch = 1.15f;
     [SerializeField] private float xpPickupSoundCooldown = 0.06f;
 
+    private readonly List<AudioSource> audioSourcePool = new List<AudioSource>();
+
+    private int forcedSourceIndex = 0;
     private float lastXPPickupSoundTime = -999f;
 
     private void Awake()
@@ -59,6 +67,79 @@ public class SFXManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        CreateInitialPool();
+    }
+
+    private void CreateInitialPool()
+    {
+        int safePoolSize = Mathf.Max(1, initialPoolSize);
+
+        for (int i = 0; i < safePoolSize; i++)
+        {
+            CreateAudioSource();
+        }
+    }
+
+    private AudioSource CreateAudioSource()
+    {
+        GameObject sourceObject = new GameObject("Pooled_SFX_Source");
+        sourceObject.transform.SetParent(transform);
+        sourceObject.transform.localPosition = Vector3.zero;
+
+        AudioSource source = sourceObject.AddComponent<AudioSource>();
+        ConfigureAudioSource(source);
+
+        audioSourcePool.Add(source);
+
+        return source;
+    }
+
+    private void ConfigureAudioSource(AudioSource source)
+    {
+        source.playOnAwake = false;
+        source.loop = false;
+        source.spatialBlend = 0f;
+        source.volume = volume;
+        source.pitch = 1f;
+    }
+
+    private AudioSource GetAvailableSource()
+    {
+        for (int i = 0; i < audioSourcePool.Count; i++)
+        {
+            AudioSource source = audioSourcePool[i];
+
+            if (source != null && !source.isPlaying)
+                return source;
+        }
+
+        if (audioSourcePool.Count < maxPoolSize)
+            return CreateAudioSource();
+
+        return GetForcedReusableSource();
+    }
+
+    private AudioSource GetForcedReusableSource()
+    {
+        if (audioSourcePool.Count == 0)
+            return CreateAudioSource();
+
+        forcedSourceIndex++;
+
+        if (forcedSourceIndex >= audioSourcePool.Count)
+            forcedSourceIndex = 0;
+
+        AudioSource source = audioSourcePool[forcedSourceIndex];
+
+        if (source != null)
+        {
+            source.Stop();
+            return source;
+        }
+
+        source = CreateAudioSource();
+        return source;
     }
 
     public void Play(AudioClip clip)
@@ -81,23 +162,22 @@ public class SFXManager : MonoBehaviour
         if (clip == null)
             return;
 
-        float pitch = Random.Range(minPitch, maxPitch);
+        AudioSource source = GetAvailableSource();
 
-        GameObject sfxObject = new GameObject("SFX_" + clip.name);
-        sfxObject.transform.position = transform.position;
+        if (source == null)
+            return;
 
-        AudioSource source = sfxObject.AddComponent<AudioSource>();
+        float safeMinPitch = Mathf.Min(minPitch, maxPitch);
+        float safeMaxPitch = Mathf.Max(minPitch, maxPitch);
+
+        source.Stop();
+
         source.clip = clip;
-        source.volume = customVolume;
-        source.pitch = pitch;
+        source.volume = Mathf.Clamp01(customVolume);
+        source.pitch = Random.Range(safeMinPitch, safeMaxPitch);
         source.spatialBlend = 0f;
-        source.playOnAwake = false;
         source.loop = false;
-
         source.Play();
-
-        float destroyTime = clip.length / Mathf.Abs(pitch) + 0.1f;
-        Destroy(sfxObject, destroyTime);
     }
 
     public void PlayShoot()

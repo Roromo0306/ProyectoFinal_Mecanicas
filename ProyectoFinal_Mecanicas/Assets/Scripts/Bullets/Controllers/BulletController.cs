@@ -22,6 +22,11 @@ public class BulletController : MonoBehaviour
     private int remainingPierceHits;
     private int remainingBounces;
 
+    private float lifetimeTimer;
+
+    private bool isInitialized = false;
+    private bool isReleased = false;
+
     private readonly HashSet<GameObject> hitRoots = new HashSet<GameObject>();
 
     public void Init(BulletRuntimeData runtimeData)
@@ -32,9 +37,12 @@ public class BulletController : MonoBehaviour
         remainingPierceHits = Mathf.Max(1, data.pierceCount);
         remainingBounces = Mathf.Max(0, data.bounceCount);
 
-        hitRoots.Clear();
+        lifetimeTimer = lifetime;
 
-        Destroy(gameObject, lifetime);
+        isInitialized = true;
+        isReleased = false;
+
+        hitRoots.Clear();
     }
 
     public void Init(
@@ -83,16 +91,30 @@ public class BulletController : MonoBehaviour
 
     private void Update()
     {
+        if (!isInitialized || isReleased)
+            return;
+
         transform.position += data.direction * speed * Time.deltaTime;
+
+        lifetimeTimer -= Time.deltaTime;
+
+        if (lifetimeTimer <= 0f)
+            ReleaseToPool();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!isInitialized || isReleased)
+            return;
+
         HandleHit(collision.gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!isInitialized || isReleased)
+            return;
+
         HandleHit(collision.gameObject);
     }
 
@@ -138,14 +160,14 @@ public class BulletController : MonoBehaviour
         if (nextBounceTarget != null && remainingBounces > 0)
         {
             remainingBounces--;
-            data.direction = (nextBounceTarget.transform.position - transform.position).normalized;
+            data.direction = BulletRuntimeData.NormalizeDirection(nextBounceTarget.transform.position - transform.position);
             return;
         }
 
         if (remainingPierceHits > 0)
             return;
 
-        Destroy(gameObject);
+        ReleaseToPool();
     }
 
     private GameObject GetEnemyRoot(GameObject obj)
@@ -253,8 +275,12 @@ public class BulletController : MonoBehaviour
         if (hitParticlePrefab == null)
             return;
 
-        GameObject fx = Instantiate(hitParticlePrefab, position, Quaternion.identity);
-        Destroy(fx, hitFxLifetime);
+        VFXObjectPool.Spawn(
+            hitParticlePrefab,
+            position,
+            Quaternion.identity,
+            hitFxLifetime
+        );
     }
 
     private void SpawnExplosionParticle(Vector3 position)
@@ -262,8 +288,27 @@ public class BulletController : MonoBehaviour
         if (explosionParticlePrefab == null)
             return;
 
-        GameObject fx = Instantiate(explosionParticlePrefab, position, Quaternion.identity);
-        fx.transform.localScale = Vector3.one * data.explosionRadius * 0.6f;
-        Destroy(fx, explosionFxLifetime);
+        Vector3 scale = Vector3.one * data.explosionRadius * 0.6f;
+
+        VFXObjectPool.Spawn(
+            explosionParticlePrefab,
+            position,
+            Quaternion.identity,
+            scale,
+            explosionFxLifetime
+        );
+    }
+
+    private void ReleaseToPool()
+    {
+        if (isReleased)
+            return;
+
+        isReleased = true;
+        isInitialized = false;
+
+        hitRoots.Clear();
+
+        BulletObjectPool.Release(gameObject);
     }
 }

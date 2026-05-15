@@ -3,12 +3,14 @@ using UnityEngine;
 public class EnemyXPDropper : MonoBehaviour
 {
     [Header("XP Prefabs")]
-    public GameObject xpPrefab;
-    public GameObject bigXPPrefab;
+    [SerializeField] private GameObject xpPrefab;
+    [SerializeField] private GameObject bigXPPrefab;
 
     [Header("Late Game XP")]
-    public float bigXPStartTime = 300f; // minuto 5
-    [Range(0f, 1f)] public float bigXPDropChance = 0.65f;
+    [SerializeField] private float bigXPStartTime = 300f;
+
+    [Range(0f, 1f)]
+    [SerializeField] private float bigXPDropChance = 0.65f;
 
     private static float runStartTime;
     private static bool runStartTimeSet = false;
@@ -29,28 +31,27 @@ public class EnemyXPDropper : MonoBehaviour
         if (elapsedTime < bigXPStartTime)
         {
             DropNormalXP();
+            return;
         }
-        else
-        {
-            TryDropBigXP();
-        }
+
+        TryDropBigXP();
     }
 
     private void DropNormalXP()
     {
-        if (xpPrefab == null) return;
+        if (xpPrefab == null)
+            return;
 
-        Instantiate(xpPrefab, transform.position, Quaternion.identity);
+        XPObjectPool.Spawn(xpPrefab, transform.position, Quaternion.identity);
     }
 
     private void TryDropBigXP()
     {
-        if (bigXPPrefab == null) return;
+        if (bigXPPrefab == null)
+            return;
 
         if (Random.value <= bigXPDropChance)
-        {
-            Instantiate(bigXPPrefab, transform.position, Quaternion.identity);
-        }
+            XPObjectPool.Spawn(bigXPPrefab, transform.position, Quaternion.identity);
     }
 
     public static void ResetRunTimer()

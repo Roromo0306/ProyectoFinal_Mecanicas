@@ -64,13 +64,16 @@ public class BulletSpawner : MonoBehaviour
 
     private void FireBullet(Vector3 position, Vector3 direction, float bulletDamage)
     {
-        GameObject bulletObj = Instantiate(bulletPrefab, position, Quaternion.identity);
+        GameObject bulletObj = BulletObjectPool.Spawn(bulletPrefab, position, Quaternion.identity);
+
+        if (bulletObj == null)
+            return;
 
         BulletController bullet = bulletObj.GetComponent<BulletController>();
 
         if (bullet == null)
         {
-            Destroy(bulletObj);
+            BulletObjectPool.Release(bulletObj);
             return;
         }
 

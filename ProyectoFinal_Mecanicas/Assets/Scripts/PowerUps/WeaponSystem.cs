@@ -38,13 +38,16 @@ public class WeaponSystem : MonoBehaviour
 
     private void FireSingle(Vector3 direction)
     {
-        GameObject bulletObj = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+        GameObject bulletObj = BulletObjectPool.Spawn(bulletPrefab, firePoint.position, Quaternion.identity);
+
+        if (bulletObj == null)
+            return;
 
         BulletController bullet = bulletObj.GetComponent<BulletController>();
 
         if (bullet == null)
         {
-            Destroy(bulletObj);
+            BulletObjectPool.Release(bulletObj);
             return;
         }
 
