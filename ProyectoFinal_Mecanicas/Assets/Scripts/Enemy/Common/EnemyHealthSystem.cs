@@ -9,11 +9,13 @@ public class EnemyHealthSystem : MonoBehaviour, IDamageable
     private float currentHealth;
     private bool isDead = false;
     private Coroutine dieRoutine;
+    private WaitForSeconds cachedDeathWait;
 
     public GameObject TargetRoot => gameObject;
 
     private void Awake()
     {
+        cachedDeathWait = new WaitForSeconds(deathDelay);
         ResetHealth();
     }
 
@@ -66,7 +68,7 @@ public class EnemyHealthSystem : MonoBehaviour, IDamageable
         if (sr != null)
         {
             sr.color = Color.white;
-            yield return new WaitForSeconds(deathDelay);
+            yield return cachedDeathWait;
         }
 
         EnemyXPDropper dropper = GetComponent<EnemyXPDropper>();

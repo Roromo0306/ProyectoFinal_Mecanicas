@@ -50,10 +50,16 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private float freezeSlowMultiplier = 1f;
 
+    private EliteEnemyHealth cachedHealth;
+    private WaitForSeconds cachedHitFlashWait;
+    private static readonly WaitForSeconds burnFlashWait = new WaitForSeconds(0.12f);
+
     private void Awake()
     {
         RefreshReferences();
         StoreOriginalColorIfNeeded();
+        cachedHealth = GetComponent<EliteEnemyHealth>();
+        cachedHitFlashWait = new WaitForSeconds(hitFlashDuration);
     }
 
     private void OnEnable()
@@ -266,7 +272,7 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
         spriteRenderer.color = hitColor;
 
-        yield return new WaitForSeconds(hitFlashDuration);
+        yield return cachedHitFlashWait;
 
         hitFlashRoutine = null;
         RefreshVisualState();
@@ -323,12 +329,11 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
             {
                 tickTimer = tickInterval;
 
-                EliteEnemyHealth health = GetComponent<EliteEnemyHealth>();
-                if (health != null)
-                    health.TakeDamage(tickDamage);
+                if (cachedHealth != null)
+                    cachedHealth.TakeDamage(tickDamage);
             }
 
-            yield return new WaitForSeconds(0.12f);
+            yield return burnFlashWait;
         }
 
         isBurning = false;

@@ -35,6 +35,8 @@ public class EnemyController
     private float hitFlashTimer = 0f;
     private readonly Color hitColor = new Color(1f, 0.2f, 0.2f, 1f);
 
+    private EnemyHealthSystem cachedHealth;
+
     public EnemyController(Transform enemyTransform)
     {
         this.enemyTransform = enemyTransform;
@@ -199,7 +201,10 @@ public class EnemyController
         TryFindPlayer();
 
         if (enemyTransform != null)
+        {
             spriteRenderer = enemyTransform.GetComponentInChildren<SpriteRenderer>();
+            cachedHealth = enemyTransform.GetComponent<EnemyHealthSystem>();
+        }
     }
 
     private void StoreOriginalColorIfNeeded()
@@ -299,10 +304,8 @@ public class EnemyController
         {
             burnTickTimer = burnTickInterval;
 
-            EnemyHealthSystem health = enemyTransform.GetComponent<EnemyHealthSystem>();
-
-            if (health != null)
-                health.TakeDamage(burnTickDamage);
+            if (cachedHealth != null)
+                cachedHealth.TakeDamage(burnTickDamage);
         }
 
         if (burnTimer <= 0f)
