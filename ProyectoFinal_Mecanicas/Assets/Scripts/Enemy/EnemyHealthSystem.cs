@@ -8,27 +8,35 @@ public class EnemyHealthSystem : MonoBehaviour, IDamageable
 
     private float currentHealth;
     private bool isDead = false;
+    private Coroutine dieRoutine;
 
     public GameObject TargetRoot => gameObject;
 
     private void Awake()
     {
-        currentHealth = maxHealth;
+        ResetHealth();
     }
 
     private void OnEnable()
     {
+        ResetHealth();
         EventBus.Subscribe<EnemyHitEvent>(OnHit);
     }
 
     private void OnDisable()
     {
         EventBus.Unsubscribe<EnemyHitEvent>(OnHit);
+
+        if (dieRoutine != null)
+        {
+            StopCoroutine(dieRoutine);
+            dieRoutine = null;
+        }
     }
 
     private void OnHit(object evt)
     {
-        var e = (EnemyHitEvent)evt;
+        EnemyHitEvent e = (EnemyHitEvent)evt;
 
         if (e.enemy != gameObject)
             return;
@@ -45,7 +53,8 @@ public class EnemyHealthSystem : MonoBehaviour, IDamageable
 
         if (currentHealth <= 0f)
         {
-            StartCoroutine(DieRoutine());
+            if (dieRoutine == null)
+                dieRoutine = StartCoroutine(DieRoutine());
         }
     }
 
@@ -64,6 +73,14 @@ public class EnemyHealthSystem : MonoBehaviour, IDamageable
         if (dropper != null)
             dropper.DropXP();
 
-        Destroy(gameObject);
+        dieRoutine = null;
+        EnemyObjectPool.Release(gameObject);
+    }
+
+    private void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        isDead = false;
+        dieRoutine = null;
     }
 }

@@ -3,36 +3,39 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Activation")]
-    public bool startActive = true;
-    public float activationTime = 0f;
+    [SerializeField] private bool startActive = true;
+    [SerializeField] private float activationTime = 0f;
 
     [Header("Enemies")]
-    public GameObject enemyPrefab;
-    public GameObject tankEnemyPrefab;
+    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private GameObject tankEnemyPrefab;
 
     [Header("Tank Settings")]
-    public bool spawnTanks = false;
+    [SerializeField] private bool spawnTanks = false;
 
     [Range(0f, 1f)]
-    public float tankSpawnChance = 0.2f;
+    [SerializeField] private float tankSpawnChance = 0.2f;
 
     [Header("Spawn Rate")]
-    public float minSpawnRate = 0.2f;
-    public float maxSpawnRate = 2f;
+    [SerializeField] private float minSpawnRate = 0.2f;
+    [SerializeField] private float maxSpawnRate = 2f;
 
     [Header("Spawn Amount")]
-    public int minEnemiesPerSpawn = 1;
-    public int maxEnemiesPerSpawn = 5;
-    public float amountRampDuration = 300f;
+    [SerializeField] private int minEnemiesPerSpawn = 1;
+    [SerializeField] private int maxEnemiesPerSpawn = 5;
+    [SerializeField] private float amountRampDuration = 300f;
 
     [Header("Phases")]
-    public float rampDuration = 60f;
-    public float peakDuration = 180f;
-    public float cooldownDuration = 60f;
+    [SerializeField] private float rampDuration = 60f;
+    [SerializeField] private float peakDuration = 180f;
+    [SerializeField] private float cooldownDuration = 60f;
 
     [Header("Spawn Position")]
-    public float spawnDistance = 20f;
-    public float spawnSpreadRadius = 3f;
+    [SerializeField] private float spawnDistance = 20f;
+    [SerializeField] private float spawnSpreadRadius = 3f;
+
+    [Header("Debug")]
+    [SerializeField] private bool showDebugLogs = false;
 
     private float timer;
     private float phaseTimer;
@@ -75,7 +78,8 @@ public class EnemySpawner : MonoBehaviour
                 return;
         }
 
-        if (player == null) return;
+        if (player == null)
+            return;
 
         phaseTimer += Time.deltaTime;
         timer += Time.deltaTime;
@@ -98,7 +102,8 @@ public class EnemySpawner : MonoBehaviour
         phaseTimer = 0f;
         currentPhase = SpawnPhase.Ramp;
 
-        Debug.Log(gameObject.name + " activado en segundo: " + gameTimer);
+        if (showDebugLogs)
+            Debug.Log(gameObject.name + " activado en segundo: " + gameTimer);
     }
 
     private void UpdatePhase()
@@ -160,8 +165,11 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnGroup()
     {
-        if (enemyPrefab == null) return;
-        if (player == null) return;
+        if (enemyPrefab == null)
+            return;
+
+        if (player == null)
+            return;
 
         int amount = GetCurrentEnemiesPerSpawn();
 
@@ -176,7 +184,7 @@ public class EnemySpawner : MonoBehaviour
             GameObject prefabToSpawn = GetEnemyPrefabToSpawn();
 
             if (prefabToSpawn != null)
-                Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+                EnemyObjectPool.Spawn(prefabToSpawn, spawnPos, Quaternion.identity);
         }
     }
 

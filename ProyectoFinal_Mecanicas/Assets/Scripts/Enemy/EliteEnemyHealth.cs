@@ -18,7 +18,18 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        currentHealth = maxHealth;
+        ResetHealth();
+    }
+
+    private void OnEnable()
+    {
+        ResetHealth();
+    }
+
+    public void PrepareForSpawn(EliteEnemySpawner owner)
+    {
+        spawner = owner;
+        ResetHealth();
     }
 
     public void TakeDamage(float amount)
@@ -50,12 +61,7 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable
 
         SFXManager.Instance?.PlayEliteEnemyDeath();
 
-        Destroy(gameObject);
-    }
-
-    private void OnDestroy()
-    {
-        NotifyDefeated();
+        EnemyObjectPool.Release(gameObject);
     }
 
     private void NotifyDefeated()
@@ -75,8 +81,16 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable
         else
         {
             ArenaClosureController arena = FindObjectOfType<ArenaClosureController>();
+
             if (arena != null)
                 arena.DeactivateArena();
         }
+    }
+
+    private void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        isDead = false;
+        defeatNotified = false;
     }
 }

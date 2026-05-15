@@ -10,17 +10,14 @@ public class EnemyController
     private float knockbackForce = 0f;
     private Vector2 knockbackVelocity;
 
-    // Separation
     private float separationRadius = 0.6f;
     private float separationForce = 2.5f;
     private LayerMask enemyLayer;
 
-    // Freeze
     private bool isFrozen = false;
     private float freezeTimer = 0f;
     private float freezeSlowMultiplier = 1f;
 
-    // Burn
     private bool isBurning = false;
     private float burnTimer = 0f;
     private float burnTickDamage = 0f;
@@ -29,29 +26,20 @@ public class EnemyController
     private float burnFlashTimer = 0f;
     private bool burnFlashYellow = false;
 
+    private bool hasStoredOriginalColor = false;
     private Color originalColor = Color.white;
-    private Color freezeColor = new Color(0.3f, 0.7f, 1f, 1f);
-    private Color burnColor = new Color(1f, 0.55f, 0.05f, 1f);
+
+    private readonly Color freezeColor = new Color(0.3f, 0.7f, 1f, 1f);
+    private readonly Color burnColor = new Color(1f, 0.55f, 0.05f, 1f);
 
     private float hitFlashTimer = 0f;
-
-    // Cambia este color si quieres otro flash.
-    private Color hitColor = new Color(1f, 0.2f, 0.2f, 1f);
+    private readonly Color hitColor = new Color(1f, 0.2f, 0.2f, 1f);
 
     public EnemyController(Transform enemyTransform)
     {
         this.enemyTransform = enemyTransform;
-
-        if (enemyTransform != null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-                playerTransform = player.transform;
-
-            spriteRenderer = enemyTransform.GetComponentInChildren<SpriteRenderer>();
-            if (spriteRenderer != null)
-                originalColor = spriteRenderer.color;
-        }
+        RefreshReferences();
+        StoreOriginalColorIfNeeded();
     }
 
     public void SetMoveSpeed(float newSpeed)
@@ -66,9 +54,51 @@ public class EnemyController
         enemyLayer = layer;
     }
 
+    public void ResetState()
+    {
+        RefreshReferences();
+
+        knockbackForce = 0f;
+        knockbackVelocity = Vector2.zero;
+
+        isFrozen = false;
+        freezeTimer = 0f;
+        freezeSlowMultiplier = 1f;
+
+        isBurning = false;
+        burnTimer = 0f;
+        burnTickDamage = 0f;
+        burnTickInterval = 0.4f;
+        burnTickTimer = 0f;
+        burnFlashTimer = 0f;
+        burnFlashYellow = false;
+
+        hitFlashTimer = 0f;
+
+        ResetVisualState();
+    }
+
+    public void ResetVisualState()
+    {
+        RefreshReferences();
+        StoreOriginalColorIfNeeded();
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = originalColor;
+            spriteRenderer.flipX = false;
+        }
+    }
+
     public void Tick()
     {
-        if (enemyTransform == null || playerTransform == null)
+        if (enemyTransform == null)
+            return;
+
+        if (playerTransform == null)
+            TryFindPlayer();
+
+        if (playerTransform == null)
             return;
 
         UpdateFreeze();
@@ -87,6 +117,7 @@ public class EnemyController
             finalDirection = direction;
 
         float currentSpeed = baseSpeed;
+
         if (isFrozen)
             currentSpeed *= freezeSlowMultiplier;
 
@@ -98,53 +129,18 @@ public class EnemyController
         UpdateSpriteFlip();
     }
 
-    private Vector2 GetSeparationDirection()
-    {
-        if (enemyLayer.value == 0)
-            return Vector2.zero;
-
-        Collider2D[] hits = Physics2D.OverlapCircleAll(
-            enemyTransform.position,
-            separationRadius,
-            enemyLayer
-        );
-
-        Vector2 separation = Vector2.zero;
-        int count = 0;
-
-        foreach (Collider2D hit in hits)
-        {
-            if (hit == null) continue;
-            if (hit.transform == enemyTransform) continue;
-
-            Vector2 away = (Vector2)(enemyTransform.position - hit.transform.position);
-            float distance = away.magnitude;
-
-            if (distance <= 0.01f)
-                away = Random.insideUnitCircle.normalized;
-            else
-                away /= distance;
-
-            separation += away;
-            count++;
-        }
-
-        if (count > 0)
-            separation /= count;
-
-        return separation.normalized;
-    }
-
     public void OnPlayerCollision(Transform player)
     {
-        if (player == null) return;
+        if (player == null)
+            return;
 
         EventBus.Publish(new PlayerHitEvent(player.position));
     }
 
     public void ApplyRadialKnockback(Vector3 sourcePosition, float radius, float force)
     {
-        if (enemyTransform == null) return;
+        if (enemyTransform == null)
+            return;
 
         float distance = Vector3.Distance(enemyTransform.position, sourcePosition);
 
@@ -179,6 +175,91 @@ public class EnemyController
         burnFlashYellow = true;
 
         RefreshVisualState();
+    }
+
+    public void ApplyBulletHitFeedback(Vector3 sourcePosition, float force)
+    {
+        if (enemyTransform == null)
+            return;
+
+        Vector2 dir = (enemyTransform.position - sourcePosition).normalized;
+
+        if (dir.sqrMagnitude <= 0.0001f)
+            dir = Random.insideUnitCircle.normalized;
+
+        knockbackVelocity = dir * force;
+        knockbackForce = force;
+
+        hitFlashTimer = 0.12f;
+        RefreshVisualState();
+    }
+
+    private void RefreshReferences()
+    {
+        TryFindPlayer();
+
+        if (enemyTransform != null)
+            spriteRenderer = enemyTransform.GetComponentInChildren<SpriteRenderer>();
+    }
+
+    private void StoreOriginalColorIfNeeded()
+    {
+        if (hasStoredOriginalColor)
+            return;
+
+        if (spriteRenderer == null)
+            return;
+
+        originalColor = spriteRenderer.color;
+        hasStoredOriginalColor = true;
+    }
+
+    private void TryFindPlayer()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+            playerTransform = player.transform;
+    }
+
+    private Vector2 GetSeparationDirection()
+    {
+        if (enemyLayer.value == 0)
+            return Vector2.zero;
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(
+            enemyTransform.position,
+            separationRadius,
+            enemyLayer
+        );
+
+        Vector2 separation = Vector2.zero;
+        int count = 0;
+
+        foreach (Collider2D hit in hits)
+        {
+            if (hit == null)
+                continue;
+
+            if (hit.transform == enemyTransform)
+                continue;
+
+            Vector2 away = (Vector2)(enemyTransform.position - hit.transform.position);
+            float distance = away.magnitude;
+
+            if (distance <= 0.01f)
+                away = Random.insideUnitCircle.normalized;
+            else
+                away /= distance;
+
+            separation += away;
+            count++;
+        }
+
+        if (count > 0)
+            separation /= count;
+
+        return separation.normalized;
     }
 
     private void UpdateFreeze()
@@ -219,6 +300,7 @@ public class EnemyController
             burnTickTimer = burnTickInterval;
 
             EnemyHealthSystem health = enemyTransform.GetComponent<EnemyHealthSystem>();
+
             if (health != null)
                 health.TakeDamage(burnTickDamage);
         }
@@ -234,10 +316,41 @@ public class EnemyController
         }
     }
 
+    private void UpdateHitFlash()
+    {
+        if (hitFlashTimer <= 0f)
+            return;
+
+        hitFlashTimer -= Time.deltaTime;
+
+        if (hitFlashTimer <= 0f)
+        {
+            hitFlashTimer = 0f;
+            RefreshVisualState();
+        }
+    }
+
+    private void UpdateKnockback()
+    {
+        if (knockbackForce <= 0f)
+            return;
+
+        knockbackVelocity = Vector2.Lerp(knockbackVelocity, Vector2.zero, 8f * Time.deltaTime);
+        knockbackForce = knockbackVelocity.magnitude;
+
+        if (knockbackForce < 0.05f)
+        {
+            knockbackVelocity = Vector2.zero;
+            knockbackForce = 0f;
+        }
+    }
+
     private void RefreshVisualState()
     {
         if (spriteRenderer == null)
             return;
+
+        StoreOriginalColorIfNeeded();
 
         if (hitFlashTimer > 0f)
         {
@@ -258,47 +371,6 @@ public class EnemyController
         }
 
         spriteRenderer.color = originalColor;
-    }
-
-    private void UpdateKnockback()
-    {
-        if (knockbackForce <= 0f)
-            return;
-
-        knockbackVelocity = Vector2.Lerp(knockbackVelocity, Vector2.zero, 8f * Time.deltaTime);
-        knockbackForce = knockbackVelocity.magnitude;
-
-        if (knockbackForce < 0.05f)
-        {
-            knockbackVelocity = Vector2.zero;
-            knockbackForce = 0f;
-        }
-    }
-
-    public void ApplyBulletHitFeedback(Vector3 sourcePosition, float force)
-    {
-        if (enemyTransform == null) return;
-
-        Vector2 dir = (enemyTransform.position - sourcePosition).normalized;
-        knockbackVelocity = dir * force;
-        knockbackForce = force;
-
-        hitFlashTimer = 0.12f;
-        RefreshVisualState();
-    }
-
-    private void UpdateHitFlash()
-    {
-        if (hitFlashTimer <= 0f)
-            return;
-
-        hitFlashTimer -= Time.deltaTime;
-
-        if (hitFlashTimer <= 0f)
-        {
-            hitFlashTimer = 0f;
-            RefreshVisualState();
-        }
     }
 
     private void UpdateSpriteFlip()

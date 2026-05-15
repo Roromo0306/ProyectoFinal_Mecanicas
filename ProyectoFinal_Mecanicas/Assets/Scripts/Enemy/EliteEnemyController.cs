@@ -37,7 +37,8 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
     private float lastHitTime = -999f;
 
     private SpriteRenderer spriteRenderer;
-    private Color originalColor;
+    private Color originalColor = Color.white;
+    private bool hasStoredOriginalColor = false;
 
     private Coroutine hitFlashRoutine;
     private Coroutine freezeRoutine;
@@ -47,31 +48,55 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
     private bool isBurning = false;
     private bool burnFlashYellow = false;
 
+    private float freezeSlowMultiplier = 1f;
+
     private void Awake()
     {
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-
-        if (spriteRenderer != null)
-            originalColor = spriteRenderer.color;
-        else
-            originalColor = Color.white;
+        RefreshReferences();
+        StoreOriginalColorIfNeeded();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-            player = playerObj.transform;
+        ResetForSpawn();
+    }
 
-        mainCamera = Camera.main;
+    private void OnDisable()
+    {
+        StopStatusCoroutines();
+        ResetVisualState();
+    }
+
+    public void ResetForSpawn()
+    {
+        RefreshReferences();
+        StopStatusCoroutines();
+
+        currentState = EliteState.Entering;
+
         enterTarget = GetPointInsideCamera();
+        chargeStartPosition = transform.position;
+        chargeDirection = Vector3.zero;
+        repositionTarget = transform.position;
 
-        RefreshVisualState();
+        stateTimer = 0f;
+        lastHitTime = -999f;
+
+        isFrozen = false;
+        isBurning = false;
+        burnFlashYellow = false;
+        freezeSlowMultiplier = 1f;
+
+        ResetVisualState();
     }
 
     private void Update()
     {
-        if (player == null) return;
+        if (player == null)
+            TryFindPlayer();
+
+        if (player == null)
+            return;
 
         UpdateSpriteFlip();
 
@@ -80,12 +105,15 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
             case EliteState.Entering:
                 UpdateEntering();
                 break;
+
             case EliteState.Waiting:
                 UpdateWaiting();
                 break;
+
             case EliteState.Charging:
                 UpdateCharging();
                 break;
+
             case EliteState.Repositioning:
                 UpdateRepositioning();
                 break;
@@ -94,7 +122,11 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private void UpdateEntering()
     {
-        transform.position = Vector3.MoveTowards(transform.position, enterTarget, enterSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            enterTarget,
+            GetSpeed(enterSpeed) * Time.deltaTime
+        );
 
         if (Vector3.Distance(transform.position, enterTarget) < 0.1f)
         {
@@ -117,7 +149,7 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private void UpdateCharging()
     {
-        transform.position += chargeDirection * chargeSpeed * Time.deltaTime;
+        transform.position += chargeDirection * GetSpeed(chargeSpeed) * Time.deltaTime;
 
         float traveled = Vector3.Distance(transform.position, chargeStartPosition);
 
@@ -130,13 +162,25 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private void UpdateRepositioning()
     {
-        transform.position = Vector3.MoveTowards(transform.position, repositionTarget, repositionSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            repositionTarget,
+            GetSpeed(repositionSpeed) * Time.deltaTime
+        );
 
         if (Vector3.Distance(transform.position, repositionTarget) < 0.1f)
         {
             currentState = EliteState.Waiting;
             stateTimer = waitBeforeCharge;
         }
+    }
+
+    private float GetSpeed(float baseSpeed)
+    {
+        if (isFrozen)
+            return baseSpeed * freezeSlowMultiplier;
+
+        return baseSpeed;
     }
 
     private void PickRepositionTarget()
@@ -156,6 +200,9 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private Vector3 GetPointInsideCamera()
     {
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+
         if (mainCamera == null)
             return transform.position;
 
@@ -191,9 +238,14 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private void TryDamagePlayer(Transform target)
     {
-        if (target == null) return;
-        if (!target.CompareTag("Player")) return;
-        if (Time.time - lastHitTime < contactDamageCooldown) return;
+        if (target == null)
+            return;
+
+        if (!target.CompareTag("Player"))
+            return;
+
+        if (Time.time - lastHitTime < contactDamageCooldown)
+            return;
 
         lastHitTime = Time.time;
         EventBus.Publish(new PlayerHitEvent(target.position));
@@ -209,7 +261,8 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private IEnumerator HitFlashRoutine()
     {
-        if (spriteRenderer == null) yield break;
+        if (spriteRenderer == null)
+            yield break;
 
         spriteRenderer.color = hitColor;
 
@@ -226,27 +279,20 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
         freezeRoutine = StartCoroutine(FreezeRoutine(duration, slowMultiplier));
     }
+
     private IEnumerator FreezeRoutine(float duration, float slowMultiplier)
     {
         isFrozen = true;
+        freezeSlowMultiplier = slowMultiplier;
+
         RefreshVisualState();
-
-        float originalEnterSpeed = enterSpeed;
-        float originalChargeSpeed = chargeSpeed;
-        float originalRepositionSpeed = repositionSpeed;
-
-        enterSpeed *= slowMultiplier;
-        chargeSpeed *= slowMultiplier;
-        repositionSpeed *= slowMultiplier;
 
         yield return new WaitForSeconds(duration);
 
-        enterSpeed = originalEnterSpeed;
-        chargeSpeed = originalChargeSpeed;
-        repositionSpeed = originalRepositionSpeed;
-
         isFrozen = false;
+        freezeSlowMultiplier = 1f;
         freezeRoutine = null;
+
         RefreshVisualState();
     }
 
@@ -288,13 +334,84 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
         isBurning = false;
         burnFlashYellow = false;
         burnRoutine = null;
+
         RefreshVisualState();
+    }
+
+    private void RefreshReferences()
+    {
+        TryFindPlayer();
+
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        StoreOriginalColorIfNeeded();
+    }
+
+    private void TryFindPlayer()
+    {
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObj != null)
+            player = playerObj.transform;
+    }
+
+    private void StoreOriginalColorIfNeeded()
+    {
+        if (hasStoredOriginalColor)
+            return;
+
+        if (spriteRenderer == null)
+            return;
+
+        originalColor = spriteRenderer.color;
+        hasStoredOriginalColor = true;
+    }
+
+    private void StopStatusCoroutines()
+    {
+        if (hitFlashRoutine != null)
+        {
+            StopCoroutine(hitFlashRoutine);
+            hitFlashRoutine = null;
+        }
+
+        if (freezeRoutine != null)
+        {
+            StopCoroutine(freezeRoutine);
+            freezeRoutine = null;
+        }
+
+        if (burnRoutine != null)
+        {
+            StopCoroutine(burnRoutine);
+            burnRoutine = null;
+        }
+    }
+
+    private void ResetVisualState()
+    {
+        RefreshReferences();
+
+        isFrozen = false;
+        isBurning = false;
+        burnFlashYellow = false;
+        freezeSlowMultiplier = 1f;
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = originalColor;
+            spriteRenderer.flipX = false;
+        }
     }
 
     private void RefreshVisualState()
     {
         if (spriteRenderer == null)
             return;
+
+        StoreOriginalColorIfNeeded();
 
         if (hitFlashRoutine != null)
         {
@@ -327,9 +444,6 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
         if (Mathf.Abs(directionToPlayer) < 0.01f)
             return;
 
-        // El sprite base mira a la derecha.
-        // Si el player está a la izquierda, flipX true.
-        // Si el player está a la derecha, flipX false.
         spriteRenderer.flipX = directionToPlayer < 0f;
     }
 }
