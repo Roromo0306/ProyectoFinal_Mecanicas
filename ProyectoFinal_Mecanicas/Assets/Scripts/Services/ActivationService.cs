@@ -5,54 +5,74 @@ public class ActivationService : MonoBehaviour
 {
     public static ActivationService Instance;
 
+    [Header("Debug")]
+    [SerializeField] private bool showDebugLogs = false;
+
     private PlayerStats playerStats;
-    private HashSet<PowerUpData> consumedLifeGrantCards = new HashSet<PowerUpData>();
+    private PlayerHealthSystem playerHealthSystem;
+
+    private readonly HashSet<PowerUpData> consumedLifeGrantCards = new HashSet<PowerUpData>();
 
     private void Awake()
     {
         Instance = this;
-        playerStats = FindObjectOfType<PlayerStats>();
+        CacheReferences();
     }
 
     public void Activate(PowerUpData data)
     {
         RecalculateEquippedPowerUps();
     }
-    private int CalculateOneTimeLifeGrants()
+
+    public void RecalculateEquippedPowerUps()
     {
-        int livesToGrant = 0;
+        CacheReferences();
+
+        if (playerStats == null)
+        {
+            Debug.LogError("ActivationService -> No se ha encontrado PlayerStats.");
+            return;
+        }
+
+        playerStats.ResetToBase();
 
         if (SelectionService.Instance == null)
-            return 0;
+        {
+            SyncHealthWithStats(false);
+            return;
+        }
 
+        ApplyEquippedCardEffects();
+
+        if (showDebugLogs)
+            LogEquippedStats();
+
+        bool shouldGrantLife = HasNewLifeGrantCard();
+        SyncHealthWithStats(shouldGrantLife);
+    }
+
+    private void CacheReferences()
+    {
+        if (playerStats == null)
+            playerStats = FindObjectOfType<PlayerStats>();
+
+        if (playerHealthSystem == null)
+            playerHealthSystem = FindObjectOfType<PlayerHealthSystem>();
+    }
+
+    private void ApplyEquippedCardEffects()
+    {
         foreach (PowerUpData card in SelectionService.Instance.equippedSlots)
         {
-            if (card == null || card.effects == null) continue;
-
-            if (consumedLifeGrantCards.Contains(card))
+            if (card == null || card.effects == null)
                 continue;
 
             foreach (PowerUpEffect effect in card.effects)
             {
-                ExtraLifeEffect extraLife = effect as ExtraLifeEffect;
-                if (extraLife != null)
-                {
-                    livesToGrant += extraLife.extraLives;
-                    consumedLifeGrantCards.Add(card);
-                    break;
-                }
-
-                SupportPetEffect supportPet = effect as SupportPetEffect;
-                if (supportPet != null)
-                {
-                    livesToGrant += supportPet.extraLives;
-                    consumedLifeGrantCards.Add(card);
-                    break;
-                }
+                if (effect != null)
+                    effect.Apply(playerStats);
             }
         }
-
-        return livesToGrant;
     }
 
     private bool HasNewLifeGrantCard()
@@ -64,7 +84,8 @@ public class ActivationService : MonoBehaviour
 
         foreach (PowerUpData card in SelectionService.Instance.equippedSlots)
         {
-            if (card == null || card.effects == null) continue;
+            if (card == null || card.effects == null)
+                continue;
 
             if (consumedLifeGrantCards.Contains(card))
                 continue;
@@ -82,28 +103,17 @@ public class ActivationService : MonoBehaviour
 
         return foundNewLifeCard;
     }
-    public void RecalculateEquippedPowerUps()
+
+    private void SyncHealthWithStats(bool grantDifference)
     {
-        if (playerStats == null)
-            playerStats = FindObjectOfType<PlayerStats>();
+        CacheReferences();
 
-        if (playerStats == null) return;
+        if (playerHealthSystem != null)
+            playerHealthSystem.SyncMaxLivesFromStats(grantDifference);
+    }
 
-        ResetStatsToBase();
-
-        if (SelectionService.Instance == null) return;
-
-        foreach (PowerUpData card in SelectionService.Instance.equippedSlots)
-        {
-            if (card == null || card.effects == null) continue;
-
-            foreach (PowerUpEffect effect in card.effects)
-            {
-                if (effect != null)
-                    effect.Apply(playerStats);
-            }
-        }
-
+    private void LogEquippedStats()
+    {
         Debug.Log(
             "EQUIPADAS -> " +
             "Damage " + playerStats.damage +
@@ -116,56 +126,5 @@ public class ActivationService : MonoBehaviour
             " | AttackPet " + playerStats.hasAttackPet +
             " | SupportPet " + playerStats.hasSupportPet
         );
-
-        bool shouldGrantLife = HasNewLifeGrantCard();
-
-        PlayerHealthSystem health = FindObjectOfType<PlayerHealthSystem>();
-        if (health != null)
-            health.SyncMaxLivesFromStats(shouldGrantLife);
-    }
-
-    private void ResetStatsToBase()
-    {
-        playerStats.damage = 1f;
-        playerStats.pierceCount = 1;
-        playerStats.fireCooldown = 0.6f;
-
-        playerStats.hasSpreadShot = false;
-        playerStats.spreadAngle = 20f;
-
-        playerStats.bounceCount = 0;
-        playerStats.bounceSearchRadius = 6f;
-
-        playerStats.hasExplodingBullets = false;
-        playerStats.explosionRadius = 2.5f;
-        playerStats.explosionDamageMultiplier = 1f;
-
-        playerStats.hasFreezeBullets = false;
-        playerStats.freezeDuration = 2f;
-        playerStats.freezeSlowMultiplier = 0.4f;
-
-        playerStats.hasBurnBullets = false;
-        playerStats.burnDuration = 3f;
-        playerStats.burnTickDamage = 0.2f;
-        playerStats.burnTickInterval = 0.4f;
-
-        playerStats.moveSpeed = 5f;
-        playerStats.maxLives = 3;
-        playerStats.magnetRadius = 2f;
-
-        playerStats.hasDash = false;
-        playerStats.dashSpeed = 18f;
-        playerStats.dashDuration = 0.18f;
-        playerStats.dashCooldown = 1.2f;
-
-        playerStats.hasRadialWeapon = false;
-        playerStats.radialOrbitRadius = 1.8f;
-        playerStats.radialOrbitSpeed = 180f;
-        playerStats.radialDamageMultiplier = 1f;
-
-        playerStats.hasAttackPet = false;
-        playerStats.hasSupportPet = false;
-        playerStats.petOrbitRadius = 2.2f;
-        playerStats.petOrbitSpeed = 160f;
     }
 }

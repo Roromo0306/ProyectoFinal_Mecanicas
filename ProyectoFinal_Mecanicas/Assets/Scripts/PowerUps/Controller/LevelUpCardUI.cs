@@ -16,9 +16,14 @@ public class LevelUpCardUI : MonoBehaviour
         data = d;
         alreadySelected = false;
 
-        if (icon != null) icon.sprite = d.icon;
-        if (title != null) title.text = d.title;
-        if (desc != null) desc.text = d.description;
+        if (icon != null)
+            icon.sprite = d.icon;
+
+        if (title != null)
+            title.text = d.title;
+
+        if (desc != null)
+            desc.text = d.description;
 
         CardTooltipTrigger tooltip = GetComponent<CardTooltipTrigger>();
         if (tooltip != null)
@@ -27,7 +32,9 @@ public class LevelUpCardUI : MonoBehaviour
 
     public void Select()
     {
-        if (alreadySelected) return;
+        if (alreadySelected)
+            return;
+
         alreadySelected = true;
 
         SFXManager.Instance?.PlayCardSelect();
@@ -40,31 +47,37 @@ public class LevelUpCardUI : MonoBehaviour
 
         if (SelectionService.Instance == null)
         {
-            Debug.LogError("SelectionService.Instance es null");
+            Debug.LogError("LevelUpCardUI.Select -> SelectionService.Instance es null");
             return;
         }
 
         SelectionService.Instance.selected = data;
-
-        // CAMBIO IMPORTANTE:
-        // Si hay slot vacío, la carta se equipa automáticamente.
-        // Si están los 6 llenos, se queda solo en deck.
         SelectionService.Instance.AddCardAndAutoEquipIfPossible(data);
 
         if (ActivationService.Instance != null)
             ActivationService.Instance.RecalculateEquippedPowerUps();
 
-        Debug.Log("Seleccionada -> " + data.title);
+        CloseLevelUpUI();
+        OpenDeckUI();
+    }
 
+    private void CloseLevelUpUI()
+    {
         LevelUpUI levelUpUI = FindObjectOfType<LevelUpUI>();
-        if (levelUpUI != null)
-            levelUpUI.MarkClosed();
 
+        if (levelUpUI != null)
+            levelUpUI.Hide();
+    }
+
+    private void OpenDeckUI()
+    {
         if (GameplayDeckMenu.Instance != null)
         {
             GameplayDeckMenu.Instance.OpenDeck();
+            return;
         }
-        else if (UIFlowController.Instance != null)
+
+        if (UIFlowController.Instance != null)
         {
             UIFlowController.Instance.OpenDeployment();
         }

@@ -2,163 +2,154 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+    private const float DefaultDamage = 1f;
+    private const int DefaultPierceCount = 1;
+    private const float DefaultFireCooldown = 0.6f;
+
+    private const bool DefaultHasSpreadShot = false;
+    private const float DefaultSpreadAngle = 20f;
+
+    private const int DefaultBounceCount = 0;
+    private const float DefaultBounceSearchRadius = 6f;
+
+    private const bool DefaultHasExplodingBullets = false;
+    private const float DefaultExplosionRadius = 2.5f;
+    private const float DefaultExplosionDamageMultiplier = 1f;
+
+    private const bool DefaultHasFreezeBullets = false;
+    private const float DefaultFreezeDuration = 2f;
+    private const float DefaultFreezeSlowMultiplier = 0.4f;
+
+    private const bool DefaultHasBurnBullets = false;
+    private const float DefaultBurnDuration = 3f;
+    private const float DefaultBurnTickDamage = 0.2f;
+    private const float DefaultBurnTickInterval = 0.4f;
+
+    private const float DefaultMoveSpeed = 5f;
+    private const int DefaultMaxLives = 3;
+    private const float DefaultMagnetRadius = 2f;
+
+    private const bool DefaultHasDash = false;
+    private const float DefaultDashSpeed = 18f;
+    private const float DefaultDashDuration = 0.18f;
+    private const float DefaultDashCooldown = 1.2f;
+
+    private const bool DefaultHasRadialWeapon = false;
+    private const float DefaultRadialOrbitRadius = 1.8f;
+    private const float DefaultRadialOrbitSpeed = 180f;
+    private const float DefaultRadialDamageMultiplier = 1f;
+
+    private const bool DefaultHasAttackPet = false;
+    private const bool DefaultHasSupportPet = false;
+    private const float DefaultPetOrbitRadius = 2.2f;
+    private const float DefaultPetOrbitSpeed = 160f;
+
     [Header("Combat")]
-    public float damage = 1f;
-    public int pierceCount = 1;
-    public float fireCooldown = 0.6f;
+    public float damage = DefaultDamage;
+    public int pierceCount = DefaultPierceCount;
+    public float fireCooldown = DefaultFireCooldown;
 
     [Header("Projectiles")]
-    public bool hasSpreadShot = false;
-    public float spreadAngle = 20f;
+    public bool hasSpreadShot = DefaultHasSpreadShot;
+    public float spreadAngle = DefaultSpreadAngle;
 
-    public int bounceCount = 0;
-    public float bounceSearchRadius = 6f;
+    public int bounceCount = DefaultBounceCount;
+    public float bounceSearchRadius = DefaultBounceSearchRadius;
 
-    public bool hasExplodingBullets = false;
-    public float explosionRadius = 1.15f;
-    public float explosionDamageMultiplier = 0f;
+    public bool hasExplodingBullets = DefaultHasExplodingBullets;
+    public float explosionRadius = DefaultExplosionRadius;
+    public float explosionDamageMultiplier = DefaultExplosionDamageMultiplier;
 
-    public bool hasFreezeBullets = false;
-    public float freezeDuration = 2f;
-    public float freezeSlowMultiplier = 0.4f;
+    public bool hasFreezeBullets = DefaultHasFreezeBullets;
+    public float freezeDuration = DefaultFreezeDuration;
+    public float freezeSlowMultiplier = DefaultFreezeSlowMultiplier;
 
-    public bool hasBurnBullets = false;
-    public float burnDuration = 3f;
-    public float burnTickDamage = 0.2f;
-    public float burnTickInterval = 0.4f;
+    public bool hasBurnBullets = DefaultHasBurnBullets;
+    public float burnDuration = DefaultBurnDuration;
+    public float burnTickDamage = DefaultBurnTickDamage;
+    public float burnTickInterval = DefaultBurnTickInterval;
 
     [Header("Movement")]
-    public float moveSpeed = 5f;
+    public float moveSpeed = DefaultMoveSpeed;
 
     [Header("Survival")]
-    public int maxLives = 3;
+    public int maxLives = DefaultMaxLives;
 
     [Header("Pickup")]
-    public float magnetRadius = 2f;
+    public float magnetRadius = DefaultMagnetRadius;
 
     [Header("Dash")]
-    public bool hasDash = false;
-    public float dashSpeed = 18f;
-    public float dashDuration = 0.18f;
-    public float dashCooldown = 1.2f;
+    public bool hasDash = DefaultHasDash;
+    public float dashSpeed = DefaultDashSpeed;
+    public float dashDuration = DefaultDashDuration;
+    public float dashCooldown = DefaultDashCooldown;
 
     [Header("Radial Weapon")]
-    public bool hasRadialWeapon = false;
-    public float radialOrbitRadius = 1.8f;
-    public float radialOrbitSpeed = 180f;
-    public float radialDamageMultiplier = 1f;
+    public bool hasRadialWeapon = DefaultHasRadialWeapon;
+    public float radialOrbitRadius = DefaultRadialOrbitRadius;
+    public float radialOrbitSpeed = DefaultRadialOrbitSpeed;
+    public float radialDamageMultiplier = DefaultRadialDamageMultiplier;
 
     [Header("Pets")]
-    public bool hasAttackPet = false;
-    public bool hasSupportPet = false;
-    public float petOrbitRadius = 2.2f;
-    public float petOrbitSpeed = 160f;
-
-    private BaseStats baseStats;
-    private bool baseSaved;
-
-    private void Start()
-    {
-        SaveBaseStats();
-    }
-
-    private void SaveBaseStats()
-    {
-        baseStats.damage = damage;
-        baseStats.pierceCount = pierceCount;
-        baseStats.fireCooldown = fireCooldown;
-
-        baseStats.hasSpreadShot = hasSpreadShot;
-        baseStats.spreadAngle = spreadAngle;
-
-        baseStats.bounceCount = bounceCount;
-        baseStats.bounceSearchRadius = bounceSearchRadius;
-
-        baseStats.hasExplodingBullets = hasExplodingBullets;
-        baseStats.explosionRadius = explosionRadius;
-        baseStats.explosionDamageMultiplier = explosionDamageMultiplier;
-
-        baseStats.hasFreezeBullets = hasFreezeBullets;
-        baseStats.freezeDuration = freezeDuration;
-        baseStats.freezeSlowMultiplier = freezeSlowMultiplier;
-
-        baseStats.hasBurnBullets = hasBurnBullets;
-        baseStats.burnDuration = burnDuration;
-        baseStats.burnTickDamage = burnTickDamage;
-        baseStats.burnTickInterval = burnTickInterval;
-
-        baseStats.moveSpeed = moveSpeed;
-        baseStats.maxLives = maxLives;
-        baseStats.magnetRadius = magnetRadius;
-
-        baseStats.hasDash = hasDash;
-        baseStats.dashSpeed = dashSpeed;
-        baseStats.dashDuration = dashDuration;
-        baseStats.dashCooldown = dashCooldown;
-
-        baseStats.hasRadialWeapon = hasRadialWeapon;
-        baseStats.radialOrbitRadius = radialOrbitRadius;
-        baseStats.radialOrbitSpeed = radialOrbitSpeed;
-        baseStats.radialDamageMultiplier = radialDamageMultiplier;
-
-        baseStats.hasAttackPet = hasAttackPet;
-        baseStats.hasSupportPet = hasSupportPet;
-        baseStats.petOrbitRadius = petOrbitRadius;
-        baseStats.petOrbitSpeed = petOrbitSpeed;
-
-        baseSaved = true;
-    }
+    public bool hasAttackPet = DefaultHasAttackPet;
+    public bool hasSupportPet = DefaultHasSupportPet;
+    public float petOrbitRadius = DefaultPetOrbitRadius;
+    public float petOrbitSpeed = DefaultPetOrbitSpeed;
 
     public void ResetToBase()
     {
-        if (!baseSaved)
-            SaveBaseStats();
+        damage = DefaultDamage;
+        pierceCount = DefaultPierceCount;
+        fireCooldown = DefaultFireCooldown;
 
-        damage = baseStats.damage;
-        pierceCount = baseStats.pierceCount;
-        fireCooldown = baseStats.fireCooldown;
+        hasSpreadShot = DefaultHasSpreadShot;
+        spreadAngle = DefaultSpreadAngle;
 
-        hasSpreadShot = baseStats.hasSpreadShot;
-        spreadAngle = baseStats.spreadAngle;
+        bounceCount = DefaultBounceCount;
+        bounceSearchRadius = DefaultBounceSearchRadius;
 
-        bounceCount = baseStats.bounceCount;
-        bounceSearchRadius = baseStats.bounceSearchRadius;
+        hasExplodingBullets = DefaultHasExplodingBullets;
+        explosionRadius = DefaultExplosionRadius;
+        explosionDamageMultiplier = DefaultExplosionDamageMultiplier;
 
-        hasExplodingBullets = baseStats.hasExplodingBullets;
-        explosionRadius = baseStats.explosionRadius;
-        explosionDamageMultiplier = baseStats.explosionDamageMultiplier;
+        hasFreezeBullets = DefaultHasFreezeBullets;
+        freezeDuration = DefaultFreezeDuration;
+        freezeSlowMultiplier = DefaultFreezeSlowMultiplier;
 
-        hasFreezeBullets = baseStats.hasFreezeBullets;
-        freezeDuration = baseStats.freezeDuration;
-        freezeSlowMultiplier = baseStats.freezeSlowMultiplier;
+        hasBurnBullets = DefaultHasBurnBullets;
+        burnDuration = DefaultBurnDuration;
+        burnTickDamage = DefaultBurnTickDamage;
+        burnTickInterval = DefaultBurnTickInterval;
 
-        hasBurnBullets = baseStats.hasBurnBullets;
-        burnDuration = baseStats.burnDuration;
-        burnTickDamage = baseStats.burnTickDamage;
-        burnTickInterval = baseStats.burnTickInterval;
+        moveSpeed = DefaultMoveSpeed;
+        maxLives = DefaultMaxLives;
+        magnetRadius = DefaultMagnetRadius;
 
-        moveSpeed = baseStats.moveSpeed;
-        maxLives = baseStats.maxLives;
-        magnetRadius = baseStats.magnetRadius;
+        hasDash = DefaultHasDash;
+        dashSpeed = DefaultDashSpeed;
+        dashDuration = DefaultDashDuration;
+        dashCooldown = DefaultDashCooldown;
 
-        hasDash = baseStats.hasDash;
-        dashSpeed = baseStats.dashSpeed;
-        dashDuration = baseStats.dashDuration;
-        dashCooldown = baseStats.dashCooldown;
+        hasRadialWeapon = DefaultHasRadialWeapon;
+        radialOrbitRadius = DefaultRadialOrbitRadius;
+        radialOrbitSpeed = DefaultRadialOrbitSpeed;
+        radialDamageMultiplier = DefaultRadialDamageMultiplier;
 
-        hasRadialWeapon = baseStats.hasRadialWeapon;
-        radialOrbitRadius = baseStats.radialOrbitRadius;
-        radialOrbitSpeed = baseStats.radialOrbitSpeed;
-        radialDamageMultiplier = baseStats.radialDamageMultiplier;
-
-        hasAttackPet = baseStats.hasAttackPet;
-        hasSupportPet = baseStats.hasSupportPet;
-        petOrbitRadius = baseStats.petOrbitRadius;
-        petOrbitSpeed = baseStats.petOrbitSpeed;
+        hasAttackPet = DefaultHasAttackPet;
+        hasSupportPet = DefaultHasSupportPet;
+        petOrbitRadius = DefaultPetOrbitRadius;
+        petOrbitSpeed = DefaultPetOrbitSpeed;
     }
 
-    public void AddDamage(float amount) => damage += amount;
-    public void AddPierce(int amount) => pierceCount += amount;
+    public void AddDamage(float amount)
+    {
+        damage += amount;
+    }
+
+    public void AddPierce(int amount)
+    {
+        pierceCount += amount;
+    }
 
     public void AddFireRate(float cooldownReduction, float minimumCooldown)
     {
@@ -199,9 +190,20 @@ public class PlayerStats : MonoBehaviour
         burnTickInterval = Mathf.Min(burnTickInterval, tickInterval);
     }
 
-    public void AddMoveSpeed(float amount) => moveSpeed += amount;
-    public void AddMaxLives(int amount) => maxLives += amount;
-    public void AddMagnetRadius(float amount) => magnetRadius += amount;
+    public void AddMoveSpeed(float amount)
+    {
+        moveSpeed += amount;
+    }
+
+    public void AddMaxLives(int amount)
+    {
+        maxLives += amount;
+    }
+
+    public void AddMagnetRadius(float amount)
+    {
+        magnetRadius += amount;
+    }
 
     public void EnableDash(float speed, float duration, float cooldown)
     {
@@ -231,50 +233,5 @@ public class PlayerStats : MonoBehaviour
         hasSupportPet = true;
         petOrbitRadius = Mathf.Max(petOrbitRadius, orbitRadius);
         petOrbitSpeed += orbitSpeed;
-    }
-
-    private struct BaseStats
-    {
-        public float damage;
-        public int pierceCount;
-        public float fireCooldown;
-
-        public bool hasSpreadShot;
-        public float spreadAngle;
-
-        public int bounceCount;
-        public float bounceSearchRadius;
-
-        public bool hasExplodingBullets;
-        public float explosionRadius;
-        public float explosionDamageMultiplier;
-
-        public bool hasFreezeBullets;
-        public float freezeDuration;
-        public float freezeSlowMultiplier;
-
-        public bool hasBurnBullets;
-        public float burnDuration;
-        public float burnTickDamage;
-        public float burnTickInterval;
-
-        public float moveSpeed;
-        public int maxLives;
-        public float magnetRadius;
-
-        public bool hasDash;
-        public float dashSpeed;
-        public float dashDuration;
-        public float dashCooldown;
-
-        public bool hasRadialWeapon;
-        public float radialOrbitRadius;
-        public float radialOrbitSpeed;
-        public float radialDamageMultiplier;
-
-        public bool hasAttackPet;
-        public bool hasSupportPet;
-        public float petOrbitRadius;
-        public float petOrbitSpeed;
     }
 }
