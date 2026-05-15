@@ -34,10 +34,8 @@ public class EnemyHealthSystem : MonoBehaviour, IDamageable
         }
     }
 
-    private void OnHit(object evt)
+    private void OnHit(EnemyHitEvent e)
     {
-        EnemyHitEvent e = (EnemyHitEvent)evt;
-
         if (e.enemy != gameObject)
             return;
 
