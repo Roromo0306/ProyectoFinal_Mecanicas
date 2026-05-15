@@ -28,6 +28,7 @@ public class BulletController : MonoBehaviour
     private bool isReleased = false;
 
     private readonly HashSet<GameObject> hitRoots = new HashSet<GameObject>();
+    private static readonly Collider2D[] physicsBuffer = new Collider2D[32];
 
     public void Init(BulletRuntimeData runtimeData)
     {
@@ -205,11 +206,13 @@ public class BulletController : MonoBehaviour
 
         SpawnExplosionParticle(explosionPosition);
 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(explosionPosition, data.explosionRadius);
+        int hitCount = Physics2D.OverlapCircleNonAlloc(explosionPosition, data.explosionRadius, physicsBuffer);
         float explosionDamage = data.damage * data.explosionDamageMultiplier;
 
-        foreach (Collider2D hit in hits)
+        for (int i = 0; i < hitCount; i++)
         {
+            Collider2D hit = physicsBuffer[i];
+
             if (hit == null)
                 continue;
 
@@ -228,13 +231,15 @@ public class BulletController : MonoBehaviour
 
     private GameObject FindNextEnemy(GameObject currentTarget)
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.bounceSearchRadius);
+        int hitCount = Physics2D.OverlapCircleNonAlloc(transform.position, data.bounceSearchRadius, physicsBuffer);
 
         GameObject closestEnemy = null;
         float closestSqrDistance = float.MaxValue;
 
-        foreach (Collider2D hit in hits)
+        for (int i = 0; i < hitCount; i++)
         {
+            Collider2D hit = physicsBuffer[i];
+
             if (hit == null)
                 continue;
 
