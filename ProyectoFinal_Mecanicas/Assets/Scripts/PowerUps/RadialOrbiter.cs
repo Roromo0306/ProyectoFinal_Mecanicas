@@ -39,11 +39,15 @@ public class RadialOrbiter : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (playerStats == null) return;
-        if (Time.time - lastDamageTime < damageCooldown) return;
+        if (playerStats == null)
+            return;
+
+        if (Time.time - lastDamageTime < damageCooldown)
+            return;
 
         GameObject enemyRoot = GetEnemyRoot(collision.gameObject);
-        if (enemyRoot == null) return;
+        if (enemyRoot == null)
+            return;
 
         float damage = playerStats.damage * playerStats.radialDamageMultiplier;
 
@@ -55,69 +59,26 @@ public class RadialOrbiter : MonoBehaviour
 
     private GameObject GetEnemyRoot(GameObject obj)
     {
-        if (obj == null) return null;
-
-        EnemyHealthSystem normal = obj.GetComponentInParent<EnemyHealthSystem>();
-        if (normal != null)
-            return normal.gameObject;
-
-        EliteEnemyHealth elite = obj.GetComponentInParent<EliteEnemyHealth>();
-        if (elite != null)
-            return elite.gameObject;
-
-        FinalBossHealth boss = obj.GetComponentInParent<FinalBossHealth>();
-        if (boss != null)
-            return boss.gameObject;
-
-        return null;
+        return CombatTargetFinder.GetDamageableRoot(obj);
     }
 
     private void DamageEnemy(GameObject enemyRoot, float amount)
     {
-        if (enemyRoot == null) return;
-
-        EnemyHealthSystem normal = enemyRoot.GetComponentInParent<EnemyHealthSystem>();
-        if (normal != null)
-        {
-            normal.TakeDamage(amount);
-            return;
-        }
-
-        EliteEnemyHealth elite = enemyRoot.GetComponentInParent<EliteEnemyHealth>();
-        if (elite != null)
-        {
-            elite.TakeDamage(amount);
-            return;
-        }
-
-        FinalBossHealth boss = enemyRoot.GetComponentInParent<FinalBossHealth>();
-        if (boss != null)
-            boss.TakeDamage(amount);
+        if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IDamageable damageable))
+            damageable.TakeDamage(amount);
     }
 
     private void ApplyHitFeedback(GameObject enemyRoot)
     {
-        if (enemyRoot == null) return;
+        if (enemyRoot == null)
+            return;
 
         Vector3 knockbackSource = transform.position;
 
-        // Si el arma radial está demasiado cerca del centro del enemigo,
-        // usamos la posición del player como origen para que el empuje tenga dirección clara.
         if (Vector2.Distance(transform.position, enemyRoot.transform.position) < 0.15f && player != null)
             knockbackSource = player.position;
 
-        EnemyInstaller normalInstaller = enemyRoot.GetComponent<EnemyInstaller>();
-        if (normalInstaller != null)
-        {
-            normalInstaller.ApplyBulletHitFeedback(knockbackSource, hitKnockbackForce);
-            return;
-        }
-
-        EliteEnemyController eliteController = enemyRoot.GetComponent<EliteEnemyController>();
-        if (eliteController != null)
-        {
-            eliteController.ApplyBulletHitFeedback(knockbackSource, hitKnockbackForce);
-            return;
-        }
+        if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IHitFeedbackReceiver feedbackReceiver))
+            feedbackReceiver.ApplyBulletHitFeedback(knockbackSource, hitKnockbackForce);
     }
 }

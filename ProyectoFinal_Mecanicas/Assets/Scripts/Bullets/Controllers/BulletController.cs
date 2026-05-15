@@ -98,17 +98,17 @@ public class BulletController : MonoBehaviour
     private void HandleHit(GameObject hitObject)
     {
         GameObject enemyRoot = GetEnemyRoot(hitObject);
-        if (enemyRoot == null) return;
+        if (enemyRoot == null)
+            return;
 
-        if (hitRoots.Contains(enemyRoot)) return;
+        if (hitRoots.Contains(enemyRoot))
+            return;
+
         hitRoots.Add(enemyRoot);
+
         SFXManager.Instance?.PlayEnemyHit();
 
-        if (hitParticlePrefab != null)
-        {
-            GameObject fx = Instantiate(hitParticlePrefab, enemyRoot.transform.position, Quaternion.identity);
-            Destroy(fx, 1.5f);
-        }
+        SpawnHitParticle(enemyRoot.transform.position);
 
         GameObject nextBounceTarget = null;
 
@@ -140,81 +140,35 @@ public class BulletController : MonoBehaviour
 
     private GameObject GetEnemyRoot(GameObject obj)
     {
-        if (obj == null) return null;
-
-        EnemyHealthSystem normal = obj.GetComponentInParent<EnemyHealthSystem>();
-        if (normal != null) return normal.gameObject;
-
-        EliteEnemyHealth elite = obj.GetComponentInParent<EliteEnemyHealth>();
-        if (elite != null) return elite.gameObject;
-
-        FinalBossHealth boss = obj.GetComponentInParent<FinalBossHealth>();
-        if (boss != null) return boss.gameObject;
-
-        return null;
+        return CombatTargetFinder.GetDamageableRoot(obj);
     }
 
     private void DamageEnemy(GameObject enemyRoot, float amount)
     {
-        if (enemyRoot == null) return;
-
-        EnemyHealthSystem normal = enemyRoot.GetComponentInParent<EnemyHealthSystem>();
-        if (normal != null)
-        {
-            normal.TakeDamage(amount);
-            return;
-        }
-
-        EliteEnemyHealth elite = enemyRoot.GetComponentInParent<EliteEnemyHealth>();
-        if (elite != null)
-        {
-            elite.TakeDamage(amount);
-            return;
-        }
-
-        FinalBossHealth boss = enemyRoot.GetComponentInParent<FinalBossHealth>();
-        if (boss != null)
-            boss.TakeDamage(amount);
+        if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IDamageable damageable))
+            damageable.TakeDamage(amount);
     }
 
     private void ApplyStatuses(GameObject enemyRoot)
     {
-        if (enemyRoot == null) return;
+        if (enemyRoot == null)
+            return;
 
-        if (hasFreeze)
+        if (hasFreeze && CombatTargetFinder.TryGetOnRoot(enemyRoot, out IFreezable freezable))
         {
-            EnemyInstaller normalInstaller = enemyRoot.GetComponent<EnemyInstaller>();
-            if (normalInstaller != null)
-                normalInstaller.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
-
-            EliteEnemyController eliteController = enemyRoot.GetComponent<EliteEnemyController>();
-            if (eliteController != null)
-                eliteController.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
-
-            FinalBossController bossController = enemyRoot.GetComponent<FinalBossController>();
-            if (bossController != null)
-                bossController.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
+            freezable.ApplyFreeze(freezeDuration, freezeSlowMultiplier);
         }
 
-        if (hasBurn)
+        if (hasBurn && CombatTargetFinder.TryGetOnRoot(enemyRoot, out IBurnable burnable))
         {
-            EnemyInstaller normalInstaller = enemyRoot.GetComponent<EnemyInstaller>();
-            if (normalInstaller != null)
-                normalInstaller.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
-
-            EliteEnemyController eliteController = enemyRoot.GetComponent<EliteEnemyController>();
-            if (eliteController != null)
-                eliteController.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
-
-            FinalBossController bossController = enemyRoot.GetComponent<FinalBossController>();
-            if (bossController != null)
-                bossController.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
+            burnable.ApplyBurn(burnDuration, burnTickDamage, burnTickInterval);
         }
     }
 
     private void Explode(GameObject mainTarget)
     {
-        if (mainTarget == null) return;
+        if (mainTarget == null)
+            return;
 
         Vector3 explosionPosition = mainTarget.transform.position;
 
@@ -229,11 +183,16 @@ public class BulletController : MonoBehaviour
 
         foreach (Collider2D hit in hits)
         {
-            if (hit == null) continue;
+            if (hit == null)
+                continue;
 
             GameObject enemyRoot = GetEnemyRoot(hit.gameObject);
-            if (enemyRoot == null) continue;
-            if (enemyRoot == mainTarget) continue;
+
+            if (enemyRoot == null)
+                continue;
+
+            if (enemyRoot == mainTarget)
+                continue;
 
             ApplyStatuses(enemyRoot);
             DamageEnemy(enemyRoot, explosionDamage);
@@ -249,12 +208,19 @@ public class BulletController : MonoBehaviour
 
         foreach (Collider2D hit in hits)
         {
-            if (hit == null) continue;
+            if (hit == null)
+                continue;
 
             GameObject enemyRoot = GetEnemyRoot(hit.gameObject);
-            if (enemyRoot == null) continue;
-            if (enemyRoot == currentTarget) continue;
-            if (hitRoots.Contains(enemyRoot)) continue;
+
+            if (enemyRoot == null)
+                continue;
+
+            if (enemyRoot == currentTarget)
+                continue;
+
+            if (hitRoots.Contains(enemyRoot))
+                continue;
 
             float distance = Vector2.Distance(transform.position, enemyRoot.transform.position);
 
@@ -270,38 +236,26 @@ public class BulletController : MonoBehaviour
 
     private void ApplyHitFeedback(GameObject enemyRoot)
     {
-        if (enemyRoot == null) return;
-
-        if (hitParticlePrefab != null)
-        {
-            GameObject fx = Instantiate(hitParticlePrefab, enemyRoot.transform.position, Quaternion.identity);
-            Destroy(fx, 1.5f);
-        }
-
-        EnemyInstaller normalInstaller = enemyRoot.GetComponent<EnemyInstaller>();
-        if (normalInstaller != null)
-        {
-            normalInstaller.ApplyBulletHitFeedback(transform.position, hitKnockbackForce);
+        if (enemyRoot == null)
             return;
-        }
 
-        EliteEnemyController eliteController = enemyRoot.GetComponent<EliteEnemyController>();
-        if (eliteController != null)
-        {
-            eliteController.ApplyBulletHitFeedback(transform.position, hitKnockbackForce);
-            return;
-        }
-
-        FinalBossController bossController = enemyRoot.GetComponent<FinalBossController>();
-        if (bossController != null)
-        {
-            bossController.ApplyBulletHitFeedback(transform.position, hitKnockbackForce);
-            return;
-        }
+        if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IHitFeedbackReceiver feedbackReceiver))
+            feedbackReceiver.ApplyBulletHitFeedback(transform.position, hitKnockbackForce);
     }
+
+    private void SpawnHitParticle(Vector3 position)
+    {
+        if (hitParticlePrefab == null)
+            return;
+
+        GameObject fx = Instantiate(hitParticlePrefab, position, Quaternion.identity);
+        Destroy(fx, 1.5f);
+    }
+
     private IEnumerator FlashWhite(SpriteRenderer sr)
     {
-        if (sr == null) yield break;
+        if (sr == null)
+            yield break;
 
         if (!originalSpriteColors.ContainsKey(sr))
             originalSpriteColors[sr] = sr.color;
@@ -319,5 +273,4 @@ public class BulletController : MonoBehaviour
         if (sr != null && activeFlashCoroutines.ContainsKey(sr))
             activeFlashCoroutines.Remove(sr);
     }
-
 }

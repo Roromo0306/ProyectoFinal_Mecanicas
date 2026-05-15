@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class EliteEnemyController : MonoBehaviour
+public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFeedbackReceiver
 {
     public enum EliteState
     {

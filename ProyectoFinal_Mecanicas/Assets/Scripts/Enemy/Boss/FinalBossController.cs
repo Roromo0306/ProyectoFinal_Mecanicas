@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FinalBossController : MonoBehaviour
+public class FinalBossController : MonoBehaviour, IFreezable, IBurnable, IHitFeedbackReceiver
 {
     [Header("Orbit")]
     public float orbitDistance = 6f;

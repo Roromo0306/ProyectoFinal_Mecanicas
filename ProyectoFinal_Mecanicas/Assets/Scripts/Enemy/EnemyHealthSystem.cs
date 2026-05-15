@@ -1,13 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-public class EnemyHealthSystem : MonoBehaviour
+public class EnemyHealthSystem : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth = 1f;
     [SerializeField] private float deathDelay = 0.08f;
 
     private float currentHealth;
     private bool isDead = false;
+
+    public GameObject TargetRoot => gameObject;
 
     private void Awake()
     {
@@ -36,7 +38,8 @@ public class EnemyHealthSystem : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (isDead) return;
+        if (isDead)
+            return;
 
         currentHealth -= damage;
 

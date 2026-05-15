@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyInstaller : MonoBehaviour
+public class EnemyInstaller : MonoBehaviour, IFreezable, IBurnable, IHitFeedbackReceiver
 {
     [Header("Enemy Stats")]
     public float moveSpeed = 2f;

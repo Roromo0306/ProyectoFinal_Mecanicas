@@ -1,14 +1,20 @@
 using UnityEngine;
 
-public class EliteEnemyHealth : MonoBehaviour
+public class EliteEnemyHealth : MonoBehaviour, IDamageable
 {
     public float maxHealth = 30f;
+
+    [Header("Debug")]
+    [SerializeField] private bool showDebugLogs = false;
+
     private float currentHealth;
 
     [HideInInspector] public EliteEnemySpawner spawner;
 
     private bool isDead = false;
     private bool defeatNotified = false;
+
+    public GameObject TargetRoot => gameObject;
 
     private void Awake()
     {
@@ -17,11 +23,13 @@ public class EliteEnemyHealth : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
-        if (isDead) return;
+        if (isDead)
+            return;
 
         currentHealth -= amount;
 
-        Debug.Log("Elite recibe daño: " + amount + " | vida: " + currentHealth);
+        if (showDebugLogs)
+            Debug.Log("Elite recibe daño: " + amount + " | vida: " + currentHealth);
 
         if (currentHealth <= 0f)
             Die();
@@ -29,7 +37,9 @@ public class EliteEnemyHealth : MonoBehaviour
 
     private void Die()
     {
-        if (isDead) return;
+        if (isDead)
+            return;
+
         isDead = true;
 
         NotifyDefeated();
@@ -50,7 +60,9 @@ public class EliteEnemyHealth : MonoBehaviour
 
     private void NotifyDefeated()
     {
-        if (defeatNotified) return;
+        if (defeatNotified)
+            return;
+
         defeatNotified = true;
 
         if (spawner == null)
