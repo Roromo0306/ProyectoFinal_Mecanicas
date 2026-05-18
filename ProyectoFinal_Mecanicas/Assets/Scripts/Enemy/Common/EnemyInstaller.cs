@@ -47,10 +47,8 @@ public class EnemyInstaller : MonoBehaviour, IFreezable, IBurnable, IHitFeedback
             controller?.OnPlayerCollision(collision.transform);
     }
 
-    private void OnPlayerHit(object evt)
+    private void OnPlayerHit(PlayerHitEvent hit)
     {
-        PlayerHitEvent hit = (PlayerHitEvent)evt;
-
         controller?.ApplyRadialKnockback(
             hit.hitPosition,
             3f,

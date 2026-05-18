@@ -3,35 +3,23 @@ using System.Collections.Generic;
 
 public static class EventBus
 {
-    private static Dictionary<Type, Action<object>> events = new();
-
-    public static void Subscribe<T>(Action<object> listener)
+    private static class Channel<T>
     {
-        var type = typeof(T);
-        if (!events.ContainsKey(type))
-            events[type] = delegate { };
-
-        events[type] += listener;
+        public static Action<T> listeners;
     }
 
-    public static void Unsubscribe<T>(Action<object> listener)
+    public static void Subscribe<T>(Action<T> listener)
     {
-        var type = typeof(T);
-        if (events.ContainsKey(type))
-        {
-            events[type] -= listener;
-        }
+        Channel<T>.listeners += listener;
+    }
+
+    public static void Unsubscribe<T>(Action<T> listener)
+    {
+        Channel<T>.listeners -= listener;
     }
 
     public static void Publish<T>(T evt)
     {
-        var type = typeof(T);
-        if (events.ContainsKey(type))
-            events[type]?.Invoke(evt);
-    }
-
-    public static void ClearAll()
-    {
-        events.Clear();
+        Channel<T>.listeners?.Invoke(evt);
     }
 }

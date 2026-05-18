@@ -70,7 +70,7 @@ public class PlayerHealthSystem : MonoBehaviour
         UpdateLivesUI();
     }
 
-    private void OnHit(object evt)
+    private void OnHit(PlayerHitEvent evt)
     {
         TakeDamage();
     }
@@ -332,6 +332,6 @@ public class PlayerHealthSystem : MonoBehaviour
 
         UpdateLivesUI();
 
-        Debug.Log("Corazón ganado -> " + lives + " / " + (playerStats != null ? playerStats.maxLives : lives));
+        Debug.Log("Corazï¿½n ganado -> " + lives + " / " + (playerStats != null ? playerStats.maxLives : lives));
     }
 }

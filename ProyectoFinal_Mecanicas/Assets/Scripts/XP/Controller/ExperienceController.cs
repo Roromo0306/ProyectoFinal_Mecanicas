@@ -21,11 +21,9 @@ public class ExperienceController
         disposed = true;
     }
 
-    private void OnXPCollected(object evt)
+    private void OnXPCollected(ExperienceCollectedEvent e)
     {
         if (disposed) return;
-
-        var e = (ExperienceCollectedEvent)evt;
 
         model.currentXP += e.amount;
 

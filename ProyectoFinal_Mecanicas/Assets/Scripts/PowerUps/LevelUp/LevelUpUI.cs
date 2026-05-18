@@ -30,14 +30,13 @@ public class LevelUpUI : MonoBehaviour
         EventBus.Unsubscribe<LevelUpEvent>(OnLevelUp);
     }
 
-    private void OnLevelUp(object evt)
+    private void OnLevelUp(LevelUpEvent levelUpEvent)
     {
         if (isShowing)
             return;
 
         SFXManager.Instance?.PlayLevelUp();
 
-        LevelUpEvent levelUpEvent = (LevelUpEvent)evt;
         StartCoroutine(ShowRoutine(levelUpEvent.newLevel));
     }
 

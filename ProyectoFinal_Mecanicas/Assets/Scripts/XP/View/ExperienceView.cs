@@ -47,10 +47,8 @@ public class ExperienceView : MonoBehaviour
             xpBar.value = targetXPValue;
     }
 
-    private void OnExperienceUpdated(object evt)
+    private void OnExperienceUpdated(ExperienceUpdatedEvent e)
     {
-        var e = (ExperienceUpdatedEvent)evt;
-
         currentXP = e.currentXP;
         xpToNext = e.xpToNextLevel;
         currentLevel = e.currentLevel;

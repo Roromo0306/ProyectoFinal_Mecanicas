@@ -15,7 +15,7 @@ public class BulletSpawner : MonoBehaviour
         playerStats = FindObjectOfType<PlayerStats>();
 
         if (playerStats == null)
-            Debug.LogError("BulletSpawner -> No se encontró PlayerStats");
+            Debug.LogError("BulletSpawner -> No se encontrï¿½ PlayerStats");
     }
 
     private void OnEnable()
@@ -28,10 +28,8 @@ public class BulletSpawner : MonoBehaviour
         EventBus.Unsubscribe<ShootEvent>(OnShoot);
     }
 
-    private void OnShoot(object evt)
+    private void OnShoot(ShootEvent shootEvent)
     {
-        ShootEvent shootEvent = (ShootEvent)evt;
-
         if (bulletPrefab == null)
             return;
 
