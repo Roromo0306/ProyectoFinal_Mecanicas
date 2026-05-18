@@ -92,7 +92,7 @@ public class EnemyController
         }
     }
 
-    public void Tick()
+    public void Tick(float dt)
     {
         if (enemyTransform == null)
             return;
@@ -103,10 +103,10 @@ public class EnemyController
         if (playerTransform == null)
             return;
 
-        UpdateFreeze();
-        UpdateBurn();
-        UpdateHitFlash();
-        UpdateKnockback();
+        UpdateFreeze(dt);
+        UpdateBurn(dt);
+        UpdateHitFlash(dt);
+        UpdateKnockback(dt);
 
         Vector2 direction = (playerTransform.position - enemyTransform.position).normalized;
         Vector2 separation = GetSeparationDirection();
@@ -123,8 +123,8 @@ public class EnemyController
         if (isFrozen)
             currentSpeed *= freezeSlowMultiplier;
 
-        Vector3 move = (Vector3)(finalDirection * currentSpeed * Time.deltaTime);
-        Vector3 knockbackMove = (Vector3)knockbackVelocity * Time.deltaTime;
+        Vector3 move = (Vector3)(finalDirection * currentSpeed * dt);
+        Vector3 knockbackMove = (Vector3)knockbackVelocity * dt;
 
         enemyTransform.position += move + knockbackMove;
 
@@ -267,12 +267,12 @@ public class EnemyController
         return separation.normalized;
     }
 
-    private void UpdateFreeze()
+    private void UpdateFreeze(float dt)
     {
         if (!isFrozen)
             return;
 
-        freezeTimer -= Time.deltaTime;
+        freezeTimer -= dt;
 
         if (freezeTimer <= 0f)
         {
@@ -284,14 +284,14 @@ public class EnemyController
         }
     }
 
-    private void UpdateBurn()
+    private void UpdateBurn(float dt)
     {
         if (!isBurning)
             return;
 
-        burnTimer -= Time.deltaTime;
-        burnTickTimer -= Time.deltaTime;
-        burnFlashTimer -= Time.deltaTime;
+        burnTimer -= dt;
+        burnTickTimer -= dt;
+        burnFlashTimer -= dt;
 
         if (burnFlashTimer <= 0f)
         {
@@ -319,12 +319,12 @@ public class EnemyController
         }
     }
 
-    private void UpdateHitFlash()
+    private void UpdateHitFlash(float dt)
     {
         if (hitFlashTimer <= 0f)
             return;
 
-        hitFlashTimer -= Time.deltaTime;
+        hitFlashTimer -= dt;
 
         if (hitFlashTimer <= 0f)
         {
@@ -333,12 +333,12 @@ public class EnemyController
         }
     }
 
-    private void UpdateKnockback()
+    private void UpdateKnockback(float dt)
     {
         if (knockbackForce <= 0f)
             return;
 
-        knockbackVelocity = Vector2.Lerp(knockbackVelocity, Vector2.zero, 8f * Time.deltaTime);
+        knockbackVelocity = Vector2.Lerp(knockbackVelocity, Vector2.zero, 8f * dt);
         knockbackForce = knockbackVelocity.magnitude;
 
         if (knockbackForce < 0.05f)

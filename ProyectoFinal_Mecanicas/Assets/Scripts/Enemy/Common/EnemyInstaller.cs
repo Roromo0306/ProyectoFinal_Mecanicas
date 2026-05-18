@@ -38,7 +38,7 @@ public class EnemyInstaller : MonoBehaviour, IFreezable, IBurnable, IHitFeedback
 
     private void Update()
     {
-        controller?.Tick();
+        controller?.Tick(Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
