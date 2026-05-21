@@ -16,9 +16,20 @@ public class EnemySpawner : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float tankSpawnChance = 0.2f;
 
+    [SerializeField] private float tankSpawnDelay = 60f;
+
     [Header("Spawn Rate")]
-    [SerializeField] private float minSpawnRate = 0.2f;
-    [SerializeField] private float maxSpawnRate = 2f;
+    [SerializeField] private float minSpawnRate = 0.45f;
+    [SerializeField] private float maxSpawnRate = 2.4f;
+
+    [Header("Early Game Balance")]
+    [SerializeField] private float firstSpawnDelay = 4f;
+    [SerializeField] private float initialSpawnDelayVariance = 2f;
+    [SerializeField] private float earlyGameProtectionDuration = 75f;
+    [SerializeField] private float earlySpawnRateMultiplier = 1.8f;
+    [SerializeField] private float earlyMinimumSpawnRate = 0.85f;
+    [SerializeField] private float earlyGroupLimitDuration = 45f;
+    [SerializeField] private int earlyMaxEnemiesPerSpawn = 1;
 
     [Header("Spawn Amount")]
     [SerializeField] private int minEnemiesPerSpawn = 1;
@@ -26,8 +37,8 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float amountRampDuration = 300f;
 
     [Header("Phases")]
-    [SerializeField] private float rampDuration = 60f;
-    [SerializeField] private float peakDuration = 180f;
+    [SerializeField] private float rampDuration = 90f;
+    [SerializeField] private float peakDuration = 150f;
     [SerializeField] private float cooldownDuration = 60f;
 
     [Header("Spawn Position")]
@@ -64,6 +75,9 @@ public class EnemySpawner : MonoBehaviour
             Debug.LogError("EnemySpawner -> No se encontró Player con tag Player");
 
         isActive = startActive;
+
+        if (isActive)
+            PrepareSpawnDelay();
     }
 
     private void Update()
@@ -98,12 +112,21 @@ public class EnemySpawner : MonoBehaviour
     private void ActivateSpawner()
     {
         isActive = true;
-        timer = 0f;
         phaseTimer = 0f;
         currentPhase = SpawnPhase.Ramp;
+        PrepareSpawnDelay();
 
         if (showDebugLogs)
             Debug.Log(gameObject.name + " activado en segundo: " + gameTimer);
+    }
+
+    private void PrepareSpawnDelay()
+    {
+        float randomDelay = initialSpawnDelayVariance > 0f
+            ? Random.Range(0f, initialSpawnDelayVariance)
+            : 0f;
+
+        timer = -(firstSpawnDelay + randomDelay);
     }
 
     private void UpdatePhase()
@@ -138,6 +161,15 @@ public class EnemySpawner : MonoBehaviour
 
     private float GetCurrentSpawnRate()
     {
+        float spawnRate = GetPhaseSpawnRate();
+        spawnRate *= GetEarlyGameSpawnRateMultiplier();
+        spawnRate = ApplyEarlyMinimumSpawnRate(spawnRate);
+
+        return Mathf.Max(0.05f, spawnRate);
+    }
+
+    private float GetPhaseSpawnRate()
+    {
         switch (currentPhase)
         {
             case SpawnPhase.Ramp:
@@ -155,12 +187,37 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    private float GetEarlyGameSpawnRateMultiplier()
+    {
+        if (earlyGameProtectionDuration <= 0f)
+            return 1f;
+
+        float t = Mathf.Clamp01(gameTimer / earlyGameProtectionDuration);
+        return Mathf.Lerp(earlySpawnRateMultiplier, 1f, t);
+    }
+
+    private float ApplyEarlyMinimumSpawnRate(float spawnRate)
+    {
+        if (earlyGameProtectionDuration <= 0f)
+            return spawnRate;
+
+        float t = Mathf.Clamp01(gameTimer / earlyGameProtectionDuration);
+        float protectedMinimumRate = Mathf.Lerp(earlyMinimumSpawnRate, 0f, t);
+
+        return Mathf.Max(spawnRate, protectedMinimumRate);
+    }
+
     private int GetCurrentEnemiesPerSpawn()
     {
         float t = amountRampDuration > 0f ? gameTimer / amountRampDuration : 1f;
         t = Mathf.Clamp01(t);
 
-        return Mathf.RoundToInt(Mathf.Lerp(minEnemiesPerSpawn, maxEnemiesPerSpawn, t));
+        int amount = Mathf.RoundToInt(Mathf.Lerp(minEnemiesPerSpawn, maxEnemiesPerSpawn, t));
+
+        if (gameTimer < earlyGroupLimitDuration)
+            amount = Mathf.Min(amount, earlyMaxEnemiesPerSpawn);
+
+        return Mathf.Max(1, amount);
     }
 
     private void SpawnGroup()
@@ -172,8 +229,7 @@ public class EnemySpawner : MonoBehaviour
             return;
 
         int amount = GetCurrentEnemiesPerSpawn();
-
-        Vector2 baseDir = Random.insideUnitCircle.normalized;
+        Vector2 baseDir = GetRandomSpawnDirection();
         Vector2 basePos = (Vector2)player.position + baseDir * spawnDistance;
 
         for (int i = 0; i < amount; i++)
@@ -188,9 +244,19 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    private Vector2 GetRandomSpawnDirection()
+    {
+        Vector2 direction = Random.insideUnitCircle;
+
+        if (direction.sqrMagnitude < 0.01f)
+            direction = Vector2.right;
+
+        return direction.normalized;
+    }
+
     private GameObject GetEnemyPrefabToSpawn()
     {
-        if (spawnTanks && tankEnemyPrefab != null)
+        if (spawnTanks && tankEnemyPrefab != null && gameTimer >= tankSpawnDelay)
         {
             if (Random.value <= tankSpawnChance)
                 return tankEnemyPrefab;

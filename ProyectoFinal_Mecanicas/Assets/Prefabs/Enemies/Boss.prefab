@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 9120829490497433880}
   - component: {fileID: 6478342653286607758}
   - component: {fileID: 6520307402677245894}
+  - component: {fileID: 2015670086479516292}
   m_Layer: 8
   m_Name: Boss
   m_TagString: Untagged
@@ -122,9 +123,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0059640887, y: 0}
+  m_Offset: {x: -0.0035417997, y: 0}
   serializedVersion: 2
-  m_Radius: 0.22570363
+  m_Radius: 0.21359223
 --- !u!50 &8684738206529289804
 Rigidbody2D:
   serializedVersion: 4
@@ -191,6 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 150
+  showDebugLogs: 0
 --- !u!114 &6478342653286607758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,3 +232,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2015670086479516292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8079791531597769146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52bb3ae38c625ff469d9f9860d3dcaa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localOffset: {x: 0, y: -0.4, z: 0}
+  keepHorizontal: 1
+  width: 0.4
+  height: 0.05
+  backgroundColor: {r: 0, g: 0, b: 0, a: 0.75}
+  fillColor: {r: 0.9, g: 0.1, b: 0.1, a: 1}
+  hideWhenFull: 0
+  hideWhenDead: 1
+  sortingLayerName: 
+  sortingOrder: 200

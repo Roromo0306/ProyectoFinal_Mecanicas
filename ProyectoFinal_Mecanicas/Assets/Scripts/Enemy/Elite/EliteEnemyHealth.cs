@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EliteEnemyHealth : MonoBehaviour, IDamageable
+public class EliteEnemyHealth : MonoBehaviour, IDamageable, IHealthStatusProvider
 {
     public float maxHealth = 30f;
 
@@ -15,6 +15,10 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable
     private bool defeatNotified = false;
 
     public GameObject TargetRoot => gameObject;
+
+    public float CurrentHealth => currentHealth;
+    public float MaxHealth => maxHealth;
+    public bool IsDead => isDead;
 
     private void Awake()
     {
@@ -37,7 +41,9 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable
         if (isDead)
             return;
 
-        currentHealth -= amount;
+        currentHealth = Mathf.Max(0f, currentHealth - amount);
+
+        PublishHealthChanged();
 
         if (showDebugLogs)
             Debug.Log("Elite recibe daño: " + amount + " | vida: " + currentHealth);
@@ -52,6 +58,8 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable
             return;
 
         isDead = true;
+
+        PublishHealthChanged();
 
         EventBus.Publish(new EnemyKilledEvent(
             gameObject,
@@ -98,5 +106,17 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable
         currentHealth = maxHealth;
         isDead = false;
         defeatNotified = false;
+
+        PublishHealthChanged();
+    }
+
+    private void PublishHealthChanged()
+    {
+        EventBus.Publish(new DamageableHealthChangedEvent(
+            gameObject,
+            currentHealth,
+            maxHealth,
+            isDead
+        ));
     }
 }

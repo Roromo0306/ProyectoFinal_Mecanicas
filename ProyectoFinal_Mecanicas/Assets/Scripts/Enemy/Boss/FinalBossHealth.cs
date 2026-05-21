@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FinalBossHealth : MonoBehaviour, IDamageable
+public class FinalBossHealth : MonoBehaviour, IDamageable, IHealthStatusProvider
 {
     public float maxHealth = 200f;
 
@@ -12,9 +12,18 @@ public class FinalBossHealth : MonoBehaviour, IDamageable
 
     public GameObject TargetRoot => gameObject;
 
+    public float CurrentHealth => currentHealth;
+    public float MaxHealth => maxHealth;
+    public bool IsDead => isDead;
+
     private void Awake()
     {
-        currentHealth = maxHealth;
+        ResetHealth();
+    }
+
+    private void OnEnable()
+    {
+        ResetHealth();
     }
 
     public void TakeDamage(float amount)
@@ -22,15 +31,15 @@ public class FinalBossHealth : MonoBehaviour, IDamageable
         if (isDead)
             return;
 
-        currentHealth -= amount;
+        currentHealth = Mathf.Max(0f, currentHealth - amount);
+
+        PublishHealthChanged();
 
         if (showDebugLogs)
             Debug.Log("Boss recibe daño: " + amount + " | Vida: " + currentHealth);
 
         if (currentHealth <= 0f)
-        {
             Die();
-        }
     }
 
     private void Die()
@@ -40,9 +49,29 @@ public class FinalBossHealth : MonoBehaviour, IDamageable
 
         isDead = true;
 
+        PublishHealthChanged();
+
         if (showDebugLogs)
             Debug.Log("BOSS FINAL DERROTADO");
 
         Destroy(gameObject);
+    }
+
+    private void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        isDead = false;
+
+        PublishHealthChanged();
+    }
+
+    private void PublishHealthChanged()
+    {
+        EventBus.Publish(new DamageableHealthChangedEvent(
+            gameObject,
+            currentHealth,
+            maxHealth,
+            isDead
+        ));
     }
 }

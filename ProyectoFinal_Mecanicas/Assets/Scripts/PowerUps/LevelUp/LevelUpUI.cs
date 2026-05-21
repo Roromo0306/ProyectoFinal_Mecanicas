@@ -4,10 +4,17 @@ using System.Collections.Generic;
 
 public class LevelUpUI : MonoBehaviour
 {
+    [Header("References")]
     public GameObject panel;
     public Transform cardContainer;
     public GameObject cardPrefab;
     public List<PowerUpData> allPowerUps;
+
+    [Header("Effects")]
+    [SerializeField] private LevelUpUIParticleEffect levelUpParticleEffect;
+
+    [Header("Card Unlock Rules")]
+    [SerializeField] private int ownedCardsBeforeIgnoringLevelLocks = 5;
 
     private bool isShowing = false;
 
@@ -47,6 +54,9 @@ public class LevelUpUI : MonoBehaviour
         if (panel != null)
             panel.SetActive(true);
 
+        if (levelUpParticleEffect != null)
+            levelUpParticleEffect.Play();
+
         Time.timeScale = 0f;
 
         ClearCards();
@@ -57,20 +67,7 @@ public class LevelUpUI : MonoBehaviour
 
         yield return MovePanel();
 
-        List<PowerUpData> pool = new List<PowerUpData>();
-
-        foreach (PowerUpData powerUp in allPowerUps)
-        {
-            if (powerUp == null) continue;
-
-            if (SelectionService.Instance != null && SelectionService.Instance.HasCard(powerUp))
-                continue;
-
-            if (playerLevel < powerUp.unlockLevel)
-                continue;
-
-            pool.Add(powerUp);
-        }
+        List<PowerUpData> pool = BuildAvailablePowerUpPool(playerLevel);
 
         if (pool.Count <= 0)
         {
@@ -79,14 +76,7 @@ public class LevelUpUI : MonoBehaviour
             yield break;
         }
 
-        List<PowerUpData> selection = new List<PowerUpData>();
-
-        for (int i = 0; i < 3 && pool.Count > 0; i++)
-        {
-            int index = Random.Range(0, pool.Count);
-            selection.Add(pool[index]);
-            pool.RemoveAt(index);
-        }
+        List<PowerUpData> selection = GetRandomSelection(pool, 3);
 
         foreach (PowerUpData data in selection)
         {
@@ -111,9 +101,54 @@ public class LevelUpUI : MonoBehaviour
         }
     }
 
+    private List<PowerUpData> BuildAvailablePowerUpPool(int playerLevel)
+    {
+        List<PowerUpData> pool = new List<PowerUpData>();
+        bool ignoreLevelLocks = ShouldIgnoreLevelLocks();
+
+        foreach (PowerUpData powerUp in allPowerUps)
+        {
+            if (powerUp == null)
+                continue;
+
+            if (SelectionService.Instance != null && SelectionService.Instance.HasCard(powerUp))
+                continue;
+
+            if (!ignoreLevelLocks && playerLevel < powerUp.unlockLevel)
+                continue;
+
+            pool.Add(powerUp);
+        }
+
+        return pool;
+    }
+
+    private bool ShouldIgnoreLevelLocks()
+    {
+        if (SelectionService.Instance == null)
+            return false;
+
+        return SelectionService.Instance.deckCards.Count >= ownedCardsBeforeIgnoringLevelLocks;
+    }
+
+    private List<PowerUpData> GetRandomSelection(List<PowerUpData> pool, int maxCards)
+    {
+        List<PowerUpData> selection = new List<PowerUpData>();
+
+        for (int i = 0; i < maxCards && pool.Count > 0; i++)
+        {
+            int index = Random.Range(0, pool.Count);
+            selection.Add(pool[index]);
+            pool.RemoveAt(index);
+        }
+
+        return selection;
+    }
+
     private void ClearCards()
     {
-        if (cardContainer == null) return;
+        if (cardContainer == null)
+            return;
 
         foreach (Transform child in cardContainer)
             Destroy(child.gameObject);
@@ -141,6 +176,9 @@ public class LevelUpUI : MonoBehaviour
     public void Hide()
     {
         ClearCards();
+
+        if (levelUpParticleEffect != null)
+            levelUpParticleEffect.Stop();
 
         if (panel != null)
             panel.SetActive(false);

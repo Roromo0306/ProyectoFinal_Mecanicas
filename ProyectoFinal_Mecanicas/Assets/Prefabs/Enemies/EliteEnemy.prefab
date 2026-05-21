@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2005475142191328656}
   - component: {fileID: 1812179960269364484}
   - component: {fileID: 2684845192156447621}
+  - component: {fileID: 6533244059597273975}
   m_Layer: 8
   m_Name: EliteEnemy
   m_TagString: Untagged
@@ -121,9 +122,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.025826825, y: 0}
+  m_Offset: {x: 0.042620696, y: 0}
   serializedVersion: 2
-  m_Radius: 0.13941668
+  m_Radius: 0.10769499
 --- !u!114 &814288775798364250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,6 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 30
+  showDebugLogs: 0
   spawner: {fileID: 0}
 --- !u!50 &1812179960269364484
 Rigidbody2D:
@@ -208,3 +210,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6533244059597273975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3532044227380647055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52bb3ae38c625ff469d9f9860d3dcaa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localOffset: {x: 0, y: -0.3, z: 0}
+  keepHorizontal: 1
+  width: 0.4
+  height: 0.05
+  backgroundColor: {r: 0, g: 0, b: 0, a: 0.75}
+  fillColor: {r: 0.9, g: 0.1, b: 0.1, a: 1}
+  hideWhenFull: 0
+  hideWhenDead: 1
+  sortingLayerName: 
+  sortingOrder: 200
