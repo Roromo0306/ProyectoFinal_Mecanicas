@@ -73,6 +73,12 @@ public class EnemyHealthSystem : MonoBehaviour, IDamageable
         if (dropper != null)
             dropper.DropXP();
 
+        EventBus.Publish(new EnemyKilledEvent(
+            gameObject,
+            EnemyKillType.Normal,
+            transform.position
+        ));
+
         dieRoutine = null;
         EnemyObjectPool.Release(gameObject);
     }

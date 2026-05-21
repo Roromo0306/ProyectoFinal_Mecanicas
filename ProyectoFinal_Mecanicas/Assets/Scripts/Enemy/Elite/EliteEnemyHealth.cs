@@ -53,6 +53,12 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable
 
         isDead = true;
 
+        EventBus.Publish(new EnemyKilledEvent(
+            gameObject,
+            EnemyKillType.Elite,
+            transform.position
+        ));
+
         NotifyDefeated();
 
         PlayerHealthSystem playerHealth = FindObjectOfType<PlayerHealthSystem>();
