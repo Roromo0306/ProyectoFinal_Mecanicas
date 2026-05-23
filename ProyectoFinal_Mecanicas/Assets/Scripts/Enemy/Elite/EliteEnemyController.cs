@@ -58,6 +58,7 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
     {
         RefreshReferences();
         StoreOriginalColorIfNeeded();
+
         cachedHealth = GetComponent<EliteEnemyHealth>();
         cachedHitFlashWait = new WaitForSeconds(hitFlashDuration);
     }
@@ -98,6 +99,9 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private void Update()
     {
+        if (!IsUsable())
+            return;
+
         if (player == null)
             TryFindPlayer();
 
@@ -244,6 +248,9 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private void TryDamagePlayer(Transform target)
     {
+        if (!IsUsable())
+            return;
+
         if (target == null)
             return;
 
@@ -259,6 +266,9 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     public void ApplyBulletHitFeedback(Vector3 sourcePosition, float force)
     {
+        if (!IsUsable())
+            return;
+
         if (hitFlashRoutine != null)
             StopCoroutine(hitFlashRoutine);
 
@@ -267,8 +277,17 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private IEnumerator HitFlashRoutine()
     {
-        if (spriteRenderer == null)
+        if (!IsUsable())
+        {
+            hitFlashRoutine = null;
             yield break;
+        }
+
+        if (spriteRenderer == null)
+        {
+            hitFlashRoutine = null;
+            yield break;
+        }
 
         spriteRenderer.color = hitColor;
 
@@ -280,6 +299,9 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     public void ApplyFreeze(float duration, float slowMultiplier)
     {
+        if (!IsUsable())
+            return;
+
         if (isFrozen || freezeRoutine != null)
             return;
 
@@ -288,6 +310,12 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private IEnumerator FreezeRoutine(float duration, float slowMultiplier)
     {
+        if (!IsUsable())
+        {
+            freezeRoutine = null;
+            yield break;
+        }
+
         isFrozen = true;
         freezeSlowMultiplier = slowMultiplier;
 
@@ -304,6 +332,9 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     public void ApplyBurn(float duration, float tickDamage, float tickInterval)
     {
+        if (!IsUsable())
+            return;
+
         if (burnRoutine != null)
             StopCoroutine(burnRoutine);
 
@@ -312,6 +343,12 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
     private IEnumerator BurnRoutine(float duration, float tickDamage, float tickInterval)
     {
+        if (!IsUsable())
+        {
+            burnRoutine = null;
+            yield break;
+        }
+
         isBurning = true;
 
         float timer = duration;
@@ -319,6 +356,12 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
         while (timer > 0f)
         {
+            if (!IsUsable())
+            {
+                burnRoutine = null;
+                yield break;
+            }
+
             timer -= Time.deltaTime;
             tickTimer -= Time.deltaTime;
 
@@ -329,7 +372,7 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
             {
                 tickTimer = tickInterval;
 
-                if (cachedHealth != null)
+                if (cachedHealth != null && !cachedHealth.IsDead)
                     cachedHealth.TakeDamage(tickDamage);
             }
 
@@ -343,6 +386,20 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
         RefreshVisualState();
     }
 
+    private bool IsUsable()
+    {
+        if (!isActiveAndEnabled)
+            return false;
+
+        if (!gameObject.activeInHierarchy)
+            return false;
+
+        if (cachedHealth != null && cachedHealth.IsDead)
+            return false;
+
+        return true;
+    }
+
     private void RefreshReferences()
     {
         TryFindPlayer();
@@ -352,6 +409,9 @@ public class EliteEnemyController : MonoBehaviour, IFreezable, IBurnable, IHitFe
 
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         StoreOriginalColorIfNeeded();
+
+        if (cachedHealth == null)
+            cachedHealth = GetComponent<EliteEnemyHealth>();
     }
 
     private void TryFindPlayer()

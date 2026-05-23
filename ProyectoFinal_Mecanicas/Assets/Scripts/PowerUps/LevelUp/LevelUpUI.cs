@@ -17,6 +17,15 @@ public class LevelUpUI : MonoBehaviour
     [SerializeField] private int ownedCardsBeforeIgnoringLevelLocks = 5;
 
     private bool isShowing = false;
+    private bool isResolvingSelection = false;
+
+    private Coroutine showRoutine;
+    private Coroutine chooseRoutine;
+
+    private readonly Queue<int> pendingLevelUps = new Queue<int>();
+
+    public bool IsShowing => isShowing;
+    public bool IsResolvingSelection => isResolvingSelection;
 
     private void Awake()
     {
@@ -24,7 +33,9 @@ public class LevelUpUI : MonoBehaviour
             panel.SetActive(false);
 
         ClearCards();
+
         isShowing = false;
+        isResolvingSelection = false;
     }
 
     private void OnEnable()
@@ -39,15 +50,27 @@ public class LevelUpUI : MonoBehaviour
 
     private void OnLevelUp(LevelUpEvent levelUpEvent)
     {
-        if (isShowing)
+        int level = Mathf.Max(1, levelUpEvent.newLevel);
+
+        if (isShowing || isResolvingSelection || IsDeckBusy())
+        {
+            pendingLevelUps.Enqueue(level);
             return;
+        }
 
         SFXManager.Instance?.PlayLevelUp();
-
-        StartCoroutine(ShowRoutine(levelUpEvent.newLevel));
+        StartShowing(level);
     }
 
-    IEnumerator ShowRoutine(int playerLevel)
+    private void StartShowing(int playerLevel)
+    {
+        if (showRoutine != null)
+            StopCoroutine(showRoutine);
+
+        showRoutine = StartCoroutine(ShowRoutine(playerLevel));
+    }
+
+    private IEnumerator ShowRoutine(int playerLevel)
     {
         isShowing = true;
 
@@ -61,18 +84,23 @@ public class LevelUpUI : MonoBehaviour
 
         ClearCards();
 
-        RectTransform rt = panel.GetComponent<RectTransform>();
+        RectTransform rt = panel != null ? panel.GetComponent<RectTransform>() : null;
+
         if (rt != null)
-            rt.anchoredPosition = new Vector2(0, 800);
+            rt.anchoredPosition = new Vector2(0f, 800f);
 
         yield return MovePanel();
+
+        if (!isShowing)
+            yield break;
 
         List<PowerUpData> pool = BuildAvailablePowerUpPool(playerLevel);
 
         if (pool.Count <= 0)
         {
             Debug.Log("LevelUpUI -> No quedan cartas nuevas disponibles.");
-            Hide();
+            ClosePanel(true);
+            TryShowQueuedLevelUp();
             yield break;
         }
 
@@ -80,6 +108,9 @@ public class LevelUpUI : MonoBehaviour
 
         foreach (PowerUpData data in selection)
         {
+            if (!isShowing)
+                yield break;
+
             GameObject card = Instantiate(cardPrefab, cardContainer);
 
             LevelUpCardUI ui = card.GetComponentInChildren<LevelUpCardUI>(true);
@@ -99,6 +130,82 @@ public class LevelUpUI : MonoBehaviour
 
             yield return new WaitForSecondsRealtime(0.2f);
         }
+
+        showRoutine = null;
+    }
+
+    public void ChooseCard(PowerUpData data)
+    {
+        if (isResolvingSelection)
+            return;
+
+        if (data == null)
+        {
+            Debug.LogError("LevelUpUI.ChooseCard -> data es null");
+            return;
+        }
+
+        if (chooseRoutine != null)
+            StopCoroutine(chooseRoutine);
+
+        chooseRoutine = StartCoroutine(ChooseCardRoutine(data));
+    }
+
+    private IEnumerator ChooseCardRoutine(PowerUpData data)
+    {
+        isResolvingSelection = true;
+
+        if (showRoutine != null)
+        {
+            StopCoroutine(showRoutine);
+            showRoutine = null;
+        }
+
+        SFXManager.Instance?.PlayCardSelect();
+
+        if (SelectionService.Instance == null)
+        {
+            Debug.LogError("LevelUpUI -> SelectionService.Instance es null");
+            ClosePanel(true);
+            isResolvingSelection = false;
+            chooseRoutine = null;
+            yield break;
+        }
+
+        SelectionService.Instance.selected = data;
+
+        // Si hay hueco, se equipa.
+        // Si no hay hueco, se queda en el deck.
+        SelectionService.Instance.AddCardAndAutoEquipIfPossible(data);
+
+        if (ActivationService.Instance != null)
+            ActivationService.Instance.RecalculateEquippedPowerUps();
+
+        // Cerramos el level up pero NO reanudamos todavía,
+        // porque ahora tiene que abrirse el deck.
+        ClosePanel(false);
+
+        // Esperamos un par de frames limpios para evitar conflictos con Destroy(),
+        // pooling de enemigos y reconstrucción del DeckPanel.
+        yield return null;
+        yield return null;
+
+        if (GameplayDeckMenu.Instance != null)
+        {
+            GameplayDeckMenu.Instance.OpenDeck();
+        }
+        else if (UIFlowController.Instance != null)
+        {
+            UIFlowController.Instance.OpenDeployment();
+        }
+        else
+        {
+            Debug.LogError("LevelUpUI -> No existe GameplayDeckMenu ni UIFlowController.");
+            Time.timeScale = 1f;
+        }
+
+        isResolvingSelection = false;
+        chooseRoutine = null;
     }
 
     private List<PowerUpData> BuildAvailablePowerUpPool(int playerLevel)
@@ -150,12 +257,19 @@ public class LevelUpUI : MonoBehaviour
         if (cardContainer == null)
             return;
 
-        foreach (Transform child in cardContainer)
+        for (int i = cardContainer.childCount - 1; i >= 0; i--)
+        {
+            Transform child = cardContainer.GetChild(i);
+            child.SetParent(null);
             Destroy(child.gameObject);
+        }
     }
 
     private IEnumerator MovePanel()
     {
+        if (panel == null)
+            yield break;
+
         float t = 0f;
         Vector3 start = new Vector3(0f, 800f, 0f);
         Vector3 end = Vector3.zero;
@@ -175,6 +289,18 @@ public class LevelUpUI : MonoBehaviour
 
     public void Hide()
     {
+        if (showRoutine != null)
+        {
+            StopCoroutine(showRoutine);
+            showRoutine = null;
+        }
+
+        ClosePanel(true);
+        TryShowQueuedLevelUp();
+    }
+
+    private void ClosePanel(bool resumeGame)
+    {
         ClearCards();
 
         if (levelUpParticleEffect != null)
@@ -183,8 +309,28 @@ public class LevelUpUI : MonoBehaviour
         if (panel != null)
             panel.SetActive(false);
 
-        Time.timeScale = 1f;
+        if (resumeGame)
+            Time.timeScale = 1f;
+
         isShowing = false;
+    }
+
+    public void TryShowQueuedLevelUp()
+    {
+        if (pendingLevelUps.Count <= 0)
+            return;
+
+        if (isShowing || isResolvingSelection || IsDeckBusy())
+            return;
+
+        int nextLevel = pendingLevelUps.Dequeue();
+        SFXManager.Instance?.PlayLevelUp();
+        StartShowing(nextLevel);
+    }
+
+    private bool IsDeckBusy()
+    {
+        return GameplayDeckMenu.Instance != null && GameplayDeckMenu.Instance.IsOpenOrOpening;
     }
 
     public void MarkClosed()

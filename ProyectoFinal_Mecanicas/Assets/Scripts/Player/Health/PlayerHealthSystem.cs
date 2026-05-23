@@ -41,9 +41,16 @@ public class PlayerHealthSystem : MonoBehaviour
     private PlayerStats playerStats;
     private int lastKnownMaxLives;
 
+    // Corazones ganados por élites.
+    // IMPORTANTE: esto va separado de PlayerStats porque ActivationService hace ResetToBase().
+    private int eliteBonusMaxLives = 0;
+
     private void Awake()
     {
         playerStats = GetComponent<PlayerStats>();
+
+        if (playerStats == null)
+            playerStats = FindObjectOfType<PlayerStats>();
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -61,11 +68,14 @@ public class PlayerHealthSystem : MonoBehaviour
 
     private void Start()
     {
-        if (playerStats != null)
-        {
-            lives = playerStats.maxLives;
-            lastKnownMaxLives = playerStats.maxLives;
-        }
+        int maxLives = GetEffectiveMaxLives();
+
+        lives = Mathf.Clamp(lives, 0, maxLives);
+
+        if (lives <= 0)
+            lives = maxLives;
+
+        lastKnownMaxLives = maxLives;
 
         UpdateLivesUI();
     }
@@ -86,9 +96,9 @@ public class PlayerHealthSystem : MonoBehaviour
             playerStats = GetComponent<PlayerStats>();
 
         if (playerStats == null)
-            return;
+            playerStats = FindObjectOfType<PlayerStats>();
 
-        int newMaxLives = playerStats.maxLives;
+        int newMaxLives = GetEffectiveMaxLives();
         int difference = newMaxLives - lastKnownMaxLives;
 
         if (grantDifference && difference > 0)
@@ -116,9 +126,11 @@ public class PlayerHealthSystem : MonoBehaviour
         lastHitTime = Time.time;
 
         lives--;
-        SFXManager.Instance?.PlayPlayerHit();
-        UpdateLivesUI();
+        lives = Mathf.Max(0, lives);
 
+        SFXManager.Instance?.PlayPlayerHit();
+
+        UpdateLivesUI();
         PlayHitFeedback();
 
         if (lives <= 0)
@@ -250,14 +262,14 @@ public class PlayerHealthSystem : MonoBehaviour
         if (isDead)
             return;
 
-        lives += amount;
+        int maxLives = GetEffectiveMaxLives();
 
-        if (playerStats != null)
-            lives = Mathf.Min(lives, playerStats.maxLives);
+        lives += amount;
+        lives = Mathf.Clamp(lives, 0, maxLives);
 
         UpdateLivesUI();
 
-        Debug.Log("Vidas actuales: " + lives + " / " + (playerStats != null ? playerStats.maxLives : lives));
+        Debug.Log("Vidas actuales: " + lives + " / " + maxLives);
     }
 
     public void SetExternalInvulnerable(bool value)
@@ -278,25 +290,54 @@ public class PlayerHealthSystem : MonoBehaviour
         if (heartsContainer == null || heartPrefab == null)
             return;
 
-        int maxLives = lives;
+        int maxLives = GetEffectiveMaxLives();
 
-        if (playerStats != null)
-            maxLives = playerStats.maxLives;
+        lives = Mathf.Clamp(lives, 0, maxLives);
 
-        while (heartsContainer.childCount < maxLives)
+        int currentChildren = heartsContainer.childCount;
+
+        // Añadir corazones si faltan.
+        if (currentChildren < maxLives)
         {
-            Instantiate(heartPrefab, heartsContainer);
+            int amountToCreate = maxLives - currentChildren;
+
+            for (int i = 0; i < amountToCreate; i++)
+            {
+                Instantiate(heartPrefab, heartsContainer);
+            }
         }
 
-        while (heartsContainer.childCount > maxLives)
+        // Quitar corazones si sobran.
+        // IMPORTANTE:
+        // No usamos while, porque Destroy() no reduce childCount hasta final del frame.
+        // Usar while aquí puede congelar Unity para siempre.
+        currentChildren = heartsContainer.childCount;
+
+        if (currentChildren > maxLives)
         {
-            Transform lastHeart = heartsContainer.GetChild(heartsContainer.childCount - 1);
-            Destroy(lastHeart.gameObject);
+            for (int i = currentChildren - 1; i >= maxLives; i--)
+            {
+                Transform extraHeart = heartsContainer.GetChild(i);
+
+                if (extraHeart != null)
+                {
+                    extraHeart.gameObject.SetActive(false);
+                    Destroy(extraHeart.gameObject);
+                }
+            }
         }
 
-        for (int i = 0; i < heartsContainer.childCount; i++)
+        // Actualizar sprites solo de los corazones válidos.
+        int visibleHeartCount = Mathf.Min(heartsContainer.childCount, maxLives);
+
+        for (int i = 0; i < visibleHeartCount; i++)
         {
-            Image heartImage = heartsContainer.GetChild(i).GetComponent<Image>();
+            Transform heartTransform = heartsContainer.GetChild(i);
+
+            if (heartTransform == null)
+                continue;
+
+            Image heartImage = heartTransform.GetComponent<Image>();
 
             if (heartImage == null)
                 continue;
@@ -316,22 +357,38 @@ public class PlayerHealthSystem : MonoBehaviour
         if (amount <= 0)
             return;
 
-        if (playerStats == null)
-            playerStats = GetComponent<PlayerStats>();
+        // No tocamos directamente playerStats.maxLives.
+        // playerStats se recalcula cada vez que cambias cartas.
+        // Si metemos aquí el corazón del élite, ActivationService lo puede borrar con ResetToBase().
+        eliteBonusMaxLives += amount;
 
-        if (playerStats != null)
-        {
-            playerStats.maxLives += amount;
-            lastKnownMaxLives = playerStats.maxLives;
-        }
+        int maxLives = GetEffectiveMaxLives();
 
         lives += amount;
+        lives = Mathf.Clamp(lives, 0, maxLives);
 
-        if (playerStats != null)
-            lives = Mathf.Min(lives, playerStats.maxLives);
+        lastKnownMaxLives = maxLives;
 
         UpdateLivesUI();
 
-        Debug.Log("Coraz�n ganado -> " + lives + " / " + (playerStats != null ? playerStats.maxLives : lives));
+        Debug.Log("Corazón ganado -> " + lives + " / " + maxLives);
+    }
+
+    private int GetEffectiveMaxLives()
+    {
+        if (playerStats == null)
+            playerStats = GetComponent<PlayerStats>();
+
+        if (playerStats == null)
+            playerStats = FindObjectOfType<PlayerStats>();
+
+        int baseMaxLives = lives;
+
+        if (playerStats != null)
+            baseMaxLives = playerStats.maxLives;
+
+        baseMaxLives = Mathf.Max(1, baseMaxLives);
+
+        return baseMaxLives + eliteBonusMaxLives;
     }
 }

@@ -22,14 +22,23 @@ public class GameplayDeckMenu : MonoBehaviour
     public Vector2 visiblePosition = Vector2.zero;
 
     private bool isOpen = false;
+    private bool isOpening = false;
+    private bool isClosing = false;
+
     private Coroutine currentRoutine;
+
+    public bool IsOpen => isOpen;
+    public bool IsOpenOrOpening => isOpen || isOpening || isClosing;
 
     private void Awake()
     {
         Instance = this;
 
         if (closeButton != null)
+        {
+            closeButton.onClick.RemoveListener(CloseDeck);
             closeButton.onClick.AddListener(CloseDeck);
+        }
 
         ForceClosed();
     }
@@ -38,6 +47,9 @@ public class GameplayDeckMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(openKey))
         {
+            if (IsLevelUpBusy())
+                return;
+
             if (isOpen)
                 CloseDeck();
             else
@@ -47,10 +59,8 @@ public class GameplayDeckMenu : MonoBehaviour
 
     public void OpenDeck()
     {
-        if (isOpen) return;
-
-        isOpen = true;
-        Time.timeScale = 0f;
+        if (isOpen || isOpening || isClosing)
+            return;
 
         if (currentRoutine != null)
             StopCoroutine(currentRoutine);
@@ -60,12 +70,8 @@ public class GameplayDeckMenu : MonoBehaviour
 
     public void CloseDeck()
     {
-        if (!isOpen) return;
-
-        isOpen = false;
-
-        if (ActivationService.Instance != null)
-            ActivationService.Instance.RecalculateEquippedPowerUps();
+        if (!isOpen || isClosing)
+            return;
 
         if (currentRoutine != null)
             StopCoroutine(currentRoutine);
@@ -75,23 +81,29 @@ public class GameplayDeckMenu : MonoBehaviour
 
     private IEnumerator OpenRoutine()
     {
-        if (deckPanel != null)
-            deckPanel.SetActive(true);
+        isOpening = true;
 
-        // CAMBIO IMPORTANTE:
-        // Primero activamos el panel, luego repintamos las cartas.
-        if (deploymentLoader != null)
-            deploymentLoader.Init();
-        else
+        if (deckPanel == null)
+        {
+            Debug.LogError("GameplayDeckMenu -> deckPanel no asignado");
+            RecoverFromFailedOpen();
+            yield break;
+        }
+
+        if (deploymentLoader == null)
+        {
             Debug.LogError("GameplayDeckMenu -> deploymentLoader no asignado");
+            RecoverFromFailedOpen();
+            yield break;
+        }
 
-        Canvas.ForceUpdateCanvases();
+        deckPanel.SetActive(true);
 
         if (canvasGroup != null)
         {
             canvasGroup.alpha = 0f;
-            canvasGroup.interactable = true;
-            canvasGroup.blocksRaycasts = true;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
         }
 
         if (panelRect != null)
@@ -100,11 +112,35 @@ public class GameplayDeckMenu : MonoBehaviour
             panelRect.localScale = Vector3.one * 0.9f;
         }
 
+        yield return null;
+
+        try
+        {
+            deploymentLoader.Init();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("GameplayDeckMenu -> Error cargando el deck:\n" + e);
+            RecoverFromFailedOpen();
+            yield break;
+        }
+
+        Canvas.ForceUpdateCanvases();
+
+        Time.timeScale = 0f;
+
+        if (canvasGroup != null)
+        {
+            canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = true;
+        }
+
+        float duration = Mathf.Max(0.01f, animationDuration);
         float t = 0f;
 
         while (t < 1f)
         {
-            t += Time.unscaledDeltaTime / animationDuration;
+            t += Time.unscaledDeltaTime / duration;
             float eased = EaseOutBack(t);
 
             if (canvasGroup != null)
@@ -120,17 +156,38 @@ public class GameplayDeckMenu : MonoBehaviour
         }
 
         if (canvasGroup != null)
+        {
             canvasGroup.alpha = 1f;
+            canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = true;
+        }
 
         if (panelRect != null)
         {
             panelRect.anchoredPosition = visiblePosition;
             panelRect.localScale = Vector3.one;
         }
+
+        isOpen = true;
+        isOpening = false;
+        currentRoutine = null;
     }
 
     private IEnumerator CloseRoutine()
     {
+        isClosing = true;
+        isOpen = false;
+
+        try
+        {
+            if (ActivationService.Instance != null)
+                ActivationService.Instance.RecalculateEquippedPowerUps();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("GameplayDeckMenu -> Error recalculando cartas al cerrar deck:\n" + e);
+        }
+
         if (canvasGroup != null)
         {
             canvasGroup.interactable = false;
@@ -139,11 +196,12 @@ public class GameplayDeckMenu : MonoBehaviour
 
         Vector2 startPos = panelRect != null ? panelRect.anchoredPosition : visiblePosition;
 
+        float duration = Mathf.Max(0.01f, animationDuration);
         float t = 0f;
 
         while (t < 1f)
         {
-            t += Time.unscaledDeltaTime / animationDuration;
+            t += Time.unscaledDeltaTime / duration;
             float eased = EaseInBack(t);
 
             if (canvasGroup != null)
@@ -159,7 +217,27 @@ public class GameplayDeckMenu : MonoBehaviour
         }
 
         ForceClosed();
+
         Time.timeScale = 1f;
+
+        isClosing = false;
+        currentRoutine = null;
+
+        LevelUpUI levelUpUI = FindObjectOfType<LevelUpUI>();
+        if (levelUpUI != null)
+            levelUpUI.TryShowQueuedLevelUp();
+    }
+
+    private void RecoverFromFailedOpen()
+    {
+        ForceClosed();
+
+        Time.timeScale = 1f;
+
+        isOpen = false;
+        isOpening = false;
+        isClosing = false;
+        currentRoutine = null;
     }
 
     private void ForceClosed()
@@ -179,6 +257,16 @@ public class GameplayDeckMenu : MonoBehaviour
             panelRect.anchoredPosition = hiddenPosition;
             panelRect.localScale = Vector3.one * 0.9f;
         }
+    }
+
+    private bool IsLevelUpBusy()
+    {
+        LevelUpUI levelUpUI = FindObjectOfType<LevelUpUI>();
+
+        if (levelUpUI == null)
+            return false;
+
+        return levelUpUI.IsShowing || levelUpUI.IsResolvingSelection;
     }
 
     private float EaseOutBack(float x)

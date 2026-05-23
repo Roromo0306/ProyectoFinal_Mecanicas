@@ -122,7 +122,7 @@ public class BulletController : MonoBehaviour
     {
         GameObject enemyRoot = GetEnemyRoot(hitObject);
 
-        if (enemyRoot == null)
+        if (!IsValidEnemyRoot(enemyRoot))
             return;
 
         if (hitRoots.Contains(enemyRoot))
@@ -144,20 +144,28 @@ public class BulletController : MonoBehaviour
 
     private void ApplyDirectHit(GameObject enemyRoot)
     {
+        if (!IsValidEnemyRoot(enemyRoot))
+            return;
+
         ApplyStatuses(enemyRoot);
 
         if (data.hasExplosion)
             Explode(enemyRoot);
 
-        DamageEnemy(enemyRoot, data.damage);
+        // IMPORTANTE:
+        // El feedback va ANTES del daño.
+        // Si el daño mata al enemigo, el pooling lo puede desactivar.
+        // Si intentamos hacer feedback después, Unity puede lanzar error.
         ApplyHitFeedback(enemyRoot);
+
+        DamageEnemy(enemyRoot, data.damage);
     }
 
     private void ResolvePierceAndBounce(GameObject nextBounceTarget)
     {
         remainingPierceHits--;
 
-        if (nextBounceTarget != null && remainingBounces > 0)
+        if (IsValidEnemyRoot(nextBounceTarget) && remainingBounces > 0)
         {
             remainingBounces--;
             data.direction = BulletRuntimeData.NormalizeDirection(nextBounceTarget.transform.position - transform.position);
@@ -175,9 +183,26 @@ public class BulletController : MonoBehaviour
         return CombatTargetFinder.GetDamageableRoot(obj);
     }
 
-    private void DamageEnemy(GameObject enemyRoot, float amount)
+    private bool IsValidEnemyRoot(GameObject enemyRoot)
     {
         if (enemyRoot == null)
+            return false;
+
+        if (!enemyRoot.activeInHierarchy)
+            return false;
+
+        if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IHealthStatusProvider healthStatus))
+        {
+            if (healthStatus.IsDead)
+                return false;
+        }
+
+        return true;
+    }
+
+    private void DamageEnemy(GameObject enemyRoot, float amount)
+    {
+        if (!IsValidEnemyRoot(enemyRoot))
             return;
 
         if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IDamageable damageable))
@@ -186,11 +211,14 @@ public class BulletController : MonoBehaviour
 
     private void ApplyStatuses(GameObject enemyRoot)
     {
-        if (enemyRoot == null)
+        if (!IsValidEnemyRoot(enemyRoot))
             return;
 
         if (data.hasFreeze && CombatTargetFinder.TryGetOnRoot(enemyRoot, out IFreezable freezable))
             freezable.ApplyFreeze(data.freezeDuration, data.freezeSlowMultiplier);
+
+        if (!IsValidEnemyRoot(enemyRoot))
+            return;
 
         if (data.hasBurn && CombatTargetFinder.TryGetOnRoot(enemyRoot, out IBurnable burnable))
             burnable.ApplyBurn(data.burnDuration, data.burnTickDamage, data.burnTickInterval);
@@ -198,7 +226,7 @@ public class BulletController : MonoBehaviour
 
     private void Explode(GameObject mainTarget)
     {
-        if (mainTarget == null)
+        if (!IsValidEnemyRoot(mainTarget))
             return;
 
         Vector3 explosionPosition = mainTarget.transform.position;
@@ -215,13 +243,17 @@ public class BulletController : MonoBehaviour
 
             GameObject enemyRoot = GetEnemyRoot(hit.gameObject);
 
-            if (enemyRoot == null)
+            if (!IsValidEnemyRoot(enemyRoot))
                 continue;
 
             if (enemyRoot == mainTarget)
                 continue;
 
             ApplyStatuses(enemyRoot);
+
+            if (!IsValidEnemyRoot(enemyRoot))
+                continue;
+
             DamageEnemy(enemyRoot, explosionDamage);
         }
     }
@@ -240,7 +272,7 @@ public class BulletController : MonoBehaviour
 
             GameObject enemyRoot = GetEnemyRoot(hit.gameObject);
 
-            if (enemyRoot == null)
+            if (!IsValidEnemyRoot(enemyRoot))
                 continue;
 
             if (enemyRoot == currentTarget)
@@ -263,7 +295,7 @@ public class BulletController : MonoBehaviour
 
     private void ApplyHitFeedback(GameObject enemyRoot)
     {
-        if (enemyRoot == null)
+        if (!IsValidEnemyRoot(enemyRoot))
             return;
 
         if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IHitFeedbackReceiver feedbackReceiver))

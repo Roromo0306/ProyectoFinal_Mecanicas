@@ -34,8 +34,15 @@ public class MainMenuUI : MonoBehaviour
 
     private void Awake()
     {
-        Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
-        
+        QualitySettings.vSyncCount = 0;
+
+        int refreshRate = Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value);
+
+        if (refreshRate <= 0)
+            refreshRate = 60;
+
+        Application.targetFrameRate = refreshRate;
+
         Time.timeScale = 1f;
 
         if (optionsPanel != null) optionsPanel.SetActive(false);

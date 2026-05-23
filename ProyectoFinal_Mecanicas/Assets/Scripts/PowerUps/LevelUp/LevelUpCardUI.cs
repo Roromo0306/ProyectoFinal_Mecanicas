@@ -37,49 +37,22 @@ public class LevelUpCardUI : MonoBehaviour
 
         alreadySelected = true;
 
-        SFXManager.Instance?.PlayCardSelect();
-
         if (data == null)
         {
             Debug.LogError("LevelUpCardUI.Select -> data es null");
+            alreadySelected = false;
             return;
         }
 
-        if (SelectionService.Instance == null)
-        {
-            Debug.LogError("LevelUpCardUI.Select -> SelectionService.Instance es null");
-            return;
-        }
-
-        SelectionService.Instance.selected = data;
-        SelectionService.Instance.AddCardAndAutoEquipIfPossible(data);
-
-        if (ActivationService.Instance != null)
-            ActivationService.Instance.RecalculateEquippedPowerUps();
-
-        CloseLevelUpUI();
-        OpenDeckUI();
-    }
-
-    private void CloseLevelUpUI()
-    {
         LevelUpUI levelUpUI = FindObjectOfType<LevelUpUI>();
 
         if (levelUpUI != null)
-            levelUpUI.Hide();
-    }
-
-    private void OpenDeckUI()
-    {
-        if (GameplayDeckMenu.Instance != null)
         {
-            GameplayDeckMenu.Instance.OpenDeck();
+            levelUpUI.ChooseCard(data);
             return;
         }
 
-        if (UIFlowController.Instance != null)
-        {
-            UIFlowController.Instance.OpenDeployment();
-        }
+        Debug.LogError("LevelUpCardUI.Select -> No se encontró LevelUpUI");
+        alreadySelected = false;
     }
 }

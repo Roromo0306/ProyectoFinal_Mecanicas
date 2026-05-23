@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class EliteEnemyHealth : MonoBehaviour, IDamageable, IHealthStatusProvider
@@ -13,6 +14,7 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable, IHealthStatusProvide
 
     private bool isDead = false;
     private bool defeatNotified = false;
+    private Coroutine deathRoutine;
 
     public GameObject TargetRoot => gameObject;
 
@@ -28,6 +30,11 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable, IHealthStatusProvide
     private void OnEnable()
     {
         ResetHealth();
+    }
+
+    private void OnDisable()
+    {
+        deathRoutine = null;
     }
 
     public void PrepareForSpawn(EliteEnemySpawner owner)
@@ -58,14 +65,15 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable, IHealthStatusProvide
             return;
 
         isDead = true;
-
         PublishHealthChanged();
 
-        EventBus.Publish(new EnemyKilledEvent(
-            gameObject,
-            EnemyKillType.Elite,
-            transform.position
-        ));
+        if (deathRoutine == null)
+            deathRoutine = StartCoroutine(DeathRoutine());
+    }
+
+    private IEnumerator DeathRoutine()
+    {
+        Vector3 deathPosition = transform.position;
 
         NotifyDefeated();
 
@@ -75,7 +83,28 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable, IHealthStatusProvide
 
         SFXManager.Instance?.PlayEliteEnemyDeath();
 
-        EnemyObjectPool.Release(gameObject);
+        try
+        {
+            EventBus.Publish(new EnemyKilledEvent(
+                gameObject,
+                EnemyKillType.Elite,
+                deathPosition
+            ));
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("EliteEnemyHealth -> Error publicando EnemyKilledEvent:\n" + e);
+        }
+
+        // IMPORTANTE:
+        // Esperamos un frame antes de devolverlo al pool.
+        // Así evitamos que la bala, el deck o el level up sigan usando un enemigo ya desactivado.
+        yield return null;
+
+        deathRoutine = null;
+
+        if (gameObject.activeInHierarchy)
+            EnemyObjectPool.Release(gameObject);
     }
 
     private void NotifyDefeated()
@@ -106,6 +135,7 @@ public class EliteEnemyHealth : MonoBehaviour, IDamageable, IHealthStatusProvide
         currentHealth = maxHealth;
         isDead = false;
         defeatNotified = false;
+        deathRoutine = null;
 
         PublishHealthChanged();
     }

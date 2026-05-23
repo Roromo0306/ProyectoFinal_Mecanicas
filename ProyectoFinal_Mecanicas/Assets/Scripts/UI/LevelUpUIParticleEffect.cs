@@ -62,6 +62,7 @@ public class LevelUpUIParticleEffect : MonoBehaviour
 
             ps.Play(true);
         }
+        Debug.Log("Level Up particles played");
     }
 
     public void Stop()

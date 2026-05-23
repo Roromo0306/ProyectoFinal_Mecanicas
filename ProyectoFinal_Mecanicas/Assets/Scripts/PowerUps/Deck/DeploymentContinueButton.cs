@@ -6,12 +6,19 @@ public class DeploymentContinueButton : MonoBehaviour
 
     public void Continue()
     {
-        if (flow == null)
+        if (GameplayDeckMenu.Instance != null)
         {
-            Debug.LogError("DeploymentContinueButton -> flow es null");
+            GameplayDeckMenu.Instance.CloseDeck();
             return;
         }
 
-        flow.CloseDeployment();
+        if (flow != null)
+        {
+            flow.CloseDeployment();
+            return;
+        }
+
+        Debug.LogError("DeploymentContinueButton -> No hay GameplayDeckMenu ni UIFlowController asignado");
+        Time.timeScale = 1f;
     }
 }
