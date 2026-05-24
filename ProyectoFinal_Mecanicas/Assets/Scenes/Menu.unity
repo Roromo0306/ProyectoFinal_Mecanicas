@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db89c74f0726c524896753ed28dd173c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameplaySceneName: Game
+  gameplaySceneName: Story
   titleText: {fileID: 744656149}
   buttonsPanel: {fileID: 364773026}
   optionsPanel: {fileID: 2046663641}
@@ -251,7 +251,7 @@ MonoBehaviour:
   quitButton: {fileID: 45411379}
   optionsBackButton: {fileID: 689865743}
   creditsBackButton: {fileID: 1816408017}
-  sceneFade: {fileID: 0}
+  sceneFade: {fileID: 1319804762}
   introDuration: 0.45
   buttonPopDelay: 0.08
 --- !u!1 &17987458

@@ -7243,7 +7243,7 @@ MonoBehaviour:
   rampDuration: 40
   peakDuration: 240
   cooldownDuration: 20
-  spawnDistance: 24
+  spawnDistance: 25
   spawnSpreadRadius: 5
   showDebugLogs: 0
 --- !u!4 &315368618
@@ -19521,8 +19521,8 @@ MonoBehaviour:
   spawnTanks: 0
   tankSpawnChance: 0
   tankSpawnDelay: 60
-  minSpawnRate: 0.35
-  maxSpawnRate: 1.4
+  minSpawnRate: 1
+  maxSpawnRate: 1.8
   firstSpawnDelay: 4
   initialSpawnDelayVariance: 2
   earlyGameProtectionDuration: 75
@@ -19531,12 +19531,12 @@ MonoBehaviour:
   earlyGroupLimitDuration: 45
   earlyMaxEnemiesPerSpawn: 1
   minEnemiesPerSpawn: 1
-  maxEnemiesPerSpawn: 4
+  maxEnemiesPerSpawn: 3
   amountRampDuration: 300
-  rampDuration: 45
-  peakDuration: 180
+  rampDuration: 90
+  peakDuration: 200
   cooldownDuration: 30
-  spawnDistance: 20
+  spawnDistance: 25
   spawnSpreadRadius: 3
   showDebugLogs: 0
 --- !u!4 &686504495
@@ -27188,7 +27188,7 @@ MonoBehaviour:
   rampDuration: 45
   peakDuration: 180
   cooldownDuration: 30
-  spawnDistance: 22
+  spawnDistance: 25
   spawnSpreadRadius: 4
   showDebugLogs: 0
 --- !u!4 &1290505631
