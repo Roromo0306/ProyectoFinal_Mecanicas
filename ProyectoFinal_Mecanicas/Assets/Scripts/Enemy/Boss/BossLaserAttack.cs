@@ -17,26 +17,37 @@ public class BossLaserAttack : MonoBehaviour
     private Vector3 originalPosition;
     private FinalBossController bossController;
 
+    private Coroutine attackRoutine;
+    private Coroutine performAttackRoutine;
+
+    private GameObject currentLaserGroup;
+    private bool isStopping = false;
+
     private void Start()
     {
         bossController = GetComponent<FinalBossController>();
-        StartCoroutine(AttackRoutine());
+        attackRoutine = StartCoroutine(AttackRoutine());
     }
 
-    IEnumerator AttackRoutine()
+    private IEnumerator AttackRoutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(attackCooldown);
 
+            if (isStopping)
+                yield break;
+
             if (bossController != null && !bossController.CanUseLaserAttack())
                 continue;
 
-            yield return StartCoroutine(PerformAttack());
+            performAttackRoutine = StartCoroutine(PerformAttack());
+            yield return performAttackRoutine;
+            performAttackRoutine = null;
         }
     }
 
-    IEnumerator PerformAttack()
+    private IEnumerator PerformAttack()
     {
         if (bossController != null && !bossController.CanUseLaserAttack())
             yield break;
@@ -49,6 +60,9 @@ public class BossLaserAttack : MonoBehaviour
 
         while (timer < shakeDuration)
         {
+            if (isStopping)
+                yield break;
+
             timer += Time.deltaTime;
 
             Vector3 randomOffset = Random.insideUnitCircle * shakeIntensity;
@@ -68,8 +82,10 @@ public class BossLaserAttack : MonoBehaviour
         bool diagonal = Random.value > 0.5f;
         bool rotating = Random.value > 0.5f;
 
-        GameObject laserGroup = new GameObject("LaserGroup");
-        laserGroup.transform.position = transform.position;
+        ClearCurrentLaserGroup();
+
+        currentLaserGroup = new GameObject("LaserGroup");
+        currentLaserGroup.transform.position = transform.position;
 
         float baseAngle = diagonal ? 45f : 0f;
 
@@ -79,7 +95,7 @@ public class BossLaserAttack : MonoBehaviour
 
             GameObject laser = Instantiate(
                 laserPrefab,
-                laserGroup.transform
+                currentLaserGroup.transform
             );
 
             laser.transform.localPosition = Vector3.zero;
@@ -90,11 +106,14 @@ public class BossLaserAttack : MonoBehaviour
 
         while (elapsed < laserDuration)
         {
+            if (isStopping)
+                yield break;
+
             elapsed += Time.deltaTime;
 
-            if (rotating)
+            if (rotating && currentLaserGroup != null)
             {
-                laserGroup.transform.Rotate(
+                currentLaserGroup.transform.Rotate(
                     Vector3.forward,
                     rotationSpeed * Time.deltaTime
                 );
@@ -103,8 +122,46 @@ public class BossLaserAttack : MonoBehaviour
             yield return null;
         }
 
-        Destroy(laserGroup);
+        ClearCurrentLaserGroup();
 
         IsAttacking = false;
+    }
+
+    public void StopAttackAndClearLasers()
+    {
+        isStopping = true;
+
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine);
+            attackRoutine = null;
+        }
+
+        if (performAttackRoutine != null)
+        {
+            StopCoroutine(performAttackRoutine);
+            performAttackRoutine = null;
+        }
+
+        if (IsAttacking)
+            transform.position = originalPosition;
+
+        IsAttacking = false;
+
+        ClearCurrentLaserGroup();
+    }
+
+    private void ClearCurrentLaserGroup()
+    {
+        if (currentLaserGroup != null)
+        {
+            Destroy(currentLaserGroup);
+            currentLaserGroup = null;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        ClearCurrentLaserGroup();
     }
 }

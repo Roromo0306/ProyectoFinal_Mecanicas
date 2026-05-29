@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.92, y: 0.92, z: 0.92}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -75,8 +75,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.16413999, g: 0.8867924, b: 0.038483348, a: 1}
+  m_Sprite: {fileID: -1332929790, guid: e6d6dd52ee222be4280d486acb950004, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -118,9 +118,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.017061764}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.28957155
 --- !u!114 &463348401306941566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,8 +133,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57529ae155072fa4890abfc21121133d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitKnockbackForce: 10
-  hitParticlePrefab: {fileID: 7548780520399808274, guid: 08138b57927efaa42bf2e392c2c07eba, type: 3}
   speed: 20
   lifetime: 3
+  hitKnockbackForce: 10
+  hitParticlePrefab: {fileID: 7548780520399808274, guid: 08138b57927efaa42bf2e392c2c07eba, type: 3}
   explosionParticlePrefab: {fileID: 7548780520399808274, guid: 923e6d52a29129f4d88d7a194b2c408d, type: 3}
+  hitFxLifetime: 1.5
+  explosionFxLifetime: 1.5

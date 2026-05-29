@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: MagnetCard
   m_EditorClassIdentifier: 
   unlockLevel: 5
-  hudIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  hudIcon: {fileID: -1046314422, guid: e6d6dd52ee222be4280d486acb950004, type: 3}
   title: "Collector\u2019s Charm"
   description: Increase your <wave><color=#55AAFF>pickup range</color></wave>.
-  icon: {fileID: 0}
+  icon: {fileID: -1090727833, guid: f96b90093e151054fbad060cc99a5831, type: 3}
   effects:
   - {fileID: 11400000, guid: d2a5ea918ae38f24bbaa18911ea0edbd, type: 2}

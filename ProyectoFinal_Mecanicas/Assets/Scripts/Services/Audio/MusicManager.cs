@@ -12,14 +12,33 @@ public class MusicManager : MonoBehaviour
     public AudioClip gameOverMusic;
     public AudioClip youWinMusic;
 
+    [Header("Story")]
+    public string storySceneName = "Story";
+
+    [Tooltip("Si lo dejas vacío, seguirá usando la música actual o la del menú.")]
+    public AudioClip storyMusic;
+
+    [Range(0f, 1f)]
+    public float storyVolume = 0.25f;
+
+    public bool useMainMenuMusicInStory = true;
+
     [Header("Settings")]
+    [Range(0f, 1f)]
     public float volume = 0.6f;
+
+    [Range(0f, 1f)]
+    public float masterVolume = 1f;
+
     public float fadeDuration = 1f;
+
+    [Header("Save")]
+    public string musicVolumePrefsKey = "MusicVolume";
 
     private AudioSource audioSource;
     private Coroutine fadeRoutine;
 
-    private bool endGameMusicPlaying = false;
+    private float currentTargetVolume = 0.6f;
 
     private void Awake()
     {
@@ -32,8 +51,7 @@ public class MusicManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
 
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
@@ -41,6 +59,8 @@ public class MusicManager : MonoBehaviour
         audioSource.loop = true;
         audioSource.playOnAwake = false;
         audioSource.volume = 0f;
+
+        masterVolume = PlayerPrefs.GetFloat(musicVolumePrefsKey, masterVolume);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         PlayMusicForScene(SceneManager.GetActiveScene().name);
@@ -53,12 +73,17 @@ public class MusicManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        endGameMusicPlaying = false;
         PlayMusicForScene(scene.name);
     }
 
     private void PlayMusicForScene(string sceneName)
     {
+        if (sceneName == storySceneName)
+        {
+            PlayStoryMusic();
+            return;
+        }
+
         AudioClip targetClip = null;
 
         if (sceneName == "Menu" || sceneName == "MainMenu")
@@ -66,84 +91,161 @@ public class MusicManager : MonoBehaviour
         else if (sceneName == "Game" || sceneName == "GameScene")
             targetClip = gameplayMusic;
 
-        if (targetClip == null) return;
+        if (targetClip == null)
+            return;
 
-        PlayMusic(targetClip);
+        PlayMusic(targetClip, volume);
+    }
+
+    private void PlayStoryMusic()
+    {
+        AudioClip targetClip = null;
+
+        if (storyMusic != null)
+            targetClip = storyMusic;
+        else if (useMainMenuMusicInStory && mainMenuMusic != null)
+            targetClip = mainMenuMusic;
+
+        if (targetClip != null)
+        {
+            PlayMusic(targetClip, storyVolume);
+        }
+        else
+        {
+            FadeToVolume(storyVolume);
+        }
     }
 
     public void PlayGameOverMusic()
     {
-        endGameMusicPlaying = true;
-
         if (gameOverMusic != null)
-            PlayMusic(gameOverMusic);
+            PlayMusic(gameOverMusic, volume);
     }
 
     public void PlayYouWinMusic()
     {
-        endGameMusicPlaying = true;
-
         if (youWinMusic != null)
-            PlayMusic(youWinMusic);
+            PlayMusic(youWinMusic, volume);
     }
 
     public void PlayGameplayMusic()
     {
-        endGameMusicPlaying = false;
-
         if (gameplayMusic != null)
-            PlayMusic(gameplayMusic);
+            PlayMusic(gameplayMusic, volume);
     }
 
     public void PlayMainMenuMusic()
     {
-        endGameMusicPlaying = false;
-
         if (mainMenuMusic != null)
-            PlayMusic(mainMenuMusic);
+            PlayMusic(mainMenuMusic, volume);
     }
 
-    private void PlayMusic(AudioClip targetClip)
+    private void PlayMusic(AudioClip targetClip, float targetVolume)
     {
-        if (targetClip == null) return;
+        if (targetClip == null)
+            return;
+
+        currentTargetVolume = Mathf.Clamp01(targetVolume);
 
         if (audioSource.clip == targetClip && audioSource.isPlaying)
+        {
+            FadeToVolume(currentTargetVolume);
             return;
+        }
 
         if (fadeRoutine != null)
             StopCoroutine(fadeRoutine);
 
-        fadeRoutine = StartCoroutine(SwitchMusicRoutine(targetClip));
+        fadeRoutine = StartCoroutine(SwitchMusicRoutine(targetClip, currentTargetVolume));
     }
 
-    private IEnumerator SwitchMusicRoutine(AudioClip newClip)
+    private IEnumerator SwitchMusicRoutine(AudioClip newClip, float targetVolume)
     {
-        yield return FadeOut();
+        if (audioSource.isPlaying)
+            yield return FadeOut();
 
         audioSource.clip = newClip;
         audioSource.volume = 0f;
         audioSource.Play();
 
-        yield return FadeIn();
+        yield return FadeIn(targetVolume);
     }
 
-    private IEnumerator FadeIn()
+    private void FadeToVolume(float targetVolume)
     {
+        currentTargetVolume = Mathf.Clamp01(targetVolume);
+
+        if (audioSource == null)
+            return;
+
+        if (fadeRoutine != null)
+            StopCoroutine(fadeRoutine);
+
+        if (!audioSource.isPlaying)
+        {
+            audioSource.volume = GetRealVolume(currentTargetVolume);
+            return;
+        }
+
+        fadeRoutine = StartCoroutine(FadeVolumeRoutine(currentTargetVolume));
+    }
+
+    private IEnumerator FadeVolumeRoutine(float targetVolume)
+    {
+        float startVolume = audioSource.volume;
+        float endVolume = GetRealVolume(targetVolume);
+
+        if (fadeDuration <= 0f)
+        {
+            audioSource.volume = endVolume;
+            yield break;
+        }
+
         float t = 0f;
 
         while (t < 1f)
         {
             t += Time.unscaledDeltaTime / fadeDuration;
-            audioSource.volume = Mathf.Lerp(0f, volume, t);
+            audioSource.volume = Mathf.Lerp(startVolume, endVolume, t);
             yield return null;
         }
 
-        audioSource.volume = volume;
+        audioSource.volume = endVolume;
+    }
+
+    private IEnumerator FadeIn(float targetVolume)
+    {
+        float endVolume = GetRealVolume(targetVolume);
+
+        if (fadeDuration <= 0f)
+        {
+            audioSource.volume = endVolume;
+            yield break;
+        }
+
+        float t = 0f;
+
+        while (t < 1f)
+        {
+            t += Time.unscaledDeltaTime / fadeDuration;
+            audioSource.volume = Mathf.Lerp(0f, endVolume, t);
+            yield return null;
+        }
+
+        audioSource.volume = endVolume;
     }
 
     private IEnumerator FadeOut()
     {
         float startVolume = audioSource.volume;
+
+        if (fadeDuration <= 0f)
+        {
+            audioSource.volume = 0f;
+            audioSource.Stop();
+            yield break;
+        }
+
         float t = 0f;
 
         while (t < 1f)
@@ -155,5 +257,26 @@ public class MusicManager : MonoBehaviour
 
         audioSource.volume = 0f;
         audioSource.Stop();
+    }
+
+    private float GetRealVolume(float baseVolume)
+    {
+        return Mathf.Clamp01(baseVolume * masterVolume);
+    }
+
+    public void SetMasterVolume(float value)
+    {
+        masterVolume = Mathf.Clamp01(value);
+
+        PlayerPrefs.SetFloat(musicVolumePrefsKey, masterVolume);
+        PlayerPrefs.Save();
+
+        if (audioSource != null && audioSource.isPlaying)
+            audioSource.volume = GetRealVolume(currentTargetVolume);
+    }
+
+    public float GetMasterVolume()
+    {
+        return masterVolume;
     }
 }

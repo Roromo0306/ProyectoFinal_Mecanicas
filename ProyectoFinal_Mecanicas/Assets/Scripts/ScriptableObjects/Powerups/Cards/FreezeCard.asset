@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: FreezeCard
   m_EditorClassIdentifier: 
   unlockLevel: 1
-  hudIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  hudIcon: {fileID: 2010898139, guid: e6d6dd52ee222be4280d486acb950004, type: 3}
   title: Frostbite
   description: Bullets <wave><color=#55AAFF>freeze</color></wave> enemies.
-  icon: {fileID: 0}
+  icon: {fileID: -985018241, guid: f96b90093e151054fbad060cc99a5831, type: 3}
   effects:
   - {fileID: 11400000, guid: 89f2eb0057aa8364180d307b9ae8738a, type: 2}

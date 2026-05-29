@@ -1,0 +1,3119 @@
+fileFormatVersion: 2
+guid: a0e2c5c4e19cb184685e0c4fc6d28bb6
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Sprites Separados_0
+      rect:
+        serializedVersion: 2
+        x: 1391
+        y: 2105
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54ec83521a45ec54c802b098ae23dc2f
+      internalID: -1725215402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_1
+      rect:
+        serializedVersion: 2
+        x: 1763
+        y: 2105
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88e9f75dd4a74c64d9e16b126030e7cb
+      internalID: 2081241162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_2
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 2093
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 569be869e0ff719458c3648c23da413a
+      internalID: 1325282460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_3
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 2087
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3455c0ecb75689545b2f4ad7027bfd7e
+      internalID: 1265055013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_4
+      rect:
+        serializedVersion: 2
+        x: 1355
+        y: 1973
+        width: 80
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ba29913a4b6d8c4fa5e4274b27704fa
+      internalID: 819334523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_5
+      rect:
+        serializedVersion: 2
+        x: 1763
+        y: 2093
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e13b3f339a8481488df959b6b062620
+      internalID: -611945201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_6
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 2081
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7068eb2e71d32f345b114a36295c9210
+      internalID: 209682631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_7
+      rect:
+        serializedVersion: 2
+        x: 581
+        y: 1949
+        width: 140
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f386ab68e9c92574f87ddd1c53454601
+      internalID: 2041597371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_8
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 2075
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7fc254df45d8744999ad892e5d29d4e
+      internalID: 790256079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_9
+      rect:
+        serializedVersion: 2
+        x: 1691
+        y: 1937
+        width: 152
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 792adecef2c7618438633ce783cfd306
+      internalID: 1371619315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_10
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 2069
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 344aecc4347f66c42a71d671a9a74606
+      internalID: -200532764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_11
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 2062
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a93165d46342c4a4f8b1fbe53c0d6d5d
+      internalID: -1225684452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_12
+      rect:
+        serializedVersion: 2
+        x: 947
+        y: 1937
+        width: 152
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb671e0d0fc37cf4cbe7f1eccca638c1
+      internalID: 1907142582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_13
+      rect:
+        serializedVersion: 2
+        x: 1115
+        y: 2062
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: deeffab42ac8193469b49a3f0ce11e0a
+      internalID: 408578725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_14
+      rect:
+        serializedVersion: 2
+        x: 1319
+        y: 2062
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 113b97b4a97d1464fbf68e550ff864e5
+      internalID: 211087140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_15
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 2062
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 207dab489555ea6439be3050a8e8730b
+      internalID: -1776004498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_16
+      rect:
+        serializedVersion: 2
+        x: 245
+        y: 1925
+        width: 68
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa7354475dbed304ab8b8703e66430e1
+      internalID: 1683876499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_17
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 2057
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2bb0e20ec92288c4f8df68d37cf6ca24
+      internalID: 801861018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_18
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 2057
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a548dc46b392d094095e6eed7d0d6b48
+      internalID: -2137601130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_19
+      rect:
+        serializedVersion: 2
+        x: 1283
+        y: 1949
+        width: 80
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94bc9846b1e267f42bae6eafaa900ef7
+      internalID: -822303426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_20
+      rect:
+        serializedVersion: 2
+        x: 1343
+        y: 2057
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ceb1f6719e2392e4080d85bc3c29afee
+      internalID: -7738722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_21
+      rect:
+        serializedVersion: 2
+        x: 1426
+        y: 1955
+        width: 82
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea01fc807eddb0746b87188374b112fc
+      internalID: 22056968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_22
+      rect:
+        serializedVersion: 2
+        x: 1439
+        y: 2057
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4be4a79c2bbfac9449c8d6fca0fa512f
+      internalID: -1146986872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_23
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 2021
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e92afbf38f5fab42ad1e5e2ad309f77
+      internalID: -562209197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_24
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 2021
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63beb5559ad2850428c69a7a57712535
+      internalID: -1638533408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_25
+      rect:
+        serializedVersion: 2
+        x: 556
+        y: 2015
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65b53ccca37b5d044ba066ac0dcb1c25
+      internalID: 707693808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_26
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 2015
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8212a3bf0a993b74a82ec5d9c015bb40
+      internalID: -1200099818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_27
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 2015
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69de48d728fe9e74f9cdb11402e38135
+      internalID: 1458192375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_28
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 2015
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c461e7d85c3364d448555d2c23eca8c0
+      internalID: -1986652673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_29
+      rect:
+        serializedVersion: 2
+        x: 1271
+        y: 2015
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd4ad5a3d84b56f47810a526d9588722
+      internalID: -1308505520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_30
+      rect:
+        serializedVersion: 2
+        x: 1511
+        y: 2015
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fca768d6f3d266b44be41a1255ae5953
+      internalID: -1687237619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_31
+      rect:
+        serializedVersion: 2
+        x: 1667
+        y: 2009
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ff53504f3c62d1438c833b4e5d94caf
+      internalID: -1905020238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_32
+      rect:
+        serializedVersion: 2
+        x: 1679
+        y: 2009
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 663956e0741e99c418a04f7eed04fd68
+      internalID: -951918950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_33
+      rect:
+        serializedVersion: 2
+        x: 1847
+        y: 2009
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52253cad94b72ff4896b2fdb55cf66ce
+      internalID: -877698299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_34
+      rect:
+        serializedVersion: 2
+        x: 1859
+        y: 2009
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d89e324274fd7a4ebbfd75b59244a88
+      internalID: 1539595151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_35
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 1997
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f78677a1a539c894bb3b569ad69d01ed
+      internalID: 1520432827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_36
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 1997
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82eb3ae9c7c488547a4046a7c080ebaa
+      internalID: 1619137259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_37
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1985
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6fbbc43e2059be342ae00ebf7a16479d
+      internalID: 739586481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_38
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 1985
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b45eeff9f23ebd42bc571d04575e3fc
+      internalID: 1781296321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_39
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 1985
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92c3049621f4c384fa7b065fc7c2dcc8
+      internalID: 2031396888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_40
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 1985
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51aeb56eb0db38a40b5e608fa1c3e5e7
+      internalID: 1765193696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_41
+      rect:
+        serializedVersion: 2
+        x: 1391
+        y: 1961
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3552659a09ab94a49b592dae19dfdc37
+      internalID: 1862295371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_42
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 1949
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fc2c70f0f4512b4898d0027795cebd0
+      internalID: 775419756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_43
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 1949
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e35c0d380670f2e408a0bf22f0e75515
+      internalID: -1949459527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_44
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1937
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2777d901f495d0c4492cf2768da466da
+      internalID: -918387063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_45
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 1937
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40473ab58d1f81a4b90dc0ef0976f9a0
+      internalID: -1575424981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_46
+      rect:
+        serializedVersion: 2
+        x: 1319
+        y: 1937
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d616b4c73d416543a34bdc50990f165
+      internalID: -1074345808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_47
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 1925
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3780c8191e434c549989527ffc4ea970
+      internalID: -11129292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_48
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 1925
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09bdce1667269aa48aeac7c8d3aa2e81
+      internalID: 413826739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_49
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1925
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 482f9fc46d4cae44eaafd6de36f4f24e
+      internalID: 1904332327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_50
+      rect:
+        serializedVersion: 2
+        x: 1763
+        y: 1925
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1ec98603a9864947807e5d40510fedf
+      internalID: 796266911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_51
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 1913
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 826968db5d15ed94f9a84f2cdcdf2c5a
+      internalID: -337488349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_52
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 1913
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f103e1ef294e284693cea76e6435bf6
+      internalID: 34006178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_53
+      rect:
+        serializedVersion: 2
+        x: 1763
+        y: 1913
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3774e990ac474d489f595b5dbb8b335
+      internalID: -1503336674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_54
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 1589
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b4e74aba122e854a856e7929c8c1dd6
+      internalID: -1592991508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_55
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 1426
+        width: 152
+        height: 178
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b055338a00c7844b813362598a7d711
+      internalID: 1790154544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_56
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 1595
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d66971303588a0546978958d3515c519
+      internalID: 63941223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_57
+      rect:
+        serializedVersion: 2
+        x: 1391
+        y: 1589
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 992077549f9a7d740940f1858d65e4a6
+      internalID: 1401148084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_58
+      rect:
+        serializedVersion: 2
+        x: 1655
+        y: 1469
+        width: 200
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5294573d1620a9c43a7fca414d00b1df
+      internalID: 1767148307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_59
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 1409
+        width: 200
+        height: 176
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3b1e2e9c613d9d4aabf2dcc5ee1453b
+      internalID: -162216275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_60
+      rect:
+        serializedVersion: 2
+        x: 947
+        y: 1415
+        width: 152
+        height: 176
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 689866efdece0a342b8cde35d388d9c1
+      internalID: -1355025972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_61
+      rect:
+        serializedVersion: 2
+        x: 1391
+        y: 1577
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5de8610423a7bdb4f8661573468a2478
+      internalID: -1342931700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_62
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 1565
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a65643ff3d863a4f81354114e85b63f
+      internalID: -158110885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_63
+      rect:
+        serializedVersion: 2
+        x: 1313
+        y: 1421
+        width: 164
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 368d93cb72e498645836af68c18ee690
+      internalID: 664039421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_64
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 1511
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a66aa49ffcb6e1418d1c10bcf2b5bcb
+      internalID: -1746235434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_65
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 1511
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c12a97bb8d147b46a5e73ca9bc44426
+      internalID: -1200923349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_66
+      rect:
+        serializedVersion: 2
+        x: 1631
+        y: 1505
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a81ef1afc2b59cf439df11117c9c0e59
+      internalID: -122584506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_67
+      rect:
+        serializedVersion: 2
+        x: 1643
+        y: 1505
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db43be9360dbb2244a9487b2509bd928
+      internalID: -1842483762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_68
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 1499
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 814f24b47b5030245a420a064253dc5b
+      internalID: -1188666870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_69
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 1499
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f92721f7503f9de468e8b3014318b3a9
+      internalID: -1339890932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_70
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 1499
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1ac82494000a1a40a52076e6fd642e3
+      internalID: -1797190128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_71
+      rect:
+        serializedVersion: 2
+        x: 743
+        y: 1499
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d7b423027d257e43bbb79c9546966f1
+      internalID: -1773760532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_72
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 1493
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09366ee7dddf28444bc707563d2121c7
+      internalID: 1547714346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_73
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 1493
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e29990b88c9adbd4abbfcb1dfeb0c38d
+      internalID: 1328965475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_74
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 1493
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d48f629ba5880b44a848302a8f18b8b1
+      internalID: 331925633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_75
+      rect:
+        serializedVersion: 2
+        x: 1115
+        y: 1493
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9bfeba52ae9a8f4d96a0eea57cf6a9c
+      internalID: 407964289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_76
+      rect:
+        serializedVersion: 2
+        x: 1289
+        y: 1493
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69d33ac1b2e6644409d290e9928b6191
+      internalID: -1066637052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_77
+      rect:
+        serializedVersion: 2
+        x: 1301
+        y: 1493
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01508e11e761fd840828b2885c02df7a
+      internalID: 1488637851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_78
+      rect:
+        serializedVersion: 2
+        x: 1481
+        y: 1493
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5d7984c85ce4bf4bb1a2e4726a1b69d
+      internalID: 1946702780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_79
+      rect:
+        serializedVersion: 2
+        x: 1493
+        y: 1493
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb62e938a78064d43a982db95d232a33
+      internalID: -539445482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_80
+      rect:
+        serializedVersion: 2
+        x: 1121
+        y: 1469
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e94446943e5ab94da9b89253c602668
+      internalID: -1679871850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_81
+      rect:
+        serializedVersion: 2
+        x: 1853
+        y: 1469
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a864cf8836d358a4a854af21b67b1ed6
+      internalID: -139191472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_82
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 1457
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b62c1003125f5e746b053f3cab2b952f
+      internalID: 1828271226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_83
+      rect:
+        serializedVersion: 2
+        x: 1691
+        y: 1457
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce4027c759a6f1947ab49b3e0c6abd74
+      internalID: -1323760630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_84
+      rect:
+        serializedVersion: 2
+        x: 1691
+        y: 1445
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f644ef546da571446a75bc2af7f1dd90
+      internalID: 1572022164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_85
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 1415
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac16087a373a3ce4d996c870f9d7e1fe
+      internalID: 96684159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_86
+      rect:
+        serializedVersion: 2
+        x: 1391
+        y: 1409
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8052708510f54846b74ab283c2b92cf
+      internalID: -1547938857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_87
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 1397
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da3eb8fc88328654d909e9ea95d6886c
+      internalID: 1493384393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_88
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 1403
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b82514fde7f41c54d8c954fc9e4d48de
+      internalID: -869105255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_89
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 1403
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4690958f1ad4c2944a54da10f43ac30e
+      internalID: 1524369374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_90
+      rect:
+        serializedVersion: 2
+        x: 1391
+        y: 1397
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0eb18c0c4355cee4e9805d8658019a88
+      internalID: 1344703383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_91
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 1091
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 108afca997458594a8935aa7b7a4ce41
+      internalID: -198526611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_92
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 929
+        width: 177
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30deaba974dbe1041875b4d235715219
+      internalID: 784424894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_93
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 1078
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 994238b6ff594b64891864136a269969
+      internalID: -1693324988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_94
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 1078
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b388167c97778648ad8a9df8f52d746
+      internalID: -1098863101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_95
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 1078
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1d557da2b9570a4892ec123867adf00
+      internalID: -1209711015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_96
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 1073
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5839fdf3af44f5f4287bcc808e1e4154
+      internalID: -1774983375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_97
+      rect:
+        serializedVersion: 2
+        x: 1078
+        y: 1073
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30640d59e425497449d2f685ea95f88a
+      internalID: -1174665501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_98
+      rect:
+        serializedVersion: 2
+        x: 1337
+        y: 1073
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6309e05358462e54d834625e473e2b4d
+      internalID: 2028849982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_99
+      rect:
+        serializedVersion: 2
+        x: 1451
+        y: 1073
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5424d14b39c7b54b820c1b090b9325e
+      internalID: 2124416110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_100
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 1007
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4cc15712095d8844a0da2ffb65554b7
+      internalID: 884174974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_101
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 1007
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5cbd58bc85e36d4e95c6384f4b8c96b
+      internalID: -410031188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_102
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 1007
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a674e115776f19c44a59f941005a6821
+      internalID: -984238287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_103
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 1007
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b38f67ef0f2021e4286658b0aa82dadc
+      internalID: 482285671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_104
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 947
+        width: 146
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38e467e62f60c004a9030ccf607c2c88
+      internalID: -584233783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_105
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 922
+        width: 122
+        height: 147
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4f97cb6bf4fe714eb4ccc2e54fbbddc
+      internalID: -1137651750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_106
+      rect:
+        serializedVersion: 2
+        x: 1337
+        y: 922
+        width: 122
+        height: 147
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2de98fc924d8a764b9116a975763f929
+      internalID: -2057395518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_107
+      rect:
+        serializedVersion: 2
+        x: 712
+        y: 995
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69fbfee529ef7bc4a9d62b0fc685133c
+      internalID: -271542494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_108
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 995
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3150917680f825347a7047b759cbb2a5
+      internalID: -488305455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_109
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 989
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4ffd7dd3c4d26e4d81225561a56cee0
+      internalID: -765554131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_110
+      rect:
+        serializedVersion: 2
+        x: 953
+        y: 989
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1bd3b08e038dc6489552293f2d6876d
+      internalID: -509234834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_111
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 989
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e662d6da5b0abf54f9b47b0ef3788ea0
+      internalID: -588396345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_112
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 989
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a00e64ad76e80d14eae56b9ba08cd601
+      internalID: -739615799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_113
+      rect:
+        serializedVersion: 2
+        x: 1313
+        y: 989
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42fe71c8c93f1c54abfaea25d4eea0ee
+      internalID: 585737383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_114
+      rect:
+        serializedVersion: 2
+        x: 1325
+        y: 989
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e036f6dd90634ee4aac1b779a36c16f2
+      internalID: -957739649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_115
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 989
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e4d5e64afc87dc4da7d84df89e9d339
+      internalID: -454989619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_116
+      rect:
+        serializedVersion: 2
+        x: 1475
+        y: 989
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e57b90bcfc0585438154c6e461070cf
+      internalID: 781129506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_117
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 947
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef5887f01460bb64c84037001a8a4186
+      internalID: 1296753194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_118
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 935
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78fe74c2bbb5c0a478235754dcad83f3
+      internalID: -2000037642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_119
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 917
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5a8c9295819c1a49932ebea4d2e2dfa
+      internalID: -673964110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_120
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 922
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ce8c3019e5b7b446a0ec1cea5c5410e
+      internalID: 834235664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_121
+      rect:
+        serializedVersion: 2
+        x: 989
+        y: 917
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7b36912b075e7c4dad6dcb29d9926f5
+      internalID: 1299063015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_122
+      rect:
+        serializedVersion: 2
+        x: 1055
+        y: 917
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 715a91f7929c42b4b97fec41dafbc4c3
+      internalID: 985709856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_123
+      rect:
+        serializedVersion: 2
+        x: 1361
+        y: 917
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bffff2d3b8714f6409d0ffaa41cfce84
+      internalID: 369696304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_124
+      rect:
+        serializedVersion: 2
+        x: 1426
+        y: 917
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3209bf7428003194f826e709bb5b5eeb
+      internalID: 279657229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_125
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 905
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 403d61e693b496440b8d18544889f1df
+      internalID: 654030785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_126
+      rect:
+        serializedVersion: 2
+        x: 977
+        y: 905
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4173c81034c3d764b971eb9c0efd0d81
+      internalID: 825735776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_127
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 911
+        width: 14
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1850b0fed5c3804a9b426f8fd2255d5
+      internalID: -969084763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_128
+      rect:
+        serializedVersion: 2
+        x: 1067
+        y: 905
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0b7100d615f4b040bd59425f2876bfa
+      internalID: 613469579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_129
+      rect:
+        serializedVersion: 2
+        x: 1348
+        y: 905
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 553f5430e39909044a74af4a1400f9f7
+      internalID: -1208282982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_130
+      rect:
+        serializedVersion: 2
+        x: 1391
+        y: 911
+        width: 14
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a496e6216f645eb45847bc8c39dd9d82
+      internalID: 879596990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_131
+      rect:
+        serializedVersion: 2
+        x: 1439
+        y: 905
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7058857feb23f9a4191d422cca32e1e3
+      internalID: 1352579548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_132
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 689
+        width: 56
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16c152b8001633d439eb1ecbd9b8860c
+      internalID: 2128785231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_133
+      rect:
+        serializedVersion: 2
+        x: 593
+        y: 652
+        width: 105
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78b2090b206046c44a68cb274f32025c
+      internalID: -1607197607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_134
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 629
+        width: 110
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc64b860dc5be3147a8e14238ef3096f
+      internalID: 1517427903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites Separados_135
+      rect:
+        serializedVersion: 2
+        x: 1337
+        y: 629
+        width: 111
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 810f227bd2c3f97488087616ce3f7e4b
+      internalID: -836082647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Sprites Separados_0: -1725215402
+      Sprites Separados_1: 2081241162
+      Sprites Separados_10: -200532764
+      Sprites Separados_100: 884174974
+      Sprites Separados_101: -410031188
+      Sprites Separados_102: -984238287
+      Sprites Separados_103: 482285671
+      Sprites Separados_104: -584233783
+      Sprites Separados_105: -1137651750
+      Sprites Separados_106: -2057395518
+      Sprites Separados_107: -271542494
+      Sprites Separados_108: -488305455
+      Sprites Separados_109: -765554131
+      Sprites Separados_11: -1225684452
+      Sprites Separados_110: -509234834
+      Sprites Separados_111: -588396345
+      Sprites Separados_112: -739615799
+      Sprites Separados_113: 585737383
+      Sprites Separados_114: -957739649
+      Sprites Separados_115: -454989619
+      Sprites Separados_116: 781129506
+      Sprites Separados_117: 1296753194
+      Sprites Separados_118: -2000037642
+      Sprites Separados_119: -673964110
+      Sprites Separados_12: 1907142582
+      Sprites Separados_120: 834235664
+      Sprites Separados_121: 1299063015
+      Sprites Separados_122: 985709856
+      Sprites Separados_123: 369696304
+      Sprites Separados_124: 279657229
+      Sprites Separados_125: 654030785
+      Sprites Separados_126: 825735776
+      Sprites Separados_127: -969084763
+      Sprites Separados_128: 613469579
+      Sprites Separados_129: -1208282982
+      Sprites Separados_13: 408578725
+      Sprites Separados_130: 879596990
+      Sprites Separados_131: 1352579548
+      Sprites Separados_132: 2128785231
+      Sprites Separados_133: -1607197607
+      Sprites Separados_134: 1517427903
+      Sprites Separados_135: -836082647
+      Sprites Separados_14: 211087140
+      Sprites Separados_15: -1776004498
+      Sprites Separados_16: 1683876499
+      Sprites Separados_17: 801861018
+      Sprites Separados_18: -2137601130
+      Sprites Separados_19: -822303426
+      Sprites Separados_2: 1325282460
+      Sprites Separados_20: -7738722
+      Sprites Separados_21: 22056968
+      Sprites Separados_22: -1146986872
+      Sprites Separados_23: -562209197
+      Sprites Separados_24: -1638533408
+      Sprites Separados_25: 707693808
+      Sprites Separados_26: -1200099818
+      Sprites Separados_27: 1458192375
+      Sprites Separados_28: -1986652673
+      Sprites Separados_29: -1308505520
+      Sprites Separados_3: 1265055013
+      Sprites Separados_30: -1687237619
+      Sprites Separados_31: -1905020238
+      Sprites Separados_32: -951918950
+      Sprites Separados_33: -877698299
+      Sprites Separados_34: 1539595151
+      Sprites Separados_35: 1520432827
+      Sprites Separados_36: 1619137259
+      Sprites Separados_37: 739586481
+      Sprites Separados_38: 1781296321
+      Sprites Separados_39: 2031396888
+      Sprites Separados_4: 819334523
+      Sprites Separados_40: 1765193696
+      Sprites Separados_41: 1862295371
+      Sprites Separados_42: 775419756
+      Sprites Separados_43: -1949459527
+      Sprites Separados_44: -918387063
+      Sprites Separados_45: -1575424981
+      Sprites Separados_46: -1074345808
+      Sprites Separados_47: -11129292
+      Sprites Separados_48: 413826739
+      Sprites Separados_49: 1904332327
+      Sprites Separados_5: -611945201
+      Sprites Separados_50: 796266911
+      Sprites Separados_51: -337488349
+      Sprites Separados_52: 34006178
+      Sprites Separados_53: -1503336674
+      Sprites Separados_54: -1592991508
+      Sprites Separados_55: 1790154544
+      Sprites Separados_56: 63941223
+      Sprites Separados_57: 1401148084
+      Sprites Separados_58: 1767148307
+      Sprites Separados_59: -162216275
+      Sprites Separados_6: 209682631
+      Sprites Separados_60: -1355025972
+      Sprites Separados_61: -1342931700
+      Sprites Separados_62: -158110885
+      Sprites Separados_63: 664039421
+      Sprites Separados_64: -1746235434
+      Sprites Separados_65: -1200923349
+      Sprites Separados_66: -122584506
+      Sprites Separados_67: -1842483762
+      Sprites Separados_68: -1188666870
+      Sprites Separados_69: -1339890932
+      Sprites Separados_7: 2041597371
+      Sprites Separados_70: -1797190128
+      Sprites Separados_71: -1773760532
+      Sprites Separados_72: 1547714346
+      Sprites Separados_73: 1328965475
+      Sprites Separados_74: 331925633
+      Sprites Separados_75: 407964289
+      Sprites Separados_76: -1066637052
+      Sprites Separados_77: 1488637851
+      Sprites Separados_78: 1946702780
+      Sprites Separados_79: -539445482
+      Sprites Separados_8: 790256079
+      Sprites Separados_80: -1679871850
+      Sprites Separados_81: -139191472
+      Sprites Separados_82: 1828271226
+      Sprites Separados_83: -1323760630
+      Sprites Separados_84: 1572022164
+      Sprites Separados_85: 96684159
+      Sprites Separados_86: -1547938857
+      Sprites Separados_87: 1493384393
+      Sprites Separados_88: -869105255
+      Sprites Separados_89: 1524369374
+      Sprites Separados_9: 1371619315
+      Sprites Separados_90: 1344703383
+      Sprites Separados_91: -198526611
+      Sprites Separados_92: 784424894
+      Sprites Separados_93: -1693324988
+      Sprites Separados_94: -1098863101
+      Sprites Separados_95: -1209711015
+      Sprites Separados_96: -1774983375
+      Sprites Separados_97: -1174665501
+      Sprites Separados_98: 2028849982
+      Sprites Separados_99: 2124416110
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: SpreadShotCard
   m_EditorClassIdentifier: 
   unlockLevel: 1
-  hudIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  hudIcon: {fileID: -633189438, guid: e6d6dd52ee222be4280d486acb950004, type: 3}
   title: Triple Shot
   description: Fire <wave><color=#FFD700>3 bullets</color></wave> in a <color=#FF9BFF>spread</color>.
-  icon: {fileID: 0}
+  icon: {fileID: 1504579729, guid: f96b90093e151054fbad060cc99a5831, type: 3}
   effects:
   - {fileID: 11400000, guid: 31138c233fc39334f84229c220dcd29c, type: 2}

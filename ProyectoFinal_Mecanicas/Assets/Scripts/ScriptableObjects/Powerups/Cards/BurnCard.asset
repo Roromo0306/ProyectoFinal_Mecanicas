@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: BurnCard
   m_EditorClassIdentifier: 
   unlockLevel: 1
-  hudIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  hudIcon: {fileID: 523082251, guid: e6d6dd52ee222be4280d486acb950004, type: 3}
   title: Hot Streak
   description: Bullets <wave><color=#FF8844>burn</color></wave> enemies over time.
-  icon: {fileID: 0}
+  icon: {fileID: 1064128210, guid: f96b90093e151054fbad060cc99a5831, type: 3}
   effects:
   - {fileID: 11400000, guid: 23802701b64ec38469fd31e6d09f652b, type: 2}

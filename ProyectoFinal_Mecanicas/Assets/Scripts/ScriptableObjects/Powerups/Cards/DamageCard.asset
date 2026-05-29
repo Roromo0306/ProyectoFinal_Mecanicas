@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: DamageCard
   m_EditorClassIdentifier: 
   unlockLevel: 4
-  hudIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  hudIcon: {fileID: -816998407, guid: e6d6dd52ee222be4280d486acb950004, type: 3}
   title: Heavy Hit
   description: Increase your <wave><color=#FF5555>damage</color></wave>.
-  icon: {fileID: 0}
+  icon: {fileID: -1995945668, guid: f96b90093e151054fbad060cc99a5831, type: 3}
   effects:
   - {fileID: 11400000, guid: ca98f70ba60570b4591465b75b8610ba, type: 2}

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: SupportPetCard
   m_EditorClassIdentifier: 
   unlockLevel: 1
-  hudIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  hudIcon: {fileID: 856209626, guid: e6d6dd52ee222be4280d486acb950004, type: 3}
   title: Lucky Guardian
   description: Summon a pet that <wave><color=#55FFAA>improves your health and speed</color></wave>.
-  icon: {fileID: 0}
+  icon: {fileID: 809032287, guid: f96b90093e151054fbad060cc99a5831, type: 3}
   effects:
   - {fileID: 11400000, guid: 0cff230ecc164ff4faf0ca15f4d100e3, type: 2}

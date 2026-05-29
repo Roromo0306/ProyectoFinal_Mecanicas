@@ -29,6 +29,11 @@ public class SFXManager : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float volume = 0.8f;
 
+    [Range(0f, 1f)]
+    [SerializeField] private float masterVolume = 1f;
+
+    [SerializeField] private string sfxVolumePrefsKey = "MasterAudioVolume";
+
     [Header("Pool Settings")]
     [SerializeField] private int initialPoolSize = 12;
     [SerializeField] private int maxPoolSize = 32;
@@ -68,6 +73,8 @@ public class SFXManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        masterVolume = PlayerPrefs.GetFloat(sfxVolumePrefsKey, masterVolume);
+
         CreateInitialPool();
     }
 
@@ -100,7 +107,7 @@ public class SFXManager : MonoBehaviour
         source.playOnAwake = false;
         source.loop = false;
         source.spatialBlend = 0f;
-        source.volume = volume;
+        source.volume = GetRealVolume(volume);
         source.pitch = 1f;
     }
 
@@ -173,11 +180,44 @@ public class SFXManager : MonoBehaviour
         source.Stop();
 
         source.clip = clip;
-        source.volume = Mathf.Clamp01(customVolume);
+        source.volume = GetRealVolume(customVolume);
         source.pitch = Random.Range(safeMinPitch, safeMaxPitch);
         source.spatialBlend = 0f;
         source.loop = false;
         source.Play();
+    }
+
+    private float GetRealVolume(float baseVolume)
+    {
+        return Mathf.Clamp01(baseVolume * masterVolume);
+    }
+
+    public void SetMasterVolume(float value)
+    {
+        float previousMasterVolume = masterVolume;
+
+        masterVolume = Mathf.Clamp01(value);
+
+        PlayerPrefs.SetFloat(sfxVolumePrefsKey, masterVolume);
+        PlayerPrefs.Save();
+
+        for (int i = 0; i < audioSourcePool.Count; i++)
+        {
+            AudioSource source = audioSourcePool[i];
+
+            if (source == null || !source.isPlaying)
+                continue;
+
+            if (previousMasterVolume > 0.001f)
+                source.volume = Mathf.Clamp01((source.volume / previousMasterVolume) * masterVolume);
+            else
+                source.volume = GetRealVolume(volume);
+        }
+    }
+
+    public float GetMasterVolume()
+    {
+        return masterVolume;
     }
 
     public void PlayShoot()

@@ -49,12 +49,25 @@ public class FinalBossHealth : MonoBehaviour, IDamageable, IHealthStatusProvider
 
         isDead = true;
 
+        StopBossAttacks();
+
         PublishHealthChanged();
 
         if (showDebugLogs)
             Debug.Log("BOSS FINAL DERROTADO");
 
         Destroy(gameObject);
+    }
+
+    private void StopBossAttacks()
+    {
+        BossLaserAttack[] laserAttacks = GetComponentsInChildren<BossLaserAttack>(true);
+
+        for (int i = 0; i < laserAttacks.Length; i++)
+        {
+            if (laserAttacks[i] != null)
+                laserAttacks[i].StopAttackAndClearLasers();
+        }
     }
 
     private void ResetHealth()

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: FireRateCard
   m_EditorClassIdentifier: 
   unlockLevel: 1
-  hudIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  hudIcon: {fileID: -1177900917, guid: e6d6dd52ee222be4280d486acb950004, type: 3}
   title: Quick Trigger
   description: Reduce <wave><color=#FFD700>time between shots</color></wave>.
-  icon: {fileID: 0}
+  icon: {fileID: 397198287, guid: f96b90093e151054fbad060cc99a5831, type: 3}
   effects:
   - {fileID: 11400000, guid: ecae57dc0b2a36749b199925246a8c23, type: 2}
