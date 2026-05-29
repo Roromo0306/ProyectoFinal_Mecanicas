@@ -3,9 +3,16 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
+    private const int AreaHitBufferSize = 64;
+    private const int MovementHitBufferSize = 16;
+
     [Header("Movement")]
     [SerializeField] private float speed = 10f;
     [SerializeField] private float lifetime = 3f;
+
+    [Header("Manual Collision")]
+    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private float collisionRadius = 0.12f;
 
     [Header("Hit Feedback")]
     [SerializeField] private float hitKnockbackForce = 3f;
@@ -28,6 +35,14 @@ public class BulletController : MonoBehaviour
     private bool isReleased = false;
 
     private readonly HashSet<GameObject> hitRoots = new HashSet<GameObject>();
+    private readonly Collider2D[] areaHitsBuffer = new Collider2D[AreaHitBufferSize];
+    private readonly RaycastHit2D[] movementHitsBuffer = new RaycastHit2D[MovementHitBufferSize];
+
+    private void Awake()
+    {
+        if (enemyLayer.value == 0)
+            enemyLayer = LayerMask.GetMask("Enemy");
+    }
 
     public void Init(BulletRuntimeData runtimeData)
     {
@@ -43,6 +58,8 @@ public class BulletController : MonoBehaviour
         isReleased = false;
 
         hitRoots.Clear();
+        ClearAreaBuffer();
+        ClearMovementBuffer();
     }
 
     public void Init(
@@ -94,7 +111,13 @@ public class BulletController : MonoBehaviour
         if (!isInitialized || isReleased)
             return;
 
-        transform.position += data.direction * speed * Time.deltaTime;
+        Vector3 startPosition = transform.position;
+        Vector3 movement = data.direction * speed * Time.deltaTime;
+
+        CheckManualHits(startPosition, movement);
+
+        if (!isReleased)
+            transform.position = startPosition + movement;
 
         lifetimeTimer -= Time.deltaTime;
 
@@ -102,27 +125,84 @@ public class BulletController : MonoBehaviour
             ReleaseToPool();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void CheckManualHits(Vector3 startPosition, Vector3 movement)
     {
-        if (!isInitialized || isReleased)
+        if (isReleased)
             return;
 
-        HandleHit(collision.gameObject);
+        if (enemyLayer.value == 0)
+            return;
+
+        float distance = movement.magnitude;
+
+        if (distance <= 0.001f)
+        {
+            CheckOverlapAtCurrentPosition();
+            return;
+        }
+
+        int hitCount = Physics2D.CircleCastNonAlloc(
+            startPosition,
+            collisionRadius,
+            movement.normalized,
+            movementHitsBuffer,
+            distance,
+            enemyLayer
+        );
+
+        ProcessMovementHits(hitCount);
+        ClearUsedMovementBufferSlots(hitCount);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void CheckOverlapAtCurrentPosition()
     {
-        if (!isInitialized || isReleased)
-            return;
+        int hitCount = Physics2D.OverlapCircleNonAlloc(
+            transform.position,
+            collisionRadius,
+            areaHitsBuffer,
+            enemyLayer
+        );
 
-        HandleHit(collision.gameObject);
+        for (int i = 0; i < hitCount; i++)
+        {
+            if (isReleased)
+                break;
+
+            Collider2D hit = areaHitsBuffer[i];
+
+            if (hit == null)
+                continue;
+
+            HandleHit(hit.gameObject);
+        }
+
+        ClearUsedAreaBufferSlots(hitCount);
+    }
+
+    private void ProcessMovementHits(int hitCount)
+    {
+        for (int i = 0; i < hitCount; i++)
+        {
+            if (isReleased)
+                break;
+
+            Collider2D hitCollider = movementHitsBuffer[i].collider;
+
+            if (hitCollider == null)
+                continue;
+
+            HandleHit(hitCollider.gameObject);
+        }
     }
 
     private void HandleHit(GameObject hitObject)
     {
-        GameObject enemyRoot = GetEnemyRoot(hitObject);
+        if (!isInitialized || isReleased)
+            return;
 
-        if (!IsValidEnemyRoot(enemyRoot))
+        GameObject enemyRoot = CombatTargetFinder.GetDamageableRoot(hitObject);
+
+        if (!CombatDamageService.IsValidTarget(enemyRoot))
             return;
 
         if (hitRoots.Contains(enemyRoot))
@@ -144,7 +224,7 @@ public class BulletController : MonoBehaviour
 
     private void ApplyDirectHit(GameObject enemyRoot)
     {
-        if (!IsValidEnemyRoot(enemyRoot))
+        if (!CombatDamageService.IsValidTarget(enemyRoot))
             return;
 
         ApplyStatuses(enemyRoot);
@@ -152,98 +232,71 @@ public class BulletController : MonoBehaviour
         if (data.hasExplosion)
             Explode(enemyRoot);
 
-        // IMPORTANTE:
-        // El feedback va ANTES del daño.
-        // Si el daño mata al enemigo, el pooling lo puede desactivar.
-        // Si intentamos hacer feedback después, Unity puede lanzar error.
-        ApplyHitFeedback(enemyRoot);
+        CombatDamageService.TryApplyHitFeedback(
+            enemyRoot,
+            transform.position,
+            hitKnockbackForce
+        );
 
-        DamageEnemy(enemyRoot, data.damage);
-    }
-
-    private void ResolvePierceAndBounce(GameObject nextBounceTarget)
-    {
-        remainingPierceHits--;
-
-        if (IsValidEnemyRoot(nextBounceTarget) && remainingBounces > 0)
-        {
-            remainingBounces--;
-            data.direction = BulletRuntimeData.NormalizeDirection(nextBounceTarget.transform.position - transform.position);
-            return;
-        }
-
-        if (remainingPierceHits > 0)
-            return;
-
-        ReleaseToPool();
-    }
-
-    private GameObject GetEnemyRoot(GameObject obj)
-    {
-        return CombatTargetFinder.GetDamageableRoot(obj);
-    }
-
-    private bool IsValidEnemyRoot(GameObject enemyRoot)
-    {
-        if (enemyRoot == null)
-            return false;
-
-        if (!enemyRoot.activeInHierarchy)
-            return false;
-
-        if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IHealthStatusProvider healthStatus))
-        {
-            if (healthStatus.IsDead)
-                return false;
-        }
-
-        return true;
-    }
-
-    private void DamageEnemy(GameObject enemyRoot, float amount)
-    {
-        if (!IsValidEnemyRoot(enemyRoot))
-            return;
-
-        if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IDamageable damageable))
-            damageable.TakeDamage(amount);
+        CombatDamageService.TryDamage(enemyRoot, data.damage);
     }
 
     private void ApplyStatuses(GameObject enemyRoot)
     {
-        if (!IsValidEnemyRoot(enemyRoot))
+        if (!CombatDamageService.IsValidTarget(enemyRoot))
             return;
 
-        if (data.hasFreeze && CombatTargetFinder.TryGetOnRoot(enemyRoot, out IFreezable freezable))
-            freezable.ApplyFreeze(data.freezeDuration, data.freezeSlowMultiplier);
+        if (data.hasFreeze)
+        {
+            CombatDamageService.TryApplyFreeze(
+                enemyRoot,
+                data.freezeDuration,
+                data.freezeSlowMultiplier
+            );
+        }
 
-        if (!IsValidEnemyRoot(enemyRoot))
+        if (!CombatDamageService.IsValidTarget(enemyRoot))
             return;
 
-        if (data.hasBurn && CombatTargetFinder.TryGetOnRoot(enemyRoot, out IBurnable burnable))
-            burnable.ApplyBurn(data.burnDuration, data.burnTickDamage, data.burnTickInterval);
+        if (data.hasBurn)
+        {
+            CombatDamageService.TryApplyBurn(
+                enemyRoot,
+                data.burnDuration,
+                data.burnTickDamage,
+                data.burnTickInterval
+            );
+        }
     }
 
     private void Explode(GameObject mainTarget)
     {
-        if (!IsValidEnemyRoot(mainTarget))
+        if (!CombatDamageService.IsValidTarget(mainTarget))
             return;
 
         Vector3 explosionPosition = mainTarget.transform.position;
 
         SpawnExplosionParticle(explosionPosition);
 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(explosionPosition, data.explosionRadius);
+        int hitCount = Physics2D.OverlapCircleNonAlloc(
+            explosionPosition,
+            data.explosionRadius,
+            areaHitsBuffer,
+            enemyLayer
+        );
+
         float explosionDamage = data.damage * data.explosionDamageMultiplier;
 
-        foreach (Collider2D hit in hits)
+        for (int i = 0; i < hitCount; i++)
         {
+            Collider2D hit = areaHitsBuffer[i];
+
             if (hit == null)
                 continue;
 
-            GameObject enemyRoot = GetEnemyRoot(hit.gameObject);
+            GameObject enemyRoot = CombatTargetFinder.GetDamageableRoot(hit.gameObject);
 
-            if (!IsValidEnemyRoot(enemyRoot))
+            if (!CombatDamageService.IsValidTarget(enemyRoot))
                 continue;
 
             if (enemyRoot == mainTarget)
@@ -251,28 +304,37 @@ public class BulletController : MonoBehaviour
 
             ApplyStatuses(enemyRoot);
 
-            if (!IsValidEnemyRoot(enemyRoot))
+            if (!CombatDamageService.IsValidTarget(enemyRoot))
                 continue;
 
-            DamageEnemy(enemyRoot, explosionDamage);
+            CombatDamageService.TryDamage(enemyRoot, explosionDamage);
         }
+
+        ClearUsedAreaBufferSlots(hitCount);
     }
 
     private GameObject FindNextEnemy(GameObject currentTarget)
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.bounceSearchRadius);
+        int hitCount = Physics2D.OverlapCircleNonAlloc(
+            transform.position,
+            data.bounceSearchRadius,
+            areaHitsBuffer,
+            enemyLayer
+        );
 
         GameObject closestEnemy = null;
         float closestSqrDistance = float.MaxValue;
 
-        foreach (Collider2D hit in hits)
+        for (int i = 0; i < hitCount; i++)
         {
+            Collider2D hit = areaHitsBuffer[i];
+
             if (hit == null)
                 continue;
 
-            GameObject enemyRoot = GetEnemyRoot(hit.gameObject);
+            GameObject enemyRoot = CombatTargetFinder.GetDamageableRoot(hit.gameObject);
 
-            if (!IsValidEnemyRoot(enemyRoot))
+            if (!CombatDamageService.IsValidTarget(enemyRoot))
                 continue;
 
             if (enemyRoot == currentTarget)
@@ -290,16 +352,26 @@ public class BulletController : MonoBehaviour
             }
         }
 
+        ClearUsedAreaBufferSlots(hitCount);
+
         return closestEnemy;
     }
 
-    private void ApplyHitFeedback(GameObject enemyRoot)
+    private void ResolvePierceAndBounce(GameObject nextBounceTarget)
     {
-        if (!IsValidEnemyRoot(enemyRoot))
+        remainingPierceHits--;
+
+        if (CombatDamageService.IsValidTarget(nextBounceTarget) && remainingBounces > 0)
+        {
+            remainingBounces--;
+            data.direction = BulletRuntimeData.NormalizeDirection(nextBounceTarget.transform.position - transform.position);
+            return;
+        }
+
+        if (remainingPierceHits > 0)
             return;
 
-        if (CombatTargetFinder.TryGetOnRoot(enemyRoot, out IHitFeedbackReceiver feedbackReceiver))
-            feedbackReceiver.ApplyBulletHitFeedback(transform.position, hitKnockbackForce);
+        ReleaseToPool();
     }
 
     private void SpawnHitParticle(Vector3 position)
@@ -340,7 +412,33 @@ public class BulletController : MonoBehaviour
         isInitialized = false;
 
         hitRoots.Clear();
+        ClearAreaBuffer();
+        ClearMovementBuffer();
 
         BulletObjectPool.Release(gameObject);
+    }
+
+    private void ClearUsedAreaBufferSlots(int usedCount)
+    {
+        for (int i = 0; i < usedCount; i++)
+            areaHitsBuffer[i] = null;
+    }
+
+    private void ClearAreaBuffer()
+    {
+        for (int i = 0; i < areaHitsBuffer.Length; i++)
+            areaHitsBuffer[i] = null;
+    }
+
+    private void ClearUsedMovementBufferSlots(int usedCount)
+    {
+        for (int i = 0; i < usedCount; i++)
+            movementHitsBuffer[i] = default;
+    }
+
+    private void ClearMovementBuffer()
+    {
+        for (int i = 0; i < movementHitsBuffer.Length; i++)
+            movementHitsBuffer[i] = default;
     }
 }

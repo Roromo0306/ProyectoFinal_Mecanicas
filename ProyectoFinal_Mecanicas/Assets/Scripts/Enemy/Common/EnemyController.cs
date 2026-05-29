@@ -2,13 +2,22 @@ using UnityEngine;
 
 public class EnemyController
 {
+    private const int SeparationBufferSize = 16;
+
     private Transform enemyTransform;
     private Transform playerTransform;
     private SpriteRenderer spriteRenderer;
+    private EnemyHealthSystem cachedHealth;
+
+    private readonly Collider2D[] separationHitsBuffer = new Collider2D[SeparationBufferSize];
 
     private float baseSpeed = 2f;
     private float knockbackForce = 0f;
     private Vector2 knockbackVelocity;
+
+    private float playerContactRadius = 0.45f;
+    private float playerHitCooldown = 0.5f;
+    private float playerHitTimer = 0f;
 
     private float separationRadius = 0.6f;
     private float separationForce = 2.5f;
@@ -35,18 +44,43 @@ public class EnemyController
     private float hitFlashTimer = 0f;
     private readonly Color hitColor = new Color(1f, 0.2f, 0.2f, 1f);
 
-    private EnemyHealthSystem cachedHealth;
-
-    public EnemyController(Transform enemyTransform)
+    public EnemyController(
+        Transform enemyTransform,
+        SpriteRenderer spriteRenderer,
+        EnemyHealthSystem healthSystem
+    )
     {
-        this.enemyTransform = enemyTransform;
-        RefreshReferences();
+        SetCachedReferences(enemyTransform, spriteRenderer, healthSystem);
         StoreOriginalColorIfNeeded();
+    }
+
+    public void SetCachedReferences(
+        Transform newEnemyTransform,
+        SpriteRenderer newSpriteRenderer,
+        EnemyHealthSystem newHealthSystem
+    )
+    {
+        enemyTransform = newEnemyTransform;
+        spriteRenderer = newSpriteRenderer;
+        cachedHealth = newHealthSystem;
+
+        StoreOriginalColorIfNeeded();
+    }
+
+    public void SetPlayer(Transform player)
+    {
+        playerTransform = player;
     }
 
     public void SetMoveSpeed(float newSpeed)
     {
         baseSpeed = newSpeed;
+    }
+
+    public void SetPlayerContact(float radius, float cooldown)
+    {
+        playerContactRadius = Mathf.Max(0.01f, radius);
+        playerHitCooldown = Mathf.Max(0.01f, cooldown);
     }
 
     public void SetSeparation(float radius, float force, LayerMask layer)
@@ -58,10 +92,13 @@ public class EnemyController
 
     public void ResetState()
     {
-        RefreshReferences();
+        if (playerTransform == null)
+            PlayerReferenceService.TryGetPlayer(out playerTransform);
 
         knockbackForce = 0f;
         knockbackVelocity = Vector2.zero;
+
+        playerHitTimer = 0f;
 
         isFrozen = false;
         freezeTimer = 0f;
@@ -82,7 +119,6 @@ public class EnemyController
 
     public void ResetVisualState()
     {
-        RefreshReferences();
         StoreOriginalColorIfNeeded();
 
         if (spriteRenderer != null)
@@ -98,7 +134,7 @@ public class EnemyController
             return;
 
         if (playerTransform == null)
-            TryFindPlayer();
+            PlayerReferenceService.TryGetPlayer(out playerTransform);
 
         if (playerTransform == null)
             return;
@@ -107,6 +143,7 @@ public class EnemyController
         UpdateBurn(dt);
         UpdateHitFlash(dt);
         UpdateKnockback(dt);
+        UpdatePlayerHitTimer(dt);
 
         Vector2 direction = (playerTransform.position - enemyTransform.position).normalized;
         Vector2 separation = GetSeparationDirection();
@@ -129,14 +166,7 @@ public class EnemyController
         enemyTransform.position += move + knockbackMove;
 
         UpdateSpriteFlip();
-    }
-
-    public void OnPlayerCollision(Transform player)
-    {
-        if (player == null)
-            return;
-
-        EventBus.Publish(new PlayerHitEvent(player.position));
+        CheckPlayerContactByDistance();
     }
 
     public void ApplyRadialKnockback(Vector3 sourcePosition, float radius, float force)
@@ -144,9 +174,10 @@ public class EnemyController
         if (enemyTransform == null)
             return;
 
-        float distance = Vector3.Distance(enemyTransform.position, sourcePosition);
+        float sqrDistance = (enemyTransform.position - sourcePosition).sqrMagnitude;
+        float sqrRadius = radius * radius;
 
-        if (distance > radius)
+        if (sqrDistance > sqrRadius)
             return;
 
         Vector2 dir = (enemyTransform.position - sourcePosition).normalized;
@@ -196,15 +227,37 @@ public class EnemyController
         RefreshVisualState();
     }
 
-    private void RefreshReferences()
+    private void UpdatePlayerHitTimer(float dt)
     {
-        TryFindPlayer();
+        if (playerHitTimer <= 0f)
+            return;
 
-        if (enemyTransform != null)
-        {
-            spriteRenderer = enemyTransform.GetComponentInChildren<SpriteRenderer>();
-            cachedHealth = enemyTransform.GetComponent<EnemyHealthSystem>();
-        }
+        playerHitTimer -= dt;
+
+        if (playerHitTimer < 0f)
+            playerHitTimer = 0f;
+    }
+
+    private void CheckPlayerContactByDistance()
+    {
+        if (playerHitTimer > 0f)
+            return;
+
+        if (playerTransform == null || enemyTransform == null)
+            return;
+
+        Vector2 enemyPosition = enemyTransform.position;
+        Vector2 playerPosition = playerTransform.position;
+
+        float sqrDistance = (enemyPosition - playerPosition).sqrMagnitude;
+        float sqrContactRadius = playerContactRadius * playerContactRadius;
+
+        if (sqrDistance > sqrContactRadius)
+            return;
+
+        playerHitTimer = playerHitCooldown;
+
+        EventBus.Publish(new PlayerHitEvent(playerTransform.position));
     }
 
     private void StoreOriginalColorIfNeeded()
@@ -219,30 +272,25 @@ public class EnemyController
         hasStoredOriginalColor = true;
     }
 
-    private void TryFindPlayer()
-    {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-
-        if (player != null)
-            playerTransform = player.transform;
-    }
-
     private Vector2 GetSeparationDirection()
     {
         if (enemyLayer.value == 0)
             return Vector2.zero;
 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(
+        int hitCount = Physics2D.OverlapCircleNonAlloc(
             enemyTransform.position,
             separationRadius,
+            separationHitsBuffer,
             enemyLayer
         );
 
         Vector2 separation = Vector2.zero;
-        int count = 0;
+        int validCount = 0;
 
-        foreach (Collider2D hit in hits)
+        for (int i = 0; i < hitCount; i++)
         {
+            Collider2D hit = separationHitsBuffer[i];
+
             if (hit == null)
                 continue;
 
@@ -258,13 +306,21 @@ public class EnemyController
                 away /= distance;
 
             separation += away;
-            count++;
+            validCount++;
         }
 
-        if (count > 0)
-            separation /= count;
+        ClearUsedBufferSlots(hitCount);
+
+        if (validCount > 0)
+            separation /= validCount;
 
         return separation.normalized;
+    }
+
+    private void ClearUsedBufferSlots(int usedCount)
+    {
+        for (int i = 0; i < usedCount; i++)
+            separationHitsBuffer[i] = null;
     }
 
     private void UpdateFreeze(float dt)

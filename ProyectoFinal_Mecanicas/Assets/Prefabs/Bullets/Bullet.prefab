@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2068369263348336209}
   - component: {fileID: 5560416492549216795}
-  - component: {fileID: 5729675525905430119}
   - component: {fileID: 463348401306941566}
   m_Layer: 7
   m_Name: Bullet
@@ -86,41 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &5729675525905430119
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1951769741892721378}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.017061764}
-  serializedVersion: 2
-  m_Radius: 0.28957155
 --- !u!114 &463348401306941566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +99,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 20
   lifetime: 3
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  collisionRadius: 0.12
   hitKnockbackForce: 10
   hitParticlePrefab: {fileID: 7548780520399808274, guid: 08138b57927efaa42bf2e392c2c07eba, type: 3}
   explosionParticlePrefab: {fileID: 7548780520399808274, guid: 923e6d52a29129f4d88d7a194b2c408d, type: 3}

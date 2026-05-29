@@ -5,6 +5,10 @@ public class EnemyInstaller : MonoBehaviour, IFreezable, IBurnable, IHitFeedback
     [Header("Enemy Stats")]
     [SerializeField] private float moveSpeed = 2f;
 
+    [Header("Player Contact")]
+    [SerializeField] private float playerContactRadius = 0.45f;
+    [SerializeField] private float playerHitCooldown = 0.5f;
+
     [Header("Separation")]
     [SerializeField] private float separationRadius = 0.6f;
     [SerializeField] private float separationForce = 2.5f;
@@ -12,39 +16,49 @@ public class EnemyInstaller : MonoBehaviour, IFreezable, IBurnable, IHitFeedback
 
     private EnemyController controller;
 
+    private Transform cachedTransform;
+    private SpriteRenderer cachedSpriteRenderer;
+    private EnemyHealthSystem cachedHealthSystem;
+    private CombatTargetCache cachedTargetCache;
+
     private void Awake()
     {
+        CacheReferences();
         CreateControllerIfNeeded();
     }
 
     private void OnEnable()
     {
+        CacheReferences();
         CreateControllerIfNeeded();
 
         controller.SetMoveSpeed(moveSpeed);
         controller.SetSeparation(separationRadius, separationForce, enemyLayer);
+        controller.SetPlayerContact(playerContactRadius, playerHitCooldown);
+
+        if (PlayerReferenceService.TryGetPlayer(out Transform player))
+            controller.SetPlayer(player);
+
         controller.ResetState();
+
+        EnemyUpdateManager.Register(this);
 
         EventBus.Subscribe<PlayerHitEvent>(OnPlayerHit);
     }
 
     private void OnDisable()
     {
+        EnemyUpdateManager.Unregister(this);
+
         EventBus.Unsubscribe<PlayerHitEvent>(OnPlayerHit);
 
         if (controller != null)
             controller.ResetVisualState();
     }
 
-    private void Update()
+    public void TickEnemy(float deltaTime)
     {
-        controller?.Tick(Time.deltaTime);
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-            controller?.OnPlayerCollision(collision.transform);
+        controller?.Tick(deltaTime);
     }
 
     private void OnPlayerHit(PlayerHitEvent hit)
@@ -71,11 +85,45 @@ public class EnemyInstaller : MonoBehaviour, IFreezable, IBurnable, IHitFeedback
         controller?.ApplyBulletHitFeedback(sourcePosition, force);
     }
 
+    private void CacheReferences()
+    {
+        if (cachedTransform == null)
+            cachedTransform = transform;
+
+        if (cachedSpriteRenderer == null)
+            cachedSpriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
+
+        if (cachedHealthSystem == null)
+            TryGetComponent(out cachedHealthSystem);
+
+        if (cachedTargetCache == null)
+        {
+            cachedTargetCache = GetComponent<CombatTargetCache>();
+
+            if (cachedTargetCache == null)
+                cachedTargetCache = gameObject.AddComponent<CombatTargetCache>();
+        }
+
+        cachedTargetCache.CacheReferences();
+    }
+
     private void CreateControllerIfNeeded()
     {
         if (controller != null)
-            return;
+        {
+            controller.SetCachedReferences(
+                cachedTransform,
+                cachedSpriteRenderer,
+                cachedHealthSystem
+            );
 
-        controller = new EnemyController(transform);
+            return;
+        }
+
+        controller = new EnemyController(
+            cachedTransform,
+            cachedSpriteRenderer,
+            cachedHealthSystem
+        );
     }
 }

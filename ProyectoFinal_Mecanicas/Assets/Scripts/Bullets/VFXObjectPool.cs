@@ -6,7 +6,8 @@ public class VFXObjectPool : MonoBehaviour
 {
     public static VFXObjectPool Instance { get; private set; }
 
-    private readonly Dictionary<GameObject, Queue<GameObject>> pools = new Dictionary<GameObject, Queue<GameObject>>();
+    private const string PooledNameSuffix = "_PooledVFX";
+
     private readonly Dictionary<GameObject, Coroutine> releaseCoroutines = new Dictionary<GameObject, Coroutine>();
 
     private void Awake()
@@ -40,11 +41,7 @@ public class VFXObjectPool : MonoBehaviour
         if (instance == null)
             return;
 
-        if (Instance == null)
-        {
-            Destroy(instance);
-            return;
-        }
+        EnsureInstance();
 
         Instance.ReleaseInternal(instance);
     }
@@ -60,10 +57,10 @@ public class VFXObjectPool : MonoBehaviour
 
     private GameObject SpawnInternal(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale, float lifetime)
     {
-        if (!pools.ContainsKey(prefab))
-            pools[prefab] = new Queue<GameObject>();
+        GameObject instance = PoolService<PooledVFXObject>.Spawn(prefab, position, rotation, PooledNameSuffix);
 
-        GameObject instance = GetAvailableInstance(prefab);
+        if (instance == null)
+            return null;
 
         if (releaseCoroutines.TryGetValue(instance, out Coroutine activeCoroutine))
         {
@@ -71,18 +68,8 @@ public class VFXObjectPool : MonoBehaviour
             releaseCoroutines.Remove(instance);
         }
 
-        instance.transform.SetParent(null);
-        instance.transform.SetPositionAndRotation(position, rotation);
         instance.transform.localScale = scale;
 
-        PooledVFXObject pooledObject = instance.GetComponent<PooledVFXObject>();
-
-        if (pooledObject == null)
-            pooledObject = instance.AddComponent<PooledVFXObject>();
-
-        pooledObject.SetPrefab(prefab);
-
-        instance.SetActive(true);
         RestartParticles(instance);
 
         if (lifetime > 0f)
@@ -92,31 +79,6 @@ public class VFXObjectPool : MonoBehaviour
         }
 
         return instance;
-    }
-
-    private GameObject GetAvailableInstance(GameObject prefab)
-    {
-        Queue<GameObject> pool = pools[prefab];
-
-        while (pool.Count > 0)
-        {
-            GameObject instance = pool.Dequeue();
-
-            if (instance != null)
-                return instance;
-        }
-
-        GameObject newInstance = Instantiate(prefab);
-        newInstance.name = prefab.name + "_PooledVFX";
-
-        PooledVFXObject pooledObject = newInstance.GetComponent<PooledVFXObject>();
-
-        if (pooledObject == null)
-            pooledObject = newInstance.AddComponent<PooledVFXObject>();
-
-        pooledObject.SetPrefab(prefab);
-
-        return newInstance;
     }
 
     private IEnumerator ReleaseAfterDelay(GameObject instance, float delay)
@@ -134,35 +96,19 @@ public class VFXObjectPool : MonoBehaviour
         if (releaseCoroutines.ContainsKey(instance))
             releaseCoroutines.Remove(instance);
 
-        PooledVFXObject pooledObject = instance.GetComponent<PooledVFXObject>();
-
-        if (pooledObject == null || pooledObject.Prefab == null)
-        {
-            Destroy(instance);
-            return;
-        }
-
         StopParticles(instance);
 
-        GameObject prefab = pooledObject.Prefab;
-
-        if (!pools.ContainsKey(prefab))
-            pools[prefab] = new Queue<GameObject>();
-
-        instance.SetActive(false);
-        instance.transform.SetParent(transform);
-
-        pools[prefab].Enqueue(instance);
+        PoolService<PooledVFXObject>.Release(instance);
     }
 
     private void RestartParticles(GameObject instance)
     {
         ParticleSystem[] particles = instance.GetComponentsInChildren<ParticleSystem>(true);
 
-        foreach (ParticleSystem particle in particles)
+        for (int i = 0; i < particles.Length; i++)
         {
-            particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            particle.Play(true);
+            particles[i].Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            particles[i].Play(true);
         }
     }
 
@@ -170,19 +116,13 @@ public class VFXObjectPool : MonoBehaviour
     {
         ParticleSystem[] particles = instance.GetComponentsInChildren<ParticleSystem>(true);
 
-        foreach (ParticleSystem particle in particles)
+        for (int i = 0; i < particles.Length; i++)
         {
-            particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            particles[i].Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
     }
 }
 
-public class PooledVFXObject : MonoBehaviour
+public class PooledVFXObject : PooledObject
 {
-    public GameObject Prefab { get; private set; }
-
-    public void SetPrefab(GameObject prefab)
-    {
-        Prefab = prefab;
-    }
 }

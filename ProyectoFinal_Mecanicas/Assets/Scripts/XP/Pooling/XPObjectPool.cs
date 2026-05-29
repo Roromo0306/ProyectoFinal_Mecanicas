@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class XPObjectPool : MonoBehaviour
 {
     public static XPObjectPool Instance { get; private set; }
 
-    private readonly Dictionary<GameObject, Queue<GameObject>> pools = new Dictionary<GameObject, Queue<GameObject>>();
+    private const string PooledNameSuffix = "_PooledXP";
 
     private void Awake()
     {
@@ -25,7 +24,7 @@ public class XPObjectPool : MonoBehaviour
 
         EnsureInstance();
 
-        return Instance.SpawnInternal(prefab, position, rotation);
+        return PoolService<PooledXPObject>.Spawn(prefab, position, rotation, PooledNameSuffix);
     }
 
     public static void Release(GameObject instance)
@@ -33,13 +32,7 @@ public class XPObjectPool : MonoBehaviour
         if (instance == null)
             return;
 
-        if (Instance == null)
-        {
-            Destroy(instance);
-            return;
-        }
-
-        Instance.ReleaseInternal(instance);
+        PoolService<PooledXPObject>.Release(instance);
     }
 
     private static void EnsureInstance()
@@ -50,82 +43,8 @@ public class XPObjectPool : MonoBehaviour
         GameObject poolObject = new GameObject("XPObjectPool");
         Instance = poolObject.AddComponent<XPObjectPool>();
     }
-
-    private GameObject SpawnInternal(GameObject prefab, Vector3 position, Quaternion rotation)
-    {
-        if (!pools.ContainsKey(prefab))
-            pools[prefab] = new Queue<GameObject>();
-
-        GameObject instance = GetAvailableInstance(prefab);
-
-        instance.transform.SetParent(null);
-        instance.transform.SetPositionAndRotation(position, rotation);
-
-        PooledXPObject pooledObject = instance.GetComponent<PooledXPObject>();
-
-        if (pooledObject == null)
-            pooledObject = instance.AddComponent<PooledXPObject>();
-
-        pooledObject.SetPrefab(prefab);
-
-        instance.SetActive(true);
-
-        return instance;
-    }
-
-    private GameObject GetAvailableInstance(GameObject prefab)
-    {
-        Queue<GameObject> pool = pools[prefab];
-
-        while (pool.Count > 0)
-        {
-            GameObject instance = pool.Dequeue();
-
-            if (instance != null)
-                return instance;
-        }
-
-        GameObject newInstance = Instantiate(prefab);
-        newInstance.name = prefab.name + "_Pooled";
-
-        PooledXPObject pooledObject = newInstance.GetComponent<PooledXPObject>();
-
-        if (pooledObject == null)
-            pooledObject = newInstance.AddComponent<PooledXPObject>();
-
-        pooledObject.SetPrefab(prefab);
-
-        return newInstance;
-    }
-
-    private void ReleaseInternal(GameObject instance)
-    {
-        PooledXPObject pooledObject = instance.GetComponent<PooledXPObject>();
-
-        if (pooledObject == null || pooledObject.Prefab == null)
-        {
-            Destroy(instance);
-            return;
-        }
-
-        GameObject prefab = pooledObject.Prefab;
-
-        if (!pools.ContainsKey(prefab))
-            pools[prefab] = new Queue<GameObject>();
-
-        instance.SetActive(false);
-        instance.transform.SetParent(transform);
-
-        pools[prefab].Enqueue(instance);
-    }
 }
 
-public class PooledXPObject : MonoBehaviour
+public class PooledXPObject : PooledObject
 {
-    public GameObject Prefab { get; private set; }
-
-    public void SetPrefab(GameObject prefab)
-    {
-        Prefab = prefab;
-    }
 }
